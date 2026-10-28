@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1017">
 <meta name="description" content="海克斯大乱斗英雄出装与海克斯推荐 · 真实对局数据">
 <title>海斗指南 · 海克斯大乱斗</title>
-<link rel="stylesheet" href="assets/css/main.css?v=20261029g">
+<link rel="stylesheet" href="assets/css/main.css?v=20261029h">
 </head>
 <body>
 
@@ -76,7 +76,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/app.js?v=20261029g"></script>
+<script src="assets/js/app.js?v=20261029h"></script>
 <script>
 /* 版本自检：手机上容易吃到旧缓存，版本不一致就自动刷一次 */
 (function () {
@@ -90,7 +90,8 @@
       if (!nv || nv === cur) return;
       if (sessionStorage.getItem('hd_v') === nv) return;
       sessionStorage.setItem('hd_v', nv);
-      location.reload();
+      /* reload 会再次吃到 HTML 缓存，改用带时间戳的跳转强制绕过 */
+      location.replace(location.pathname + '?r=' + Date.now() + location.hash);
     })
     .catch(function () {});
 })();
