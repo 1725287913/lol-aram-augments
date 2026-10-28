@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0e17">
 <title>海斗指南 · 海克斯大乱斗</title>
-<link rel="stylesheet" href="assets/css/main.css?v=20261028c">
+<link rel="stylesheet" href="assets/css/main.css?v=20261028d">
 </head>
 <body>
 
@@ -19,9 +19,16 @@
   </div>
   <button class="navbtn" id="randomHero" title="随机抽一个英雄看看怎么玩（快捷键 R）">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/></svg>
-    随机
+    <span>随机</span>
   </button>
-  <button class="navbtn" id="openPlays">玩法库</button>
+  <button class="navbtn" id="openQuiz" title="三选一训练：随机一个英雄，三轮选卡，看你押中几次最优解">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7.5" width="12" height="13.5" rx="2.5"/><path d="M7 4.5h11.5A2.5 2.5 0 0 1 21 7v11"/><path d="M6 12h5M6 15.5h5M6 19h3"/></svg>
+    <span>三选一</span>
+  </button>
+  <button class="navbtn" id="openPlays">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M10 4h8.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H10"/></svg>
+    <span>玩法库</span>
+  </button>
   <div class="meta" id="patchInfo">加载中…</div>
 </header>
 
@@ -49,6 +56,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/app.js?v=20261028c"></script>
+<script src="assets/js/app.js?v=20261028d"></script>
 </body>
 </html>

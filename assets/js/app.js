@@ -126,7 +126,10 @@
     $('#patchInfo').innerHTML =
       `<b>${esc(meta.gamePatch || '')}</b> · ${c.heroes || index.length} 英雄 · ${c.augments || augments.length} 海克斯 · 更新 ${esc(meta.rateUpdatedAt || '')}`;
     $('#heroCount').textContent = index.length;
-    if ($('#openPlays') && S.plays.length) $('#openPlays').textContent = `玩法库 ${S.plays.length}`;
+    if ($('#openPlays') && S.plays.length) {
+      const sp = $('#openPlays').querySelector('span');
+      if (sp) sp.textContent = `玩法库 ${S.plays.length}`;
+    }
 
     renderList();
 
@@ -337,7 +340,16 @@
   /* ---------------- 打开英雄 ---------------- */
   let heroSeq = 0; // 防止连点随机时旧请求覆盖新英雄
   async function openHero(slug) {
-    if (S.hero && S.hero.slug === slug) return;
+    QZ.on = false;
+    if (S.hero && S.hero.slug === slug) {
+      // 从训练 / 玩法库回到同一个英雄时，内容区需要重绘一次
+      if (S.view !== 'hero') {
+        S.view = 'hero';
+        renderHero();
+        $('#content').scrollTop = 0;
+      }
+      return;
+    }
     const seq = ++heroSeq;
     $('#content').innerHTML = `<div style="padding:32px 24px"><div class="skel" style="height:110px;margin-bottom:16px"></div><div class="skel" style="height:260px"></div></div>`;
     try {
@@ -1065,6 +1077,301 @@
     `);
   }
 
+  /* ---------------- 海克斯三选一（选卡训练） ---------------- */
+  const QZ_TIERS = ['prismatic', 'gold', 'silver'];
+  const QZ_TIER_CN = { prismatic: '棱彩', gold: '黄金', silver: '白银' };
+  const qzSaved = LS.get('hd_quiz', null);
+  const QZ = {
+    on: false, hero: null, rates: {}, base: 50,
+    round: 0, options: [], picked: -1, scores: [], log: [],
+    stat:
+      qzSaved && typeof qzSaved === 'object'
+        ? { n: qzSaved.n || 0, sum: qzSaved.sum || 0, best: qzSaved.best || 0 }
+        : { n: 0, sum: 0, best: 0 },
+  };
+
+  // 该英雄各海克斯的真实胜率（来自数据里的英雄维度统计）
+  function qzRates(h) {
+    const m = {};
+    (h.recommendAugments || []).forEach((r) => {
+      if (r.winRate != null && r.winRate > 0) m[r.name] = { winRate: r.winRate, pickRate: r.pickRate };
+    });
+    return m;
+  }
+
+  // 某个海克斯在这个英雄身上的胜率；没有人物数据就退回全局胜率
+  function qzRate(name) {
+    const r = QZ.rates[name];
+    if (r && r.winRate > 0) return r.winRate;
+    const a = S.augMap[name];
+    if (a && a.winRate > 0) return a.winRate;
+    return QZ.base;
+  }
+
+  // 抽三张：只用该英雄有真实数据的，保证三张同口径；
+  // 并按「三张拉得开但别太离谱」来挑组合——太接近选哪个都对，太悬殊一眼看穿
+  function qzDraw(tier) {
+    const inTier = S.augments.filter((a) => a.tier === tier && !a.isDeleted);
+    const own = inTier.filter((a) => QZ.rates[a.name] && QZ.rates[a.name].winRate > 0);
+    const pool = own.length >= 8 ? own : inTier.filter((a) => qzRate(a.name) > 0);
+    if (pool.length <= 3) return pool.slice();
+    const TARGET = 4.5;
+    let best = null;
+    for (let t = 0; t < 40; t++) {
+      const bag = pool.slice();
+      const pick = [];
+      while (pick.length < 3 && bag.length) pick.push(bag.splice((Math.random() * bag.length) | 0, 1)[0]);
+      if (pick.length < 3) break;
+      const rs = pick.map((a) => qzRate(a.name));
+      const spread = Math.max.apply(null, rs) - Math.min.apply(null, rs);
+      const sc = -Math.abs(spread - TARGET) + pick.filter((a) => own.indexOf(a) >= 0).length * 0.5;
+      if (!best || sc > best.sc) best = { pick, sc };
+      if (Math.abs(spread - TARGET) < 0.5) break;
+    }
+    return best ? best.pick : pool.slice(0, 3);
+  }
+
+  async function openQuiz() {
+    QZ.on = true;
+    QZ.seq = (QZ.seq || 0) + 1;
+    const my = QZ.seq;
+    QZ.round = 0;
+    QZ.scores = [];
+    QZ.log = [];
+    QZ.picked = -1;
+    QZ.hero = null;
+    S.view = 'quiz';
+    const list = S.index.length ? S.index : [];
+    if (!list.length) return;
+    const pick = list[(Math.random() * list.length) | 0];
+    $('#content').innerHTML = `<div class="qz-wrap"><div class="qz-loading">发牌中…</div></div>`;
+    $('#content').scrollTop = 0;
+    try {
+      const h = await getJSON(`data/heroes/${pick.slug}.json`);
+      if (!QZ.on || my !== QZ.seq) return;
+      QZ.hero = h;
+      QZ.rates = qzRates(h);
+      QZ.base = h.winRate != null ? h.winRate : 50;
+      qzDeal();
+    } catch (e) {
+      $('#content').innerHTML = `<div class="qz-wrap"><div class="notice warn"><span class="ni">!</span><div>发牌失败：${esc(
+        e.message
+      )}</div></div></div>`;
+    }
+  }
+
+  function qzDeal() {
+    QZ.picked = -1;
+    const tier = QZ_TIERS[QZ.round];
+    QZ.options = qzDraw(tier).map((a) => {
+      const r = QZ.rates[a.name];
+      return {
+        name: a.name,
+        icon: a.icon,
+        tier,
+        tierLabel: QZ_TIER_CN[tier],
+        short: a.short || a.desc || '',
+        rate: qzRate(a.name),
+        pickRate: r ? r.pickRate : null,
+        known: !!r,
+      };
+    });
+    qzRender();
+  }
+
+  function qzRender() {
+    const h = QZ.hero;
+    if (!h) return;
+    const done = QZ.picked >= 0;
+    const ranked = QZ.options.map((o, i) => ({ o, i })).sort((a, b) => b.o.rate - a.o.rate);
+    const bestRate = ranked[0] ? ranked[0].o.rate : 0;
+    const secondRate = ranked[1] ? ranked[1].o.rate : bestRate;
+    const bestIdx = ranked[0] ? ranked[0].i : -1;
+    const mine = done ? QZ.options[QZ.picked] : null;
+    const gap = done ? bestRate - mine.rate : 0;
+    const score = done ? QZ.scores[QZ.round] : 0;
+
+    const dots = QZ_TIERS.map(
+      (t, i) =>
+        `<span class="qz-dot${i < QZ.round ? ' done' : i === QZ.round ? ' now' : ''}">${
+          i < QZ.round ? '✓ ' : ''
+        }${QZ_TIER_CN[t]}</span>`
+    ).join('');
+
+    const cards = QZ.options
+      .map((o, i) => {
+        const isPick = done && i === QZ.picked;
+        const isBest = done && i === bestIdx;
+        const rkPos = ranked.findIndex((x) => x.i === i) + 1;
+        const cls = ['qz-card'];
+        if (done) cls.push('locked');
+        if (isPick) cls.push('picked');
+        if (isPick && gap > 0.05) cls.push('bad');
+        if (isBest) cls.push('best');
+        return `<div class="${cls.join(' ')}" data-qz-pick="${i}" data-tier="${o.tier}">
+        <div class="qz-top"><span class="tier ${o.tier}">${o.tierLabel}</span>${
+          done
+            ? isBest
+              ? `<span class="qz-rk gold">最优</span>`
+              : `<span class="qz-rk">第 ${rkPos} 名</span>`
+            : ''
+        }</div>
+        <div class="qz-ico">${img(o.icon, '', o.name)}</div>
+        <div class="qz-name">${esc(o.name)}</div>
+        <div class="qz-short">${esc(o.short)}</div>
+        ${
+          done
+            ? `<div class="qz-stat"><b>${o.rate.toFixed(2)}%</b><span>${
+                o.pickRate != null ? '选取 ' + o.pickRate.toFixed(1) + '%' : '全局数据'
+              }</span></div>`
+            : `<div class="qz-stat veil">选完揭晓胜率</div>`
+        }
+        </div>`;
+      })
+      .join('');
+
+    let resHTML = '';
+    if (done) {
+      const hit = gap <= 0.05;
+      const leadTxt =
+        secondRate < bestRate - 0.05 ? `，领先第二 ${(bestRate - secondRate).toFixed(2)} 个点` : '';
+      resHTML = `<div class="qz-res ${hit ? 'ok' : gap <= 1.5 ? 'mid' : 'bad'}">
+        <div class="qz-res-l">
+          <div class="qz-res-t">${
+            hit ? '押中了最优解' : gap <= 1.5 ? '几乎最优，差一点点' : '这手选亏了'
+          }</div>
+          <div class="qz-res-s">${
+            hit
+              ? `数据上就是这张最强${leadTxt}。`
+              : `数据最优是「${esc(QZ.options[bestIdx].name)}」${bestRate.toFixed(
+                  2
+                )}%，你选的「${esc(mine.name)}」${mine.rate.toFixed(2)}%，差 ${gap.toFixed(2)} 个点。`
+          }</div>
+        </div>
+        <div class="qz-res-r">+${score}<span>分</span></div>
+      </div>
+      <button class="qz-next" data-qz-next>${
+        QZ.round < 2 ? '下一轮 · ' + QZ_TIER_CN[QZ_TIERS[QZ.round + 1]] : '看总成绩'
+      }</button>`;
+    }
+
+    const sc = $('#content').scrollTop;
+    $('#content').innerHTML = `<div class="qz-wrap">
+      <div class="qz-head">
+        <button class="qz-exit" data-qz-exit>‹ 退出</button>
+        <div class="qz-hero">
+          ${img(h.avatar, '', h.name)}
+          <div class="qz-hero-t"><b>${esc(h.name)}</b><span>整体胜率 ${
+      h.winRate != null ? h.winRate.toFixed(2) + '%' : '—'
+    }</span></div>
+        </div>
+        <div class="qz-prog">${dots}</div>
+      </div>
+      <div class="qz-tip">第 ${QZ.round + 1} 轮 · ${
+      QZ_TIER_CN[QZ_TIERS[QZ.round]]
+    }海克斯三选一，按这个英雄的真实胜率算分${done ? '' : '，选完才揭晓'}</div>
+      <div class="qz-grid">${cards}</div>
+      ${resHTML}
+    </div>`;
+    $('#content').scrollTop = sc;
+  }
+
+  function qzPick(i) {
+    if (QZ.picked >= 0) return;
+    const o = QZ.options[i];
+    if (!o) return;
+    QZ.picked = i;
+    const bestRate = Math.max.apply(null, QZ.options.map((x) => x.rate));
+    const bestIdx = QZ.options.findIndex((x) => x.rate === bestRate);
+    const gap = Math.max(0, bestRate - o.rate);
+    const score = Math.max(0, Math.round(100 - gap * 13));
+    QZ.scores[QZ.round] = score;
+    QZ.log[QZ.round] = {
+      tier: o.tier,
+      tierLabel: o.tierLabel,
+      picked: o.name,
+      pickedRate: o.rate,
+      best: QZ.options[bestIdx] ? QZ.options[bestIdx].name : o.name,
+      bestRate,
+      gap,
+      score,
+    };
+    qzRender();
+  }
+
+  function qzNext() {
+    if (QZ.round < QZ_TIERS.length - 1) {
+      QZ.round++;
+      qzDeal();
+      $('#content').scrollTop = 0;
+    } else {
+      qzFinish();
+    }
+  }
+
+  // 段位：按一局三轮的平均分
+  function qzRank(avg) {
+    if (avg >= 97) return { key: 'king', name: '王者', note: '三轮全是数据最优，这判断可以直接开播了' };
+    if (avg >= 92) return { key: 'master', name: '大师', note: '只有一手吃了亏，其他都押得死死的' };
+    if (avg >= 85) return { key: 'dia', name: '钻石', note: '两轮押中，剩下一手也能选到次优' };
+    if (avg >= 76) return { key: 'plat', name: '铂金', note: '大方向对，但偶尔会被「看着厉害」的骗' };
+    if (avg >= 65) return { key: 'gold', name: '黄金', note: '基本靠感觉，跟数据还差着一截' };
+    if (avg >= 50) return { key: 'silver', name: '白银', note: '被高选取率带偏了几次，选之前先想契合度' };
+    return { key: 'bronze', name: '青铜', note: '先别跟风，开局前翻一眼这个英雄的胜率排行' };
+  }
+
+  function qzFinish() {
+    const total = QZ.scores.reduce((a, b) => a + (b || 0), 0);
+    const avg = total / QZ_TIERS.length;
+    const rk = qzRank(avg);
+    const st = QZ.stat;
+    st.n = (st.n || 0) + 1;
+    st.sum = (st.sum || 0) + total;
+    st.best = Math.max(st.best || 0, total);
+    LS.set('hd_quiz', st);
+
+    const rows = QZ.log
+      .map(
+        (r) => `<div class="qz-log-row">
+        <span class="tier ${r.tier}">${r.tierLabel}</span>
+        <div class="qz-log-txt"><b>你选了「${esc(r.picked)}」</b><span>${
+          r.gap <= 0.05
+            ? '就是最优解'
+            : `最优「${esc(r.best)}」${r.bestRate.toFixed(2)}%，差 ${r.gap.toFixed(2)} 个点`
+        }</span></div>
+        <span class="qz-log-sc">+${r.score}</span>
+      </div>`
+      )
+      .join('');
+
+    $('#content').innerHTML = `<div class="qz-wrap">
+      <div class="qz-final">
+        <div class="qz-final-top">
+          <div class="qz-badge qz-${rk.key}"><span>${rk.name}</span></div>
+          <div class="qz-total"><b>${total}</b><span>/ ${QZ_TIERS.length * 100}</span></div>
+        </div>
+        <div class="qz-final-note">${esc(rk.note)}</div>
+        <div class="qz-sub">${esc(QZ.hero ? QZ.hero.name : '')} · 三轮复盘</div>
+        <div class="qz-log">${rows}</div>
+        <div class="qz-hist">已玩 ${st.n} 局 · 平均 ${st.n ? Math.round(st.sum / st.n) : 0} 分 · 最高 ${
+      st.best
+    } 分</div>
+        <div class="qz-acts">
+          <button class="qz-next" data-qz-again>再来一局</button>
+          <button class="qz-exit wide" data-qz-hero>看这个英雄的攻略</button>
+        </div>
+      </div>
+    </div>`;
+    $('#content').scrollTop = 0;
+  }
+
+  function qzExit() {
+    QZ.on = false;
+    S.view = 'hero';
+    if (S.hero) renderHero();
+    else if (S.index.length) openHero(S.index[0].slug);
+  }
+
   /* ---------------- 随机 / 分享 ---------------- */
   function randomHero() {
     if (!S.index.length) return;
@@ -1106,9 +1413,38 @@
 
     if (t.closest('[data-close]')) return closeModal();
 
-    // 顶栏：随机一个英雄 / 玩法库入口
+    // 顶栏：随机一个英雄 / 玩法库入口 / 三选一训练
     if (t.closest('#randomHero')) {
       randomHero();
+      return;
+    }
+    if (t.closest('#openQuiz')) {
+      if (!S.augments.length) return;
+      openQuiz();
+      return;
+    }
+    // 三选一训练：选牌 / 下一轮 / 再来一局 / 退出 / 看攻略
+    const qzCard = t.closest('[data-qz-pick]');
+    if (qzCard) {
+      qzPick(+qzCard.dataset.qzPick);
+      return;
+    }
+    if (t.closest('[data-qz-next]')) {
+      qzNext();
+      return;
+    }
+    if (t.closest('[data-qz-again]')) {
+      openQuiz();
+      return;
+    }
+    if (t.closest('[data-qz-exit]')) {
+      qzExit();
+      return;
+    }
+    if (t.closest('[data-qz-hero]')) {
+      const slug = QZ.hero && QZ.hero.slug;
+      QZ.on = false;
+      if (slug) openHero(slug);
       return;
     }
     // 英雄页：收藏 / 分享
@@ -1215,6 +1551,10 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      if (QZ.on) {
+        qzExit();
+        return;
+      }
       closeModal();
       return;
     }
@@ -1229,11 +1569,25 @@
     }
     const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || e.altKey) return;
+    // 训练中：1/2/3 选牌，空格 / 回车下一轮
+    if (QZ.on) {
+      if (e.key >= '1' && e.key <= '3') {
+        qzPick(+e.key - 1);
+        return;
+      }
+      if ((e.key === ' ' || e.key === 'Enter') && QZ.picked >= 0) {
+        e.preventDefault();
+        qzNext();
+      }
+      return;
+    }
     if (e.key === '/') {
       e.preventDefault();
       $('#q').focus();
     } else if (e.key === 'r' || e.key === 'R') {
       randomHero();
+    } else if (e.key === 'q' || e.key === 'Q') {
+      if (S.augments.length) openQuiz();
     }
   });
 
@@ -1243,7 +1597,7 @@
   });
 
   // 调试句柄（控制台可直接调）
-  window.__HD = { S, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, searchHeroes, renderTab, renderList, closeModal };
+  window.__HD = { S, QZ, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, searchHeroes, renderTab, renderList, closeModal, openQuiz, qzPick, qzNext, qzFinish, qzExit };
 
   boot().catch((err) => {    document.body.innerHTML = `<div style="padding:40px;color:#e0645c;font-family:sans-serif">
       <h2>数据加载失败</h2><p style="color:#8b97ad;margin-top:8px">${esc(err.message)}</p>
