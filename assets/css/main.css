@@ -5142,3 +5142,51 @@ ul {
   height: 30px;
   padding-right: 9px;
 }
+
+/* ============================================================
+   v6：手机端海报独立通栏 —— 完整清晰露出，不被内容压住
+   ============================================================ */
+@media (max-width: 760px) {
+  /* 背景层从 fixed 全屏改为顶部绝对定位通栏，高度=整张海报比例 */
+  .hero-bg {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: auto;
+    aspect-ratio: 1215 / 717;
+  }
+
+  .hero-bg-img {
+    height: 100%;
+    aspect-ratio: auto;
+    object-position: 50% 30%;
+  }
+
+  /* 遮罩只负责海报底部渐入正文 */
+  .hero-bg-veil {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 11, 17, 0.02) 0%,
+      rgba(8, 11, 17, 0.1) 58%,
+      var(--bg) 94%
+    );
+  }
+
+  /* 信息卡片下移到海报下方，海报完整露出 */
+  .hero-head {
+    margin-top: 168px;
+  }
+
+  /* 卡片顶部不再需要透明横幅区（海报已在卡片上方） */
+  .hh-banner {
+    height: 0;
+  }
+
+  .hh-banner::after {
+    display: none;
+  }
+
+  /* 卡片恢复实色底，保证文字清晰 */
+  .hero-head {
+    background: linear-gradient(180deg, rgba(15, 20, 28, 0.88) 0%, rgba(12, 17, 24, 0.97) 100%);
+  }
+}
