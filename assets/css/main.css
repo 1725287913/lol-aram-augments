@@ -748,6 +748,11 @@ img.miss-img{opacity:0}
 .bd-hd{display:flex;align-items:center;gap:11px;padding:16px 20px 13px;
   border-bottom:1px solid var(--line);position:relative}
 .bd-hd h3{flex:1;min-width:0;padding-right:30px;font-size:17px;font-weight:600;color:#fff}
+.bd-hdt{flex:1;min-width:0;padding-right:30px}
+.bd-hdt h3{font-size:17px;font-weight:600;color:#fff;padding-right:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd-by{margin-top:2px;font-size:11px;color:var(--dim-2)}
+.bd-rs{margin-top:3px;font-size:11px;line-height:1.5;color:var(--dim-2)}
 .bd-body{padding:15px 20px 20px}
 .bd-desc{font-size:13.5px;line-height:1.78;color:#c3ccdb}
 .bd-tip{display:flex;gap:9px;margin-top:12px;padding:11px 13px;border-radius:9px;

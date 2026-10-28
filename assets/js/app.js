@@ -86,7 +86,7 @@
 
   const S = {
     index: [], augments: [], augMap: {}, itemMap: {}, heroMap: {}, plays: [],
-    meta: {}, hero: null, rates: {}, sup: {},
+    meta: {}, hero: null, rates: {}, sup: {}, mp: {},
     tab: 'play', sub: 'build', builds: [], playIdx: 0, tier: 'all', sort: 'wr', expand: false, view: 'hero',
     favs: initFavs, playQ: '',
   };
@@ -107,19 +107,21 @@
 
   async function boot() {
     const base = 'data/';
-    const [index, augments, items, meta, plays, sup] = await Promise.all([
+    const [index, augments, items, meta, plays, sup, mp] = await Promise.all([
       getJSON(base + 'index.json'),
       getJSON(base + 'augments.json'),
       getJSON(base + 'items.json'),
       getJSON(base + 'meta.json'),
       getJSON(base + 'plays.json').catch(() => []),
       getJSON(base + 'supplement.json').catch(() => ({})),
+      getJSON(base + 'builds_mp.json').catch(() => ({})),
     ]);
     S.index = index;
     S.augments = augments;
     S.meta = meta;
     S.plays = plays || [];
     S.sup = sup || {};
+    S.mp = mp || {};
     augments.forEach((a) => (S.augMap[a.name] = a));
     items.forEach((i) => (S.itemMap[i.name] = i));
     index.forEach((h) => (S.heroMap[h.name] = h));
@@ -341,8 +343,12 @@
 
   /* ---------------- 打开英雄 ---------------- */
   let heroSeq = 0; // 防止连点随机时旧请求覆盖新英雄
-  // 人工补录（data/supplement.json）：按方案名覆盖字段，没有的方案直接新增
+  // 方案数据：优先用小程序全量方案（data/builds_mp.json），再用人工补录覆盖个别字段
   function applySup(h) {
+    const mp = S.mp && S.mp[h.slug];
+    if (mp && mp.length) {
+      h.builds = mp.map((b) => Object.assign({}, b, { hasDetail: (b.items || []).length > 0 }));
+    }
     const sup = S.sup && (S.sup[h.slug] || S.sup[h.name]);
     if (!sup || !sup.builds) return;
     const aug = (n) => {
@@ -521,7 +527,7 @@
         cores.length || alts.length
           ? `<div class="bc-augs">
         ${cores.length ? `<div class="ba"><span class="ba-l">核心</span><div class="ba-w">${cores.map((a) => cell(a, 1)).join('')}</div></div>` : ''}
-        ${alts.length ? `<div class="ba"><span class="ba-l">高胜率</span><div class="ba-w">${alts.map((a) => cell(a)).join('')}</div></div>` : ''}
+        ${alts.length ? `<div class="ba"><span class="ba-l">备选</span><div class="ba-w">${alts.map((a) => cell(a)).join('')}</div></div>` : ''}
       </div>`
           : ''
       }
@@ -546,6 +552,7 @@
               <div class="bd-sub">${tier ? `<span class="tier ${esc(tier)}">${esc(AUG_CN[tier] || tier)}</span>` : ''}${
                 wr != null ? `<span style="color:${wrColor(wr)}">${wr.toFixed(2)}%</span>` : ''
               }</div>
+              ${a.reason ? `<div class="bd-rs">${esc(a.reason)}</div>` : ''}
             </div>
           </div>`;
         })
@@ -557,7 +564,10 @@
     showModal(`
       <div class="bd-hd">
         ${rankBadge(b.tier)}
-        <h3>${esc(b.name)}</h3>
+        <div class="bd-hdt">
+          <h3>${esc(b.name)}</h3>
+          ${b.isUser && b.author ? `<div class="bd-by">${esc(b.author)} 贡献</div>` : ''}
+        </div>
         <button class="m-x" data-close>✕</button>
       </div>
       <div class="bd-body">
@@ -571,7 +581,7 @@
         }
         ${
           (b.altAugments || []).length
-            ? `<h5 class="bd-h">高胜率海克斯</h5><div class="bd-grid">${augGrid(b.altAugments)}</div>`
+            ? `<h5 class="bd-h">备选海克斯</h5><div class="bd-grid">${augGrid(b.altAugments)}</div>`
             : ''
         }
         ${
