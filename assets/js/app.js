@@ -86,7 +86,7 @@
 
   const S = {
     index: [], augments: [], augMap: {}, itemMap: {}, heroMap: {}, plays: [],
-    meta: {}, hero: null, rates: {},
+    meta: {}, hero: null, rates: {}, sup: {},
     tab: 'play', sub: 'build', builds: [], playIdx: 0, tier: 'all', sort: 'wr', expand: false, view: 'hero',
     favs: initFavs, playQ: '',
   };
@@ -107,17 +107,19 @@
 
   async function boot() {
     const base = 'data/';
-    const [index, augments, items, meta, plays] = await Promise.all([
+    const [index, augments, items, meta, plays, sup] = await Promise.all([
       getJSON(base + 'index.json'),
       getJSON(base + 'augments.json'),
       getJSON(base + 'items.json'),
       getJSON(base + 'meta.json'),
       getJSON(base + 'plays.json').catch(() => []),
+      getJSON(base + 'supplement.json').catch(() => ({})),
     ]);
     S.index = index;
     S.augments = augments;
     S.meta = meta;
     S.plays = plays || [];
+    S.sup = sup || {};
     augments.forEach((a) => (S.augMap[a.name] = a));
     items.forEach((i) => (S.itemMap[i.name] = i));
     index.forEach((h) => (S.heroMap[h.name] = h));
@@ -339,6 +341,38 @@
 
   /* ---------------- 打开英雄 ---------------- */
   let heroSeq = 0; // 防止连点随机时旧请求覆盖新英雄
+  // 人工补录（data/supplement.json）：按方案名覆盖字段，没有的方案直接新增
+  function applySup(h) {
+    const sup = S.sup && (S.sup[h.slug] || S.sup[h.name]);
+    if (!sup || !sup.builds) return;
+    const aug = (n) => {
+      const a = S.augMap[n];
+      return { name: n, icon: a ? a.icon : null, tier: a ? a.tier : null, winRate: a && a.winRate != null ? a.winRate : null };
+    };
+    const item = (n) => {
+      const i = S.itemMap[n];
+      return { name: n, icon: i ? i.icon : null };
+    };
+    h.builds = h.builds || [];
+    Object.entries(sup.builds).forEach(([name, p]) => {
+      let b = h.builds.find((x) => x.name === name);
+      if (!b) {
+        b = { name, tier: null, desc: null, forge: [], coreAugments: [], altAugments: [], items: [], startItems: [], shoes: [], otherItems: [], hasDetail: false };
+        h.builds.push(b);
+      }
+      if (p.tier) b.tier = p.tier;
+      if (p.desc != null) b.desc = p.desc;
+      if (p.tips) b.tips = p.tips;
+      if (p.forge) b.forge = p.forge;
+      if (p.coreAugments) b.coreAugments = p.coreAugments.map(aug);
+      if (p.altAugments) b.altAugments = p.altAugments.map(aug);
+      if (p.items) {
+        b.items = p.items.map(item);
+        b.hasDetail = true;
+      }
+    });
+  }
+
   async function openHero(slug) {
     QZ.on = false;
     if (S.hero && S.hero.slug === slug) {
@@ -356,6 +390,7 @@
       const d = await getJSON(`data/heroes/${slug}.json`);
       if (seq !== heroSeq) return;
       S.hero = d;
+      applySup(d);
       S.view = 'hero';
       S.tab = 'play';
       S.playIdx = 0;
