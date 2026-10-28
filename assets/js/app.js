@@ -520,10 +520,11 @@
         a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`
       }</div><div class="bca-nm">${esc(a.name)}</div>${isOff ? '<i class="bca-off">已下架</i>' : ''}</div>`;
     };
-    return `<article class="bcard" data-build="${i}">
+    return `<article class="bcard${b.stale ? ' stale' : ''}" data-build="${i}">
       <div class="bc-hd">
         ${rankBadge(b.tier)}
         <h4 class="bc-tt">${esc(b.name)}</h4>
+        ${b.stale ? '<span class="off-tag">4.0 已移除</span>' : ''}
         <span class="bc-go" data-build="${i}">查看详情<i>›</i></span>
       </div>
       ${forge}
@@ -607,8 +608,8 @@
   }
 
   // 三件套组合：按三个海克斯在本英雄身上的胜率均值排序
-  function combosHTML(h) {
-    const rows = (h.augmentCombos || []).map((c) => {
+  function combosHTML(list) {
+    const rows = (list || []).map((c) => {
       const rs = c.map((n) => (S.rates[n] ? S.rates[n].winRate : null));
       const known = rs.filter((x) => x != null);
       const avg = known.length ? known.reduce((a, b) => a + b, 0) / known.length : null;
@@ -674,11 +675,22 @@
     const plays = h.playstyles || [];
     // 有装备或海克斯的方案才算数，纯名字的空壳不展示；内容多的排前面，再按评级
     const fill = (b) => ((b.coreAugments || []).length ? 1 : 0) + ((b.items || []).length ? 1 : 0);
+    // 核心海克斯全在 4.0 被移除 → 标为旧版本方案，排到最后
+    (h.builds || []).forEach((b) => {
+      const cs = (b.coreAugments || []).filter((a) => a.name);
+      b.stale = cs.length > 0 && cs.every((a) => (S.augMap[a.name] || {}).isDeleted);
+    });
     const builds = (h.builds || [])
       .filter((b) => (b.items || []).length || (b.coreAugments || []).length || (b.altAugments || []).length)
-      .sort((a, b) => fill(b) - fill(a) || tierScore(b.tier) - tierScore(a.tier));
+      .sort(
+        (a, b) =>
+          (a.stale ? 1 : 0) - (b.stale ? 1 : 0) ||
+          fill(b) - fill(a) ||
+          tierScore(b.tier) - tierScore(a.tier)
+      );
     S.builds = builds;
-    const combos = h.augmentCombos || [];
+    // 三件套：任意一个海克斯在 4.0 被移除，这套组合就凑不出来了，整条剔除
+    const combos = (h.augmentCombos || []).filter((c) => !c.some((n) => (S.augMap[n] || {}).isDeleted));
     const total = builds.length + plays.length + combos.length;
     if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
 
@@ -695,7 +707,7 @@
     } else if (sub === 'route') {
       body = `<div class="route-list">${plays.map((x, i) => routeCard(x, i)).join('')}</div>`;
     } else {
-      body = `<div class="combo-list">${combosHTML(h)}</div>`;
+      body = `<div class="combo-list">${combosHTML(combos)}</div>`;
     }
 
     return `<div class="play-tabs">${segs

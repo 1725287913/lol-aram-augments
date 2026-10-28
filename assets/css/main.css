@@ -687,7 +687,13 @@ img.miss-img{opacity:0}
   .route-card{padding:11px 12px}
   .adv-items .item{width:32px;height:32px}
   .adv-an .ai.big{width:30px;height:30px}
-  .combo-list{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
+  /* 三件套：手机上单列全宽，避免三个图标+排名+长名字挤在一张窄卡里 */
+  .combo-list{grid-template-columns:1fr;gap:7px}
+  .combo{padding:9px 11px}
+  .combo-hd{margin-bottom:5px}
+  .combo .ci{width:28px;height:28px}
+  .combo .cn{font-size:11.5px;-webkit-line-clamp:2}
+  .combo-wr{margin-top:4px}
 }
 @media(max-width:560px){
   .navbtn span{display:none}
@@ -712,6 +718,8 @@ img.miss-img{opacity:0}
   background:linear-gradient(180deg,var(--surface),rgba(15,21,33,.55));
   transition:border-color .15s,transform .15s}
 .bcard:hover{border-color:rgba(200,170,110,.42);transform:translateY(-1px)}
+.bcard.stale{opacity:.7}
+.bcard.stale:hover{opacity:1}
 .bc-hd{display:flex;align-items:center;gap:10px}
 .bc-hd .rank{width:29px;height:33px}
 .bc-hd .rank span{font-size:12px}
@@ -744,8 +752,8 @@ img.miss-img{opacity:0}
 .bca.big .bca-nm{color:var(--gold-l)}
 .bca:hover .bca-ic{border-color:var(--gold);transform:translateY(-2px)}
 /* 已下架的海克斯：灰度 + 角标，数据照小程序原样保留，只是标明版本状态 */
-.bca.off .bca-ic{filter:grayscale(1);opacity:.5;border-color:var(--line)}
-.bca.off .bca-nm{color:var(--dim-2);text-decoration:line-through}
+.bca.off .bca-ic{filter:grayscale(.7);opacity:.72;border-color:var(--line)}
+.bca.off .bca-nm{color:var(--dim-2)}
 .bca-off{display:block;margin-top:2px;font-style:normal;font-size:9px;line-height:1.2;
   color:#e0645c;background:rgba(224,100,92,.12);border-radius:3px;padding:1px 0}
 .off-tag{display:inline-block;margin-left:6px;font-size:10px;line-height:1.4;padding:0 4px;
