@@ -129,6 +129,11 @@
     if ($('#openPlays') && S.plays.length) $('#openPlays').textContent = `玩法库 ${S.plays.length}`;
 
     renderList();
+
+    // 空闲时预热拼音表：中文打错字也能认出来（放前面，href 直达时也会预加载）
+    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 600));
+    idle(() => ensurePY());
+
     const hash = decodeURIComponent(location.hash.replace(/^#/, ''));
     if (hash) {
       const hit = S.index.find((h) => h.slug === hash || h.name === hash);
@@ -136,15 +141,6 @@
     }
     // 默认打开胜率最高且数据完整的英雄，避免空白
     openHero(S.index[0].slug);
-
-    // 空闲时预热拼音表，中文打错字也能认出来
-    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1200));
-    idle(() => {
-      loadPY().then(() => {
-        const v = $('#q').value;
-        if (v && v.trim()) renderList(v);
-      });
-    });
   }
 
   /* ---------------- 搜索：中文 / 别名 / 拼音 / 首字母 / 容错 ---------------- */
@@ -173,6 +169,15 @@
     let out = '';
     for (const ch of s) out += PY.get(ch) || ch;
     return out;
+  }
+  // 保证拼音表就绪；刚加载完如果搜索框还有字，就按最新关键词重跑一次
+  function ensurePY() {
+    if (PY) return Promise.resolve(PY);
+    return loadPY().then((m) => {
+      const v = $('#q').value;
+      if (v && v.trim()) renderList(v);
+      return m;
+    });
   }
 
   // 编辑距离（长度差 >3 直接放弃，省算力）
@@ -292,6 +297,7 @@
   $('#q').addEventListener('input', (e) => {
     clearTimeout(listTimer);
     listTimer = setTimeout(() => renderList(e.target.value), 120);
+    if (!PY) ensurePY(); // 中文容错要等拼音表
   });
 
   $('#heroGrid').addEventListener('click', (e) => {
