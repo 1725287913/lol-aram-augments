@@ -11,16 +11,84 @@
       ? `<img src="${esc(src)}" class="${cls || ''}" alt="${esc(alt || '')}" loading="lazy" onerror="this.style.visibility='hidden'">`
       : `<span class="${cls || ''} miss">?</span>`;
 
+  // 本地存储（无 localStorage 时静默降级）
+  const LS = {
+    get(k, d) {
+      try {
+        const v = localStorage.getItem(k);
+        return v == null ? d : JSON.parse(v);
+      } catch (e) {
+        return d;
+      }
+    },
+    set(k, v) {
+      try {
+        localStorage.setItem(k, JSON.stringify(v));
+      } catch (e) {}
+    },
+  };
+
+  // 底部轻提示
+  let toastTimer = null;
+  function toast(msg) {
+    const el = $('#toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 1900);
+  }
+
+  // 复制到剪贴板（带 execCommand 兜底）
+  async function copyText(t) {
+    try {
+      await navigator.clipboard.writeText(t);
+      return true;
+    } catch (e) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = t;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return true;
+      } catch (e2) {
+        return false;
+      }
+    }
+  }
+
+  // 评级 → 徽章样式
+  const TIER_RANK = { SSS: 6, SS: 5, S: 4, A: 3, B: 2, C: 1 };
+  function tierKey(t) {
+    const s = String(t || '').toUpperCase();
+    return /^(SSS|SS|S|A|B|C)$/.test(s) ? s.toLowerCase() : 'c';
+  }
+  const tierScore = (t) => TIER_RANK[String(t || '').toUpperCase()] || 0;
+  function rankBadge(t) {
+    if (!t) return '';
+    const k = tierKey(t);
+    return `<span class="rank r-${k}" title="${esc(t)} 级方案"><span>${esc(t)}</span></span>`;
+  }
+
   // 锻体属性中文名
   const FORGE = {
     cd: '技能急速', 物穿: '护甲穿透', 法穿: '法术穿透', 攻击力: '攻击力', 攻速: '攻击速度',
     生命值: '生命值', 抗性: '双抗', 全能吸血: '全能吸血', 法强: '法术强度', 暴击: '暴击率', 移速: '移动速度',
   };
 
+  // 本地收藏，兼容历史脏数据
+  const savedFavs = LS.get('hd_favs', []);
+  const initFavs = Array.isArray(savedFavs) ? savedFavs.filter((x) => typeof x === 'string') : [];
+
   const S = {
     index: [], augments: [], augMap: {}, itemMap: {}, heroMap: {}, plays: [],
     meta: {}, hero: null, rates: {},
     tab: 'play', playIdx: 0, tier: 'all', sort: 'wr', expand: false, view: 'hero',
+    favs: initFavs, playQ: '',
   };
 
   const TABS = [
@@ -72,6 +140,17 @@
 
   /* ---------------- 英雄列表 ---------------- */
   let listTimer = null;
+  function heroCard(h, isFav) {
+    return `<div class="hcard${S.hero && S.hero.slug === h.slug ? ' active' : ''}${isFav ? ' fav' : ''}" data-slug="${esc(
+      h.slug
+    )}" title="${esc(h.name + ' ' + (h.winRate != null ? h.winRate.toFixed(2) + '%' : ''))}">
+        ${img(h.avatar, '', h.name)}
+        ${h.winRate != null ? `<span class="wr">${h.winRate.toFixed(1)}</span>` : ''}
+        <span class="star" data-fav="${esc(h.slug)}" title="收藏 / 取消收藏">★</span>
+        <span class="nm">${esc(h.name)}</span>
+      </div>`;
+  }
+
   function renderList(kw) {
     const q = (kw || '').trim().toLowerCase();
     const list = q
@@ -83,18 +162,23 @@
         )
       : S.index;
     $('#heroCount').textContent = q ? `${list.length} / ${S.index.length}` : S.index.length;
-    $('#heroGrid').innerHTML = list
-      .map(
-        (h) => `<div class="hcard${S.hero && S.hero.slug === h.slug ? ' active' : ''}" data-slug="${esc(h.slug)}" title="${esc(
-          h.name + ' ' + (h.winRate != null ? h.winRate.toFixed(2) + '%' : '')
-        )}">
-        ${img(h.avatar, '', h.name)}
-        <span class="wr">${h.winRate != null ? h.winRate.toFixed(1) : '—'}</span>
-        <span class="nm">${esc(h.name)}</span>
-      </div>`
-      )
-      .join('');
-    if (!list.length) $('#heroGrid').innerHTML = `<div style="grid-column:1/-1;padding:24px 6px;color:#5e6b82;font-size:12px;text-align:center">没找到「${esc(q)}」</div>`;
+
+    const favSet = new Set(S.favs);
+    const favHeroes = S.favs.map((s) => S.heroMap[s]).filter(Boolean);
+    let html = '';
+    // 搜索时不做分组，避免结果被收藏截断
+    if (!q && favHeroes.length) {
+      html += `<div class="grid-label">我的收藏 ${favHeroes.length}</div>`;
+      html += favHeroes.map((h) => heroCard(h, true)).join('');
+      html += `<div class="grid-label">全部英雄 ${S.index.length}</div>`;
+    }
+    html += list.map((h) => heroCard(h, favSet.has(h.slug))).join('');
+    if (!list.length) {
+      html = `<div style="grid-column:1/-1;padding:24px 6px;color:#5e6b82;font-size:12px;text-align:center">没找到「${esc(
+        q
+      )}」</div>`;
+    }
+    $('#heroGrid').innerHTML = html;
   }
 
   $('#q').addEventListener('input', (e) => {
@@ -103,16 +187,48 @@
   });
 
   $('#heroGrid').addEventListener('click', (e) => {
+    // 点星标只收藏，不切英雄
+    const star = e.target.closest('[data-fav]');
+    if (star) {
+      e.stopPropagation();
+      toggleFav(star.dataset.fav);
+      return;
+    }
     const card = e.target.closest('.hcard');
     if (card) openHero(card.dataset.slug);
   });
 
+  // 收藏 / 取消收藏
+  function toggleFav(slug) {
+    if (!slug) return;
+    const i = S.favs.indexOf(slug);
+    if (i >= 0) S.favs.splice(i, 1);
+    else S.favs.unshift(slug);
+    LS.set('hd_favs', S.favs);
+    paintFavBtn();
+    renderList($('#q').value);
+    toast(i >= 0 ? '已取消收藏' : '已加入收藏，侧栏置顶');
+  }
+
+  // 只更新顶部收藏按钮，不重渲染整页（保留滚动位置）
+  function paintFavBtn() {
+    const btn = $('#favBtn');
+    if (!btn || !S.hero) return;
+    const on = S.favs.includes(S.hero.slug);
+    btn.classList.toggle('on', on);
+    const label = btn.querySelector('span');
+    if (label) label.textContent = on ? '已收藏' : '收藏';
+  }
+
   /* ---------------- 打开英雄 ---------------- */
+  let heroSeq = 0; // 防止连点随机时旧请求覆盖新英雄
   async function openHero(slug) {
     if (S.hero && S.hero.slug === slug) return;
+    const seq = ++heroSeq;
     $('#content').innerHTML = `<div style="padding:32px 24px"><div class="skel" style="height:110px;margin-bottom:16px"></div><div class="skel" style="height:260px"></div></div>`;
     try {
       const d = await getJSON(`data/heroes/${slug}.json`);
+      if (seq !== heroSeq) return;
       S.hero = d;
       S.view = 'hero';
       S.tab = 'play';
@@ -128,6 +244,7 @@
       $('.content').scrollTop = 0;
       window.scrollTo(0, 0);
     } catch (err) {
+      if (seq !== heroSeq) return;
       $('#content').innerHTML = `<div class="notice warn" style="margin:24px"><span class="ni">!</span><div>加载失败：${esc(err.message)}</div></div>`;
     }
   }
@@ -174,6 +291,16 @@
         ${TABS.map((t) => `<button class="tab${S.tab === t.k ? ' on' : ''}" data-tab="${t.k}">${t.label}${
           t.k === 'augments' ? `<span class="badge">${(h.recommendAugments || []).length}</span>` : ''
         }</button>`).join('')}
+        <div class="tab-acts">
+          <button class="act${S.favs.includes(h.slug) ? ' on' : ''}" id="favBtn" title="收藏后置顶在左侧列表">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 6.2 6.8.9-5 4.7 1.3 6.7-6-3.3-6 3.3 1.3-6.7-5-4.7 6.8-.9z"/></svg>
+            <span>${S.favs.includes(h.slug) ? '已收藏' : '收藏'}</span>
+          </button>
+          <button class="act" id="shareBtn" title="复制这个英雄的直达链接">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.6 1.6"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.6-1.6"/></svg>
+            <span>分享</span>
+          </button>
+        </div>
       </div>
       <div class="tab-body" id="tabBody"></div>
     `;
@@ -198,9 +325,37 @@
     if (!it) return '';
     const info = S.itemMap[it.name] || {};
     const tip = `${it.name}${info.price ? ' · ' + info.price + '金币' : ''}${info.desc ? '\n' + info.desc.replace(/<[^>]+>/g, '') : ''}`;
-    return `<div class="item" title="${esc(tip)}">${img(it.icon, '', it.name)}${
+    return `<div class="item" data-item="${esc(it.name)}" title="${esc(tip)}">${img(it.icon, '', it.name)}${
       idx ? `<span class="idx">${idx}</span>` : ''
     }</div>`;
+  }
+
+  // 一条「思路点评」：评级徽章 + 方案名 + 文字点评 + 核心海克斯图标
+  function advRow(b) {
+    const cores = (b.coreAugments || []).filter((a) => a.icon);
+    return `<div class="adv">
+      ${rankBadge(b.tier)}
+      <div class="adv-bd">
+        <div class="adv-t"><b>${esc(b.name)}</b></div>
+        ${
+          b.desc
+            ? `<div class="adv-d">${esc(b.desc)}</div>`
+            : `<div class="adv-mut">原站没收录这套的文字点评，可以先按名字和核心海克斯对照下面的出装。</div>`
+        }
+        ${
+          cores.length
+            ? `<div class="adv-augs">${cores
+                .map(
+                  (a) =>
+                    `<span class="ai" data-aug="${esc(a.name)}" title="${esc(a.name)}${
+                      a.winRate != null ? ' · ' + a.winRate.toFixed(2) + '%' : ''
+                    }">${img(a.icon, '', a.name)}</span>`
+                )
+                .join('')}</div>`
+            : ''
+        }
+      </div>
+    </div>`;
   }
 
   function viewPlay() {
@@ -278,19 +433,19 @@
 
       ${
         (h.builds || []).length
-          ? `<div class="section">
-        <div class="sec-head"><h3>思路点评</h3><div class="sec-line"></div><span class="hint">来自攻略数据</span></div>
-        ${h.builds
-          .filter((b) => b.desc)
-          .slice(0, 4)
-          .map(
-            (b) =>
-              `<div class="chg"><div class="ver">${esc(b.tier || '')}</div><div class="tx"><b style="color:#e8ebf2">${esc(
-                b.name
-              )}</b><br>${esc(b.desc)}</div></div>`
-          )
-          .join('') || '<div class="notice" style="margin:0"><span class="ni">!</span><div>这套方案暂无文字点评。</div></div>'}
-      </div>`
+          ? (() => {
+              const all = h.builds.slice().sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
+              const withDesc = all.filter((b) => b.desc);
+              // 有文字的优先，全都没文字就退化成按评级列前三套
+              const show = withDesc.length ? withDesc.slice(0, 4) : all.slice(0, 3);
+              const hint = withDesc.length
+                ? `共 ${all.length} 套 · 展示 ${show.length} 套有文字点评`
+                : `共 ${all.length} 套 · 原站未收录文字点评`;
+              return `<div class="section">
+        <div class="sec-head"><h3>思路点评</h3><div class="sec-line"></div><span class="hint">${hint}</span></div>
+        <div class="adv-list">${show.map(advRow).join('')}</div>
+      </div>`;
+            })()
           : ''
       }
 
@@ -519,26 +674,49 @@
       <div class="view-bar">
         <button class="chip" id="backHero">‹ 返回英雄</button>
         <h2>海克斯玩法库</h2>
-        <span class="hint">${S.plays.length} 套</span>
+        <input id="playQ" class="play-q" type="search" placeholder="搜玩法 / 海克斯 / 英雄" value="${esc(S.playQ)}">
+        <span class="hint" id="playCount">${S.plays.length} 套</span>
       </div>
-      <div class="play-cards">
-        ${S.plays
-          .map(
-            (p, i) => `<div class="pcard" data-play-open="${i}">
-          <div class="pc-top">${p.augments
+      <div class="play-cards" id="playList">${playCardsHTML()}</div>
+    `;
+    $('.content').scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+
+  // 玩法卡片列表（支持关键词过滤：玩法名 / 描述 / 海克斯 / 适配英雄）
+  function playCardsHTML() {
+    const kw = S.playQ.trim().toLowerCase();
+    const list = !kw
+      ? S.plays
+      : S.plays.filter((p) =>
+          [
+            p.name,
+            p.description || '',
+            (p.augments || []).map((a) => a.name).join(' '),
+            (p.combinations || [])
+              .map((c) => (c.name || '') + ' ' + (c.items || []).map((i) => i.name).join(' ') + ' ' + (c.heroes || []).map((h) => h.name).join(' '))
+              .join(' '),
+          ]
+            .join(' ')
+            .toLowerCase()
+            .includes(kw)
+        );
+    const cnt = $('#playCount');
+    if (cnt) cnt.textContent = kw ? `${list.length} / ${S.plays.length} 套` : `${S.plays.length} 套`;
+    if (!list.length) return `<div style="grid-column:1/-1;padding:30px;text-align:center;color:#5e6b82;font-size:12px">没有匹配「${esc(S.playQ)}」的玩法</div>`;
+    return list
+      .map(
+        (p) => `<div class="pcard" data-play-name="${esc(p.name)}">
+          <div class="pc-top">${(p.augments || [])
             .filter((a) => a.core)
             .map((a) => `<span class="pci">${a.icon ? img(a.icon, '', a.name) : '<span class="miss">?</span>'}</span>`)
             .join('')}</div>
           <div class="pc-name">${esc(p.name)}</div>
           <div class="pc-desc">${esc(p.description)}</div>
-          <div class="pc-meta"><span>${p.combinations.length} 种出装</span><span class="pc-more">查看 ›</span></div>
+          <div class="pc-meta"><span>${(p.combinations || []).length} 种出装</span><span class="pc-more">查看 ›</span></div>
         </div>`
-          )
-          .join('')}
-      </div>
-    `;
-    $('.content').scrollTop = 0;
-    window.scrollTo(0, 0);
+      )
+      .join('');
   }
 
   function openPlay(name) {
@@ -604,7 +782,7 @@
 
   function openAug(name) {
     const a = S.augMap[name];
-    const rate = S.rates[name];
+    const rate = S.hero ? S.rates[name] : null;
     if (!a) {
       showModal(`<div class="m-head"><div class="mic"><span class="miss">?</span></div>
         <div class="m-body"><div class="m-title"><h2>${esc(name)}</h2></div>
@@ -725,6 +903,75 @@
     `);
   }
 
+  /* ---------------- 装备详情 ---------------- */
+  function openItem(name) {
+    const it = S.itemMap[name];
+    if (!it) {
+      toast('这件装备暂无数据');
+      return;
+    }
+    const key = (g) => (typeof g === 'string' ? g : (g && g.name) || '');
+    const hit = (arr) => (arr || []).some((g) => key(g) === name);
+    // 哪些海克斯在推荐 / 慎用里提过这件装备
+    const augs = S.augments.filter((a) => hit(a.items) || hit(a.specialItems) || hit(a.trapItems));
+    // 哪些玩法库组合里用到它
+    const inPlays = S.plays.filter((p) => (p.combinations || []).some((c) => (c.items || []).some((i) => i.name === name)));
+
+    showModal(`
+      <div class="m-head">
+        <div class="mic">${it.icon ? img(it.icon, '', it.name) : '<span class="miss">?</span>'}</div>
+        <div class="m-body">
+          <div class="m-title"><h2>${esc(it.name)}</h2></div>
+          <div class="m-sub">
+            ${it.price != null ? `<span>售价 <b>${it.price}</b></span>` : ''}
+            ${it.sellPrice != null ? `<span>回收 <b>${it.sellPrice}</b></span>` : ''}
+            ${it.id ? `<span>编号 ${esc(it.id)}</span>` : ''}
+          </div>
+        </div>
+        <button class="m-x" data-close>✕</button>
+      </div>
+      <div class="m-cnt">
+        ${it.desc ? `<div class="blk"><div class="lbl">装备效果</div><div class="txt">${esc(it.desc)}</div></div>` : ''}
+        ${
+          augs.length
+            ? `<div class="blk"><div class="lbl">提到它的海克斯</div><div class="chip-line">${augs
+                .slice(0, 18)
+                .map((a) => `<button class="chip play-link" data-aug="${esc(a.name)}">${esc(a.name)}</button>`)
+                .join('')}</div></div>`
+            : ''
+        }
+        ${
+          inPlays.length
+            ? `<div class="blk"><div class="lbl">出现在这些玩法</div><div class="chip-line">${inPlays
+                .map((p) => `<button class="chip play-link" data-play-name="${esc(p.name)}">${esc(p.name)} ›</button>`)
+                .join('')}</div></div>`
+            : ''
+        }
+      </div>
+    `);
+  }
+
+  /* ---------------- 随机 / 分享 ---------------- */
+  function randomHero() {
+    if (!S.index.length) return;
+    const cur = S.hero && S.hero.slug;
+    let pick = cur;
+    // 避免抽到当前这个（只剩一个英雄时除外）
+    for (let i = 0; i < 8 && pick === cur && S.index.length > 1; i++) {
+      pick = S.index[Math.floor(Math.random() * S.index.length)].slug;
+    }
+    const target = S.index.find((h) => h.slug === pick);
+    if (!target) return;
+    openHero(pick);
+    toast(`随机到：${target.name}`);
+  }
+
+  function shareHero() {
+    if (!S.hero) return;
+    const url = location.href.split('#')[0] + '#' + encodeURIComponent(S.hero.slug);
+    copyText(url).then((ok) => toast(ok ? '链接已复制，发群里就能直接打开' : '复制失败，请手动复制地址栏'));
+  }
+
   function showModal(html) {
     const m = $('#modal');
     $('#modalCard').innerHTML = html;
@@ -744,6 +991,21 @@
     const t = e.target;
 
     if (t.closest('[data-close]')) return closeModal();
+
+    // 顶栏：随机一个英雄 / 玩法库入口
+    if (t.closest('#randomHero')) {
+      randomHero();
+      return;
+    }
+    // 英雄页：收藏 / 分享
+    if (t.closest('#favBtn')) {
+      if (S.hero) toggleFav(S.hero.slug);
+      return;
+    }
+    if (t.closest('#shareBtn')) {
+      shareHero();
+      return;
+    }
 
     // 玩法库：入口 / 返回 / 打开某一套
     if (t.closest('#openPlays')) {
@@ -813,6 +1075,10 @@
     const aug = t.closest('[data-aug]');
     if (aug) return openAug(aug.dataset.aug);
 
+    // 点装备图标看详情
+    const itemEl = t.closest('[data-item]');
+    if (itemEl) return openItem(itemEl.dataset.item);
+
     // 组合卡：点图标看对应海克斯，点空白看第一件
     const combo = t.closest('[data-combo]');
     if (combo) {
@@ -824,8 +1090,28 @@
     }
   });
 
+  // 玩法库搜索（只换卡片，不重建整页，避免输入框丢焦点）
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'playQ') {
+      S.playQ = e.target.value;
+      const box = $('#playList');
+      if (box) box.innerHTML = playCardsHTML();
+    }
+  });
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === '/') {
+      e.preventDefault();
+      $('#q').focus();
+    } else if (e.key === 'r' || e.key === 'R') {
+      randomHero();
+    }
   });
 
   window.addEventListener('hashchange', () => {
@@ -834,7 +1120,7 @@
   });
 
   // 调试句柄（控制台可直接调）
-  window.__HD = { S, openHero, openAug, openPlay, showPlays, renderTab, renderList, closeModal };
+  window.__HD = { S, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, renderTab, renderList, closeModal };
 
   boot().catch((err) => {    document.body.innerHTML = `<div style="padding:40px;color:#e0645c;font-family:sans-serif">
       <h2>数据加载失败</h2><p style="color:#8b97ad;margin-top:8px">${esc(err.message)}</p>
