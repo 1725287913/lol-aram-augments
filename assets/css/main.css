@@ -5190,3 +5190,71 @@ ul {
     background: linear-gradient(180deg, rgba(15, 20, 28, 0.88) 0%, rgba(12, 17, 24, 0.97) 100%);
   }
 }
+
+/* ============================================================
+   v7：PC 横版原画 / 手机竖版立绘 双图层
+   ============================================================ */
+
+/* PC：只显示横版 */
+.bg-m {
+  display: none;
+}
+
+.bg-pc {
+  display: block;
+}
+
+@media (max-width: 760px) {
+  /* 手机：切换为竖版立绘（499x717，人物构图天然适配竖屏） */
+  .bg-pc {
+    display: none;
+  }
+
+  .bg-m {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 348px;
+    object-fit: cover;
+    object-position: 50% 10%;
+    opacity: 0;
+    transform: none;
+    filter: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .bg-m.on {
+    opacity: 1;
+  }
+
+  /* 竖版海报下方渐入正文 */
+  .hero-bg-veil {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 11, 17, 0) 0%,
+      rgba(8, 11, 17, 0.06) 52%,
+      rgba(8, 11, 17, 0.55) 82%,
+      var(--bg) 97%
+    );
+  }
+
+  /* 信息卡片下移，海报完整露出 */
+  .hero-head {
+    margin-top: 300px;
+  }
+
+  /* 覆盖 v6 的旧手机规则（横版时代遗留） */
+  .hero-bg {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 348px;
+    aspect-ratio: auto;
+  }
+
+  .hero-bg-img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}

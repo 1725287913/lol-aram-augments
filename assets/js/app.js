@@ -417,7 +417,7 @@
     return `<span class="tbadge t-${tierCls(t) || 'na'}">${esc(t)}</span>`;
   }
 
-  /* 切换英雄时换整页背景海报（用 <img> 精确控位；已载过的直接切换不闪白） */
+  /* 切换英雄时换背景海报：PC 用横版原画，手机用竖版立绘（两图层 CSS 按端切换） */
   const posterCache = new Set();
 
   function preloadPoster(slug) {
@@ -430,25 +430,37 @@
   function paintPoster(slug) {
     const h = S.hero;
     const bg = $('#heroBgImg');
+    const bgM = $('#heroBgImgM');
     const s = slug || (h && h.slug);
-    if (!bg || !s) return;
+    if ((!bg && !bgM) || !s) return;
     const url = posterOf(s);
+    const apply = (el, u) => {
+      if (!el) return;
+      el.src = u;
+      el.classList.add('on');
+    };
     if (posterCache.has(s)) {
-      bg.src = url;
-      bg.classList.add('on');
+      apply(bg, url);
+      if (bgM) apply(bgM, url.replace('/poster/', '/poster_m/'));
       return;
     }
     const pre = new Image();
     pre.onload = function () {
       posterCache.add(s);
-      if ((S.hero && S.hero.slug === s) || !S.hero) {
-        bg.src = url;
-        bg.classList.add('on');
+      if (!S.hero || S.hero.slug === s) {
+        apply(bg, url);
+        if (bgM) apply(bgM, url.replace('/poster/', '/poster_m/'));
       }
     };
     pre.onerror = function () {
-      bg.removeAttribute('src');
-      bg.classList.remove('on');
+      if (bg) {
+        bg.removeAttribute('src');
+        bg.classList.remove('on');
+      }
+      if (bgM) {
+        bgM.removeAttribute('src');
+        bgM.classList.remove('on');
+      }
     };
     pre.src = url;
   }
