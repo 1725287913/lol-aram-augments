@@ -136,6 +136,110 @@
     }
     // 默认打开胜率最高且数据完整的英雄，避免空白
     openHero(S.index[0].slug);
+
+    // 空闲时预热拼音表，中文打错字也能认出来
+    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1200));
+    idle(() => {
+      loadPY().then(() => {
+        const v = $('#q').value;
+        if (v && v.trim()) renderList(v);
+      });
+    });
+  }
+
+  /* ---------------- 搜索：中文 / 别名 / 拼音 / 首字母 / 容错 ---------------- */
+  // 汉字 → 无声调拼音（data/pinyin.txt 懒加载，63KB，不拖慢首屏）
+  let PY = null;
+  let pyLoading = null;
+  function loadPY() {
+    if (pyLoading) return pyLoading;
+    pyLoading = fetch('data/pinyin.txt?v=20261028')
+      .then((r) => (r.ok ? r.text() : ''))
+      .then((txt) => {
+        PY = new Map();
+        txt.split('\n').forEach((line) => {
+          const i = line.indexOf(':');
+          if (i < 1) return;
+          const py = line.slice(0, i);
+          for (const ch of line.slice(i + 1)) PY.set(ch, py);
+        });
+        return PY;
+      })
+      .catch(() => (PY = new Map()));
+    return pyLoading;
+  }
+  function pyOf(s) {
+    if (!PY) return '';
+    let out = '';
+    for (const ch of s) out += PY.get(ch) || ch;
+    return out;
+  }
+
+  // 编辑距离（长度差 >3 直接放弃，省算力）
+  function lev(a, b) {
+    if (a === b) return 0;
+    const m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    if (Math.abs(m - n) > 3) return 99;
+    let prev = [];
+    for (let j = 0; j <= n; j++) prev[j] = j;
+    for (let i = 1; i <= m; i++) {
+      const cur = [i];
+      for (let j = 1; j <= n; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[n];
+  }
+  // 允许打错几个字：越长越宽容
+  const typoLimit = (n) => (n >= 8 ? 3 : n >= 5 ? 2 : 1);
+  const isCN = (s) => /[\u4e00-\u9fa5]/.test(s);
+
+  // 单个英雄的匹配分：0 = 不匹配，越高越准
+  function heroScore(h, kw, kwPy) {
+    let best = 0;
+    for (const raw of [h.name, h.slug].concat(h.aliases || [])) {
+      const n = String(raw).toLowerCase();
+      if (n === kw) best = Math.max(best, 100);
+      else if (n.indexOf(kw) === 0) best = Math.max(best, 92);
+      else if (n.includes(kw)) best = Math.max(best, 84);
+      // 中文输错一个字（非同音的情况，同音交给拼音比对）；两字名差别太大就不算
+      else if (kw.length >= 3 && isCN(kw) && lev(n, kw) <= 1) best = Math.max(best, 56);
+    }
+    // 拼音比对：中文查询先转成拼音（剪辑 → jianji → 剑姬）
+    const pq = kwPy && /[a-z]/.test(kwPy) ? kwPy : /[a-z]/.test(kw) ? kw : '';
+    if (pq) {
+      for (const pair of h.py || []) {
+        const full = pair[0], ini = pair[1];
+        if (full === pq || ini === pq) best = Math.max(best, 96);
+        else if (full.indexOf(pq) === 0 || ini.indexOf(pq) === 0) best = Math.max(best, 88);
+        else if (pq.length >= 3 && (full.includes(pq) || ini.includes(pq))) best = Math.max(best, 74);
+        else if (pq.length >= 2 && /^[a-z]+$/.test(pq)) {
+          // 拼音打错字母：jainji → jianji、zdran → zhadanren
+          const d = Math.min(lev(full, pq), lev(ini, pq));
+          if (d <= typoLimit(pq.length)) best = Math.max(best, d === 1 ? 66 : 52);
+        }
+      }
+    }
+    return best;
+  }
+
+  function searchHeroes(q) {
+    const kw = (q || '').trim().toLowerCase();
+    if (!kw) return { list: S.index, best: 0, hits: [] };
+    const kwPy = isCN(kw) ? pyOf(kw) : '';
+    const hits = [];
+    for (const h of S.index) {
+      const s = heroScore(h, kw, kwPy);
+      if (s) hits.push({ h, s });
+    }
+    hits.sort((a, b) => b.s - a.s || (b.h.winRate || 0) - (a.h.winRate || 0));
+    const best = hits.length ? hits[0].s : 0;
+    // 已经有精确命中了，就别把 50 分的瞎猜混进列表
+    const cut = best >= 88 ? best - 30 : 0;
+    return { list: hits.filter((x) => x.s >= cut).map((x) => x.h), best, hits };
   }
 
   /* ---------------- 英雄列表 ---------------- */
@@ -152,15 +256,9 @@
   }
 
   function renderList(kw) {
-    const q = (kw || '').trim().toLowerCase();
-    const list = q
-      ? S.index.filter(
-          (h) =>
-            h.name.toLowerCase().includes(q) ||
-            h.slug.toLowerCase().includes(q) ||
-            (h.aliases || []).some((a) => a.toLowerCase().includes(q))
-        )
-      : S.index;
+    const q = (kw || '').trim();
+    const found = q ? searchHeroes(q) : { list: S.index, best: 0 };
+    const list = found.list;
     $('#heroCount').textContent = q ? `${list.length} / ${S.index.length}` : S.index.length;
 
     const favSet = new Set(S.favs);
@@ -172,11 +270,21 @@
       html += favHeroes.map((h) => heroCard(h, true)).join('');
       html += `<div class="grid-label">全部英雄 ${S.index.length}</div>`;
     }
+    // 靠拼音 / 容错匹配出来的，标一下免得以为搜错了
+    if (q && list.length && found.best < 80) {
+      html += `<div class="grid-label">拼音 / 近似匹配 · ${list.length} 个</div>`;
+    } else if (q && list.length) {
+      const top = list[0];
+      const direct = [top.name, top.slug].concat(top.aliases || []).some((n) => String(n).toLowerCase().includes(q.toLowerCase()));
+      if (!direct) html += `<div class="grid-label">按拼音匹配 · ${list.length} 个</div>`;
+    }
     html += list.map((h) => heroCard(h, favSet.has(h.slug))).join('');
     if (!list.length) {
-      html = `<div style="grid-column:1/-1;padding:24px 6px;color:#5e6b82;font-size:12px;text-align:center">没找到「${esc(
-        q
-      )}」</div>`;
+      html = `<div class="empty-hit">
+        <b>没找到「${esc(q)}」</b>
+        <span>试试拼音：<i>zdr</i> 炸弹人、<i>jj</i> 剑姬、<i>ys</i> 亚索</span>
+        <span>打错字也认得，比如 <i>剪辑</i> → 无双剑姬，<i>jainji</i> 也能搜到</span>
+      </div>`;
     }
     $('#heroGrid').innerHTML = html;
   }
@@ -1104,6 +1212,15 @@
       closeModal();
       return;
     }
+    // 搜索框里回车 = 直接打开最匹配的那个
+    if (e.key === 'Enter' && e.target && e.target.id === 'q') {
+      const v = (e.target.value || '').trim();
+      if (v) {
+        const r = searchHeroes(v);
+        if (r.list.length) openHero(r.list[0].slug);
+      }
+      return;
+    }
     const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === '/') {
@@ -1120,7 +1237,7 @@
   });
 
   // 调试句柄（控制台可直接调）
-  window.__HD = { S, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, renderTab, renderList, closeModal };
+  window.__HD = { S, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, searchHeroes, renderTab, renderList, closeModal };
 
   boot().catch((err) => {    document.body.innerHTML = `<div style="padding:40px;color:#e0645c;font-family:sans-serif">
       <h2>数据加载失败</h2><p style="color:#8b97ad;margin-top:8px">${esc(err.message)}</p>
