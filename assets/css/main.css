@@ -4631,3 +4631,483 @@ ul {
     letter-spacing: -0.2px;
   }
 }
+
+/* ============================================================
+   v5：核心构建方案（对齐海斗小程序的卡片样式）+ 海报增强
+   ============================================================ */
+
+/* ---------- 海报更凸显 ---------- */
+.hero-bg-img {
+  height: 96vh;
+  filter: brightness(0.86) saturate(1.16) contrast(1.03);
+}
+
+.hero-bg-img.on {
+  opacity: 1;
+}
+
+.hero-bg-veil {
+  background:
+    radial-gradient(135% 74% at 50% 0%, rgba(8, 11, 17, 0) 0%, rgba(8, 11, 17, 0.4) 54%, var(--bg) 90%),
+    linear-gradient(180deg, rgba(8, 11, 17, 0.14) 0%, rgba(8, 11, 17, 0.34) 40%, var(--bg) 76%);
+}
+
+/* 卡片顶部横幅：人物更亮、更靠上，真正看得清是谁 */
+.hh-banner {
+  height: 232px;
+}
+
+.hh-banner img {
+  opacity: 0.95;
+  object-position: 50% 12%;
+  filter: saturate(1.2) contrast(1.05);
+}
+
+.hh-banner::after {
+  background:
+    linear-gradient(100deg, rgba(10, 14, 20, 0.92) 0%, rgba(10, 14, 20, 0.6) 38%, rgba(10, 14, 20, 0.16) 72%, rgba(10, 14, 20, 0.4) 100%),
+    linear-gradient(180deg, rgba(10, 14, 20, 0.1) 0%, rgba(10, 14, 20, 0.3) 58%, rgba(12, 17, 24, 0.78) 100%);
+}
+
+/* ---------- 构建方案卡片 ---------- */
+.pl-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 12px;
+}
+
+.pl-card {
+  padding: 14px 15px 13px;
+  border-radius: 14px;
+  background: linear-gradient(165deg, rgba(24, 33, 46, 0.9) 0%, rgba(16, 22, 31, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  transition: 0.16s;
+}
+
+.pl-card:hover {
+  border-color: rgba(108, 182, 255, 0.34);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
+}
+
+.pl-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pl-hd h4 {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--tx);
+  letter-spacing: 0.2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 评级徽章 */
+.pl-tier {
+  flex: 0 0 auto;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  color: #0a0f16;
+  background: linear-gradient(135deg, #ffd76e, #ffa726);
+}
+
+.pl-tier.t-s {
+  background: linear-gradient(135deg, #7fd2ff, #3d9bff);
+  color: #06121e;
+}
+
+.pl-tier.t-ss,
+.pl-tier.t-sss {
+  background: linear-gradient(135deg, #ff9de2, #e04fd0);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(224, 79, 208, 0.4);
+}
+
+.pl-tier.t-a {
+  background: linear-gradient(135deg, #c9a5ff, #9a5cf0);
+  color: #fff;
+}
+
+.pl-tier.t-b,
+.pl-tier.t-c {
+  background: linear-gradient(135deg, #9fb0c2, #6d7c8d);
+  color: #0a0f16;
+}
+
+.pl-user {
+  flex: 0 0 auto;
+  height: 17px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #a8d5b0;
+  background: rgba(79, 216, 138, 0.14);
+  border: 1px solid rgba(79, 216, 138, 0.3);
+}
+
+.pl-more {
+  flex: 0 0 auto;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9fc6f0;
+  background: rgba(61, 155, 255, 0.12);
+  border: 1px solid rgba(108, 182, 255, 0.34);
+  transition: 0.15s;
+  white-space: nowrap;
+}
+
+.pl-more:hover {
+  color: #fff;
+  background: rgba(61, 155, 255, 0.26);
+}
+
+/* 锻体词条行 */
+.pl-forge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+  font-size: 11.5px;
+}
+
+.pl-forge i {
+  font-style: normal;
+  color: #7fc0ff;
+  font-weight: 600;
+}
+
+.pl-forge b {
+  font-weight: 400;
+  color: var(--dim-2);
+  font-size: 10px;
+}
+
+.pl-forge.big {
+  margin: 0 0 4px;
+  font-size: 12.5px;
+  gap: 6px;
+}
+
+/* 核心 / 备选 / 装备 三行 */
+.pl-body {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pl-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.pl-lb {
+  flex: 0 0 auto;
+  width: 30px;
+  padding-top: 3px;
+  font-size: 10.5px;
+  color: var(--dim-2);
+  letter-spacing: 0.5px;
+}
+
+.pl-val {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* 海克斯小胶囊：256px 图标，40px 显示仍然锐利 */
+.pl-aug {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 8px 0 3px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 0.14s;
+  cursor: pointer;
+}
+
+.pl-aug:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.pl-aug img {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: block;
+}
+
+.pl-aug em {
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--tx-2);
+  white-space: nowrap;
+}
+
+.pl-aug.r-prismatic {
+  border-color: rgba(183, 130, 245, 0.4);
+}
+.pl-aug.r-prismatic em {
+  color: #ddbcff;
+}
+.pl-aug.r-gold {
+  border-color: rgba(255, 197, 61, 0.36);
+}
+.pl-aug.r-gold em {
+  color: #ffdd94;
+}
+.pl-aug.r-silver {
+  border-color: rgba(154, 172, 191, 0.36);
+}
+.pl-aug.r-silver em {
+  color: #c8d4e0;
+}
+
+/* 装备小胶囊 */
+.pl-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 8px 0 3px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: 0.14s;
+}
+
+.pl-item:hover {
+  border-color: rgba(108, 182, 255, 0.4);
+}
+
+.pl-item img {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  display: block;
+}
+
+.pl-item em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.pl-desc {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+  font-size: 11.8px;
+  line-height: 1.6;
+  color: var(--dim);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 弹层里的方案区块 */
+.pl-blk {
+  margin-top: 14px;
+}
+
+.pl-blk-lb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--tx-2);
+  letter-spacing: 0.4px;
+}
+
+.pl-blk-lb i {
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--dim-2);
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pl-blk-val {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.pl-blk-val .pl-aug {
+  height: 34px;
+  padding-right: 10px;
+}
+
+.pl-blk-val .pl-aug img {
+  width: 30px;
+  height: 30px;
+}
+
+.pl-blk-val .pl-aug em {
+  font-size: 12.5px;
+}
+
+.pl-tip {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: rgba(255, 197, 61, 0.07);
+  border-left: 2px solid rgba(255, 197, 61, 0.5);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--tx-2);
+}
+
+/* ---------- 图标尺寸收敛：64px 源不要撑太大，否则必糊 ---------- */
+.gi-box {
+  width: 48px;
+  height: 48px;
+}
+
+.gitem {
+  width: 48px;
+}
+
+.sk-ic,
+.sk-ic img {
+  width: 36px;
+  height: 36px;
+}
+
+.ab-ic,
+.ab-ic img {
+  width: 26px;
+  height: 26px;
+}
+
+@media (max-width: 760px) {
+  .pl-list {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-card {
+    padding: 12px 12px 11px;
+  }
+
+  .pl-hd h4 {
+    font-size: 13.5px;
+  }
+
+  .pl-row {
+    gap: 8px;
+  }
+
+  .pl-lb {
+    width: 26px;
+    font-size: 10px;
+  }
+
+  .pl-aug {
+    height: 28px;
+    padding-right: 7px;
+  }
+
+  .pl-aug img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .pl-aug em {
+    font-size: 11px;
+  }
+
+  .pl-item {
+    height: 26px;
+  }
+
+  .pl-item img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .pl-item em {
+    font-size: 10.5px;
+  }
+
+  /* 手机上海报同样要看得清 */
+  .hero-bg-img {
+    height: 78vh;
+    background-position: 50% 20%;
+  }
+
+  .hh-banner {
+    height: 176px;
+  }
+
+  .hh-banner img {
+    opacity: 0.86;
+  }
+}
+
+/* ---------- v5 细节：缺失图标不显示破图 ---------- */
+.img-fail {
+  opacity: 0;
+}
+
+.pl-aug .img-fail + em,
+.pl-item .img-fail + em {
+  margin-left: 5px;
+}
+
+/* 方案卡片里的图标再放大一档：256px 海克斯源足够，64px 装备源也还锐利 */
+.pl-aug img {
+  width: 30px;
+  height: 30px;
+}
+
+.pl-aug {
+  height: 32px;
+  padding-right: 9px;
+}
+
+.pl-item img {
+  width: 26px;
+  height: 26px;
+}
+
+.pl-item {
+  height: 30px;
+  padding-right: 9px;
+}

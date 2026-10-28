@@ -91,6 +91,8 @@
     augFilter: 'all',
     favs: initFavs,
     expand: {}, // 海克斯列表是否展开
+    plans: {}, // 小程序「核心构建方案」，按英雄 slug 分组
+    augIcon: {}, // 海克斯名 → 256px 高清图标
   };
 
   async function getJSON(url) {
@@ -156,6 +158,21 @@
 
     const idle = window.requestIdleCallback || ((f) => setTimeout(f, 400));
     idle(() => ensurePY());
+  }
+
+  /* 构建方案（小程序「核心构建方案」）体较大，开英雄时才拉，不拖慢首屏 */
+  let planLoad = null;
+  function ensurePlans() {
+    if (planLoad) return planLoad;
+    planLoad = Promise.all([
+      getJSON('data/plans.json').catch(() => ({})),
+      getJSON('data/augicon.json').catch(() => ({})),
+    ]).then(([p, ic]) => {
+      S.plans = p;
+      S.augIcon = ic;
+      return p;
+    });
+    return planLoad;
   }
 
   /* ---------- 搜索：中文 / 称号 / 拼音 / 首字母 / 容错 ---------- */
@@ -359,10 +376,18 @@
       S.build = 0;
       S.augFilter = 'all';
       S.expand = {};
+      S.planAll = false;
       history.replaceState(null, '', '#' + encodeURIComponent(slug));
       renderHero();
       renderList($('#q').value);
       window.scrollTo({ top: 0, behavior: 'auto' });
+      // 构建方案随后到，到了再补渲染，不阻塞首屏
+      ensurePlans().then(() => {
+        if (seq !== heroSeq) return;
+        if ($('#pageBody')) renderBody();
+        const qn = $('#quickNav');
+        if (qn) qn.innerHTML = quickNavHTML();
+      });
     } catch (err) {
       if (seq !== heroSeq) return;
       $('#content').innerHTML = `<div class="notice warn"><span class="ni">!</span><div>加载失败：${esc(err.message)}</div></div>`;
@@ -370,9 +395,14 @@
   }
 
   /* ---------- 头像 + 徽章 ---------- */
-  // 官方高清头像（120px）与海报（1000px），比数据源自带的 96px 小图清晰
-  const faceOf = (slug) => `assets/zhishi/face/${slug}.png`;
+  // 官方立绘裁出的 256px 头像与 1000px 海报，比数据源自带的 96px 小图清晰得多
+  const faceOf = (slug) => `assets/zhishi/face/${slug}.jpg`;
   const posterOf = (slug) => `assets/zhishi/poster/${slug}.jpg`;
+
+  /* 海克斯图标：小程序素材是 256px，比数据源自带的 64px 清晰；没有高清版才回退 */
+  function hiAug(name, fallback) {
+    return (S.augIcon && S.augIcon[name]) || fallback || '';
+  }
 
   function tierBadge(t) {
     if (!t) return '';
@@ -402,8 +432,10 @@
     const b = curBuild();
     const augN = b ? RAR_ORDER.reduce((n, k) => n + ((b.augs[k[0]] || []).length), 0) : 0;
     const spN = (S.hero.special || []).length;
+    const planN = ((S.plans || {})[S.hero.slug] || []).length;
     const items = [
-      { id: 'sec-gear', n: '构建方案', c: b ? String((b.six || []).length) : '' },
+      { id: 'sec-plan', n: '构建方案', c: planN ? String(planN) : '', hide: !planN },
+      { id: 'sec-gear', n: '推荐出装', c: b ? String((b.six || []).length) : '' },
       { id: 'sec-aug', n: '推荐海克斯', c: augN ? String(augN) : '' },
       { id: 'sec-game', n: '常规玩法', c: '' },
       { id: 'sec-sp', n: '特殊玩法', c: spN ? String(spN) : '', hide: !spN },
@@ -563,7 +595,7 @@
   function augMini(a) {
     const rar = a.r || 'gold';
     return `<button class="amini r-${rar}" data-aug="${a.i != null ? a.i : esc(a.n)}" title="${esc(a.n)} · ${RAR[rar] || rar}">
-      ${img(a.ic, '', a.n)}<em>${esc(a.n)}</em>
+      ${img(hiAug(a.n, a.ic), '', a.n)}<em>${esc(a.n)}</em>
     </button>`;
   }
 
@@ -584,7 +616,125 @@
     if (!b) return `<div class="notice"><span class="ni">i</span><div>这个英雄暂无流派数据。</div></div>`;
 
     // 特殊玩法有独立入口（流派条最后一项），这里不再重复铺一遍
-    return buildGear(b) + buildAugs(b) + buildCombos(b) + buildGame(h) + buildTips(h) + buildSkills(h);
+    return (
+      buildPlansSec() +
+      buildGear(b) +
+      buildAugs(b) +
+      buildCombos(b) +
+      buildGame(h) +
+      buildTips(h) +
+      buildSkills(h)
+    );
+  }
+
+  /* ---------- 核心构建方案（来自海斗小程序） ---------- */
+  const TIER_CLS = { SSS: 'sss', SS: 'ss', S: 's', A: 'a', B: 'b', C: 'c' };
+
+  function planTierBadge(t) {
+    return `<span class="pl-tier t-${TIER_CLS[t] || 'a'}">${esc(t || 'A')}</span>`;
+  }
+
+  function planAugChip(a) {
+    const rar = a.r || 'gold';
+    return `<span class="pl-aug r-${rar}" data-aug="${esc(a.n)}" title="${esc(a.n)}">
+      ${img(hiAug(a.n, a.ic), '', a.n)}<em>${esc(a.n)}</em>
+    </span>`;
+  }
+
+  function planItemChip(it) {
+    return `<span class="pl-item" data-item="${esc(it.n)}" title="${esc(it.n)}">
+      ${img(it.ic, '', it.n)}<em>${esc(it.n)}</em>
+    </span>`;
+  }
+
+  /* 空行不占位，避免出现一排孤零零的破折号 */
+  function planRow(label, arr, render) {
+    if (!arr || !arr.length) return '';
+    return `<div class="pl-row">
+      <span class="pl-lb">${esc(label)}</span>
+      <div class="pl-val">${arr.map(render).join('')}</div>
+    </div>`;
+  }
+
+  function buildPlansSec() {
+    const list = (S.plans && S.plans[S.hero.slug]) || [];
+    if (!list.length) return '';
+    // 默认只铺前 6 套，其余折叠
+    const LIMIT = 6;
+    const show = S.planAll ? list : list.slice(0, LIMIT);
+
+    const cards = show
+      .map(
+        (p, i) => `<div class="pl-card">
+        <div class="pl-hd">
+          ${planTierBadge(p.t)}
+          <h4>${esc(p.n)}</h4>
+          ${p.u ? '<span class="pl-user">玩家</span>' : ''}
+          <button class="pl-more" data-plan="${i}">查看详情</button>
+        </div>
+        ${p.f && p.f.length ? `<div class="pl-forge">${p.f.map((f) => `<i>${esc(f)}</i>`).join('<b>›</b>')}</div>` : ''}
+        <div class="pl-body">
+          ${planRow('核心', p.ca, planAugChip)}
+          ${planRow('备选', p.aa, planAugChip)}
+          ${planRow('装备', p.it, planItemChip)}
+        </div>
+        ${p.d ? `<p class="pl-desc">${esc(p.d)}</p>` : ''}
+      </div>`
+      )
+      .join('');
+
+    const more =
+      list.length > LIMIT
+        ? `<button class="more-btn" data-planmore="1">${S.planAll ? '收起' : `展开剩余 ${list.length - LIMIT} 套方案`}</button>`
+        : '';
+
+    const ss = list.filter((p) => p.t === 'SS' || p.t === 'SSS').length;
+    return `<section class="sec" id="sec-plan">
+      ${secHead('核心构建方案', '', `海斗小程序 · 共 ${list.length} 套${ss ? ` · 其中 ${ss} 套 SS` : ''}`)}
+      <div class="pl-list">${cards}</div>
+      ${more}
+    </section>`;
+  }
+
+  /* 方案详情弹层 */
+  function openPlan(i) {
+    const list = (S.plans && S.plans[S.hero.slug]) || [];
+    const p = list[i];
+    if (!p) return;
+
+    const augBlock = (title, arr, cls) =>
+      arr && arr.length
+        ? `<div class="pl-blk">
+            <div class="pl-blk-lb">${title}<i>${arr.length}</i></div>
+            <div class="pl-blk-val ${cls}">${arr.map(planAugChip).join('')}</div>
+          </div>`
+        : '';
+
+    showModal(`
+      <div class="bd-hd">
+        ${planTierBadge(p.t)}
+        <div class="bd-id">
+          <h3>${esc(p.n)}</h3>
+          <div class="bd-tags">${p.u ? '<span class="pl-user">玩家创建</span>' : '<span class="dimtxt">海斗官方</span>'}</div>
+        </div>
+        <button class="m-x" data-close aria-label="关闭">✕</button>
+      </div>
+      <div class="bd-body">
+        ${p.d ? `<p class="bd-desc">${esc(p.d)}</p>` : ''}
+        ${p.f && p.f.length ? `<div class="pl-forge big">${p.f.map((f) => `<i>${esc(f)}</i>`).join('<b>›</b>')}</div>` : ''}
+        ${augBlock('核心海克斯', p.ca, 'core')}
+        ${augBlock('备选海克斯', p.aa, 'alt')}
+        ${
+          p.it && p.it.length
+            ? `<div class="pl-blk">
+                <div class="pl-blk-lb">推荐装备<i>${p.it.length}</i></div>
+                <div class="pl-blk-val items">${p.it.map(planItemChip).join('')}</div>
+              </div>`
+            : ''
+        }
+        ${p.tip ? `<p class="pl-tip">${esc(p.tip)}</p>` : ''}
+      </div>
+    `);
   }
 
   /* 推荐出装：核心三件就是六件的前三件，合并成一段不再重复展示 */
@@ -659,7 +809,7 @@
     const rar = a.r || 'gold';
     return `<button class="aug r-${rar}" data-aug="${a.i != null ? a.i : esc(a.n)}">
       <span class="aug-rk">${idx}</span>
-      <span class="aug-ic">${img(a.ic, '', a.n)}</span>
+      <span class="aug-ic">${img(hiAug(a.n, a.ic), '', a.n)}</span>
       <span class="aug-bd">
         <span class="aug-nm">${esc(a.n)}<em class="rar-tag r-${rar}">${RAR[rar] || rar}</em></span>
         ${a.t ? `<span class="aug-tier">${esc(a.t)} 级</span>` : ''}
@@ -741,7 +891,7 @@
       )
       .join('');
 
-    return `<section class="sec" id="sec-sp">
+    return buildPlansSec() + `<section class="sec" id="sec-sp">
       ${secHead('特殊玩法', '', `${list.length} 套 · 需要特定海克斯才成立`)}
       <div class="sp-list">${cards}</div>
     </section>`;
@@ -814,6 +964,18 @@
   function openAug(key) {
     const byId = /^\d+$/.test(String(key));
     const a = byId ? S.augById[Number(key)] : S.augByName[key] || S.augments.find((x) => x.name === key);
+    // 小程序里有、统计榜单里没有的（多为新版本海克斯）：至少把图标和名字展示出来
+    if (!a && !byId && S.augIcon[key]) {
+      return showModal(`
+        <div class="bd-hd">
+          <span class="bd-ic r-gold">${img(S.augIcon[key], '', key)}</span>
+          <div class="bd-id"><h3>${esc(key)}</h3></div>
+          <button class="m-x" data-close aria-label="关闭">✕</button>
+        </div>
+        <div class="bd-body">
+          <p class="bd-desc">这个海克斯在小程序构建方案里有用到，但统计榜单暂时没有它的胜率数据。</p>
+        </div>`);
+    }
     if (!a) return;
 
     const h = S.hero;
@@ -835,7 +997,7 @@
 
     showModal(`
       <div class="bd-hd">
-        <span class="bd-ic r-${a.rarity}">${img(a.icon, '', a.name)}</span>
+        <span class="bd-ic r-${a.rarity}">${img(hiAug(a.name, a.icon), '', a.name)}</span>
         <div class="bd-id">
           <h3>${esc(a.name)}</h3>
           <div class="bd-tags">
@@ -1131,6 +1293,15 @@
     if (ex) {
       const b = curBuild();
       if (b) S.expand[b.k] = ex.dataset.expand === '1';
+      return renderBody();
+    }
+
+    const pl = t.closest('[data-plan]');
+    if (pl) return openPlan(Number(pl.dataset.plan));
+
+    const plm = t.closest('[data-planmore]');
+    if (plm) {
+      S.planAll = plm.dataset.planmore === '1';
       return renderBody();
     }
 
