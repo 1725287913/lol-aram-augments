@@ -2780,14 +2780,14 @@ ul {
   padding-right: 2px;
 }
 
-/* ---------- 英雄头部：海报透出来的玻璃卡 ---------- */
+/* ---------- 英雄头部：顶部透明让整页海报透出，不叠第二张图 ---------- */
 .hero-head {
   position: relative;
   padding: 20px 20px 16px;
   border-radius: 18px;
-  background: linear-gradient(160deg, rgba(23, 31, 44, 0.86) 0%, rgba(14, 19, 27, 0.92) 100%);
-  backdrop-filter: blur(22px) saturate(1.3);
-  -webkit-backdrop-filter: blur(22px) saturate(1.3);
+  background: linear-gradient(180deg, rgba(12, 17, 24, 0.12) 0%, rgba(12, 17, 24, 0.42) 46%, rgba(12, 17, 24, 0.92) 100%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   overflow: hidden;
@@ -4435,9 +4435,9 @@ ul {
 /* ---------- v4 修三：海报透进卡片 + 手机端按钮不压标题 ---------- */
 /* 卡片降点不透明度，让背后英雄海报真的看得见 */
 .hero-head {
-  background: linear-gradient(160deg, rgba(23, 31, 44, 0.72) 0%, rgba(14, 19, 27, 0.84) 100%);
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  background: linear-gradient(180deg, rgba(12, 17, 24, 0.1) 0%, rgba(12, 17, 24, 0.4) 46%, rgba(12, 17, 24, 0.92) 100%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* 出装、海克斯这些实心块也给一丝通透感，整页才不像贴纸 */
@@ -4456,9 +4456,7 @@ ul {
 @media (max-width: 760px) {
   /* 手机竖屏：横版海报裁到人物上半身，别整张铺满 */
   .hero-bg-img {
-    height: 74vh;
-    background-position: 50% 22%;
-    background-size: cover;
+    object-position: 50% 20%;
   }
 
   /* 标题右侧给收藏/分享让出位置 */
@@ -4531,12 +4529,12 @@ ul {
 
 /* 有了横幅，卡片自身的底色可以更透 */
 .hero-head {
-  background: linear-gradient(170deg, rgba(16, 22, 31, 0.78) 0%, rgba(12, 17, 24, 0.9) 62%, rgba(12, 17, 24, 0.96) 100%);
+  background: linear-gradient(180deg, rgba(12, 17, 24, 0.1) 0%, rgba(12, 17, 24, 0.42) 50%, rgba(12, 17, 24, 0.94) 100%);
 }
 
-/* 全局背景降低存在感，避免和横幅重复 */
+/* 全局背景充分显示，海报要清晰可见 */
 .hero-bg-img.on {
-  opacity: 0.5;
+  opacity: 1;
 }
 
 @media (max-width: 760px) {
@@ -4636,37 +4634,46 @@ ul {
    v5：核心构建方案（对齐海斗小程序的卡片样式）+ 海报增强
    ============================================================ */
 
-/* ---------- 海报更凸显 ---------- */
+/* ---------- 海报更凸显：整页用一张清晰 <img>，卡片顶部不再叠第二张（消除分层） ---------- */
 .hero-bg-img {
-  height: 96vh;
-  filter: brightness(0.86) saturate(1.16) contrast(1.03);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 8%;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.6s ease, transform 5s ease-out;
+  filter: brightness(0.88) saturate(1.14) contrast(1.03);
 }
 
 .hero-bg-img.on {
   opacity: 1;
+  transform: scale(1);
 }
 
 .hero-bg-veil {
   background:
-    radial-gradient(135% 74% at 50% 0%, rgba(8, 11, 17, 0) 0%, rgba(8, 11, 17, 0.4) 54%, var(--bg) 90%),
-    linear-gradient(180deg, rgba(8, 11, 17, 0.14) 0%, rgba(8, 11, 17, 0.34) 40%, var(--bg) 76%);
+    radial-gradient(135% 74% at 50% 0%, rgba(8, 11, 17, 0) 0%, rgba(8, 11, 17, 0.34) 52%, var(--bg) 88%),
+    linear-gradient(180deg, rgba(8, 11, 17, 0.12) 0%, rgba(8, 11, 17, 0.3) 40%, var(--bg) 74%);
 }
 
-/* 卡片顶部横幅：人物更亮、更靠上，真正看得清是谁 */
+/* 卡片顶部横幅：不叠第二张图，透明让整页背景透出，只保留一条轻微压暗保证名字可读 */
 .hh-banner {
   height: 232px;
+  background: transparent;
 }
 
 .hh-banner img {
-  opacity: 0.95;
-  object-position: 50% 12%;
-  filter: saturate(1.2) contrast(1.05);
+  display: none;
 }
 
 .hh-banner::after {
   background:
-    linear-gradient(100deg, rgba(10, 14, 20, 0.92) 0%, rgba(10, 14, 20, 0.6) 38%, rgba(10, 14, 20, 0.16) 72%, rgba(10, 14, 20, 0.4) 100%),
-    linear-gradient(180deg, rgba(10, 14, 20, 0.1) 0%, rgba(10, 14, 20, 0.3) 58%, rgba(12, 17, 24, 0.78) 100%);
+    linear-gradient(100deg, rgba(10, 14, 20, 0.78) 0%, rgba(10, 14, 20, 0.42) 40%, rgba(10, 14, 20, 0.08) 72%, rgba(10, 14, 20, 0.24) 100%),
+    linear-gradient(180deg, rgba(10, 14, 20, 0.06) 0%, rgba(10, 14, 20, 0.22) 58%, rgba(12, 17, 24, 0.6) 100%);
 }
 
 /* ---------- 构建方案卡片 ---------- */
@@ -5068,16 +5075,11 @@ ul {
 
   /* 手机上海报同样要看得清 */
   .hero-bg-img {
-    height: 78vh;
-    background-position: 50% 20%;
+    object-position: 50% 14%;
   }
 
   .hh-banner {
     height: 176px;
-  }
-
-  .hh-banner img {
-    opacity: 0.86;
   }
 }
 

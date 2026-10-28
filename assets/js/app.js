@@ -395,9 +395,9 @@
   }
 
   /* ---------- 头像 + 徽章 ---------- */
-  // 官方立绘裁出的 256px 头像与 1000px 海报，比数据源自带的 96px 小图清晰得多
+  // 官方立绘裁出的 256px 头像、1215px 官方原版海报，比数据源自带的 96px 小图清晰得多
   const faceOf = (slug) => `assets/zhishi/face/${slug}.jpg`;
-  const posterOf = (slug) => `assets/zhishi/poster/${slug}.jpg`;
+  const posterOf = (slug) => `assets/zhishi/poster/${slug}.webp`;
 
   /* 海克斯图标：小程序素材是 256px，比数据源自带的 64px 清晰；没有高清版才回退 */
   function hiAug(name, fallback) {
@@ -409,7 +409,7 @@
     return `<span class="tbadge t-${tierCls(t) || 'na'}">${esc(t)}</span>`;
   }
 
-  /* 切换英雄时换整页背景海报 */
+  /* 切换英雄时换整页背景海报（用 <img> 精确控位，不 cover 拉大导致模糊） */
   function paintPoster() {
     const h = S.hero;
     const bg = $('#heroBgImg');
@@ -417,11 +417,11 @@
     const url = posterOf(h.slug);
     const pre = new Image();
     pre.onload = function () {
-      bg.style.backgroundImage = `url("${url}")`;
+      bg.src = url;
       bg.classList.add('on');
     };
     pre.onerror = function () {
-      bg.style.backgroundImage = '';
+      bg.removeAttribute('src');
       bg.classList.remove('on');
     };
     pre.src = url;
@@ -459,7 +459,7 @@
 
     $('#content').innerHTML = `
       <section class="hero-head">
-        <div class="hh-banner"><img src="${posterOf(h.slug)}" alt="" loading="eager" onerror="this.parentNode.style.display='none'" /></div>
+        <div class="hh-banner"></div>
         <div class="hh-main">
           <div class="hh-avatar">
             ${img(faceOf(h.slug), '', h.name)}
@@ -617,8 +617,8 @@
 
     // 特殊玩法有独立入口（流派条最后一项），这里不再重复铺一遍
     return (
-      buildPlansSec() +
       buildGear(b) +
+      buildPlansSec() +
       buildAugs(b) +
       buildCombos(b) +
       buildGame(h) +
