@@ -701,13 +701,17 @@ img.miss-img{opacity:0}
 }
 
 /* ============ 玩法：分段切换 ============ */
-.play-tabs{display:flex;gap:5px;margin-bottom:14px;padding:4px;border-radius:10px;
-  background:var(--surface);border:1px solid var(--line);overflow-x:auto}
-.play-tabs .pt{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:7px;
-  font-size:13px;color:var(--dim);white-space:nowrap;transition:.15s}
+/* 注意：.pt 在「技能」区块里是 26×26 的加点方块，这里必须显式复位宽高/底色/边框，
+   否则分段按钮会被压成 26px、文字叠在一起（手机端曾整体糊成一行） */
+.play-tabs{display:flex;gap:4px;margin-bottom:14px;padding:4px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.play-tabs::-webkit-scrollbar{display:none}
+.play-tabs .pt{width:auto;height:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;
+  padding:7px 12px;border:0;border-radius:7px;background:transparent;
+  font-size:13px;line-height:1.2;color:var(--dim);white-space:nowrap;cursor:pointer;transition:.15s}
 .play-tabs .pt i{font-style:normal;font-size:11px;line-height:1;padding:2px 5px;border-radius:4px;
   background:var(--surface-3);color:var(--dim-2);font-variant-numeric:tabular-nums}
-.play-tabs .pt:hover{color:var(--text)}
+.play-tabs .pt:hover{color:var(--text);background:var(--surface-2)}
 .play-tabs .pt.on{background:linear-gradient(180deg,rgba(200,170,110,.2),rgba(200,170,110,.07));
   color:var(--gold-l);box-shadow:inset 0 0 0 1px rgba(200,170,110,.3)}
 .play-tabs .pt.on i{background:rgba(200,170,110,.24);color:var(--gold-l)}
@@ -716,10 +720,8 @@ img.miss-img{opacity:0}
 .build-list{display:flex;flex-direction:column;gap:10px}
 .bcard{padding:13px 15px 14px;border-radius:12px;border:1px solid var(--line);cursor:pointer;
   background:linear-gradient(180deg,var(--surface),rgba(15,21,33,.55));
-  transition:border-color .15s,transform .15s}
+  transition:border-color .15s,transform .15s;overflow:hidden}
 .bcard:hover{border-color:rgba(200,170,110,.42);transform:translateY(-1px)}
-.bcard.stale{opacity:.7}
-.bcard.stale:hover{opacity:1}
 .bc-hd{display:flex;align-items:center;gap:10px}
 .bc-hd .rank{width:29px;height:33px}
 .bc-hd .rank span{font-size:12px}
@@ -735,11 +737,11 @@ img.miss-img{opacity:0}
 .bc-forge i,.bd-forge i{font-style:normal;color:var(--dim-2);opacity:.55}
 
 .bc-augs{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px}
-.ba{display:flex;gap:7px;align-items:stretch;min-width:0}
+.ba{display:flex;gap:7px;align-items:stretch;min-width:0;max-width:100%}
 .ba-l{writing-mode:vertical-rl;flex-shrink:0;padding-top:3px;text-align:center;
   font-size:10px;letter-spacing:2px;color:var(--dim-2)}
-.ba-w{display:flex;flex-wrap:wrap;gap:7px}
-.bca{width:55px;text-align:center;cursor:pointer}
+.ba-w{display:flex;flex-wrap:wrap;gap:7px;flex:1;min-width:0}
+.bca{width:55px;flex:0 0 auto;text-align:center;cursor:pointer}
 .bca-ic{width:44px;height:44px;margin:0 auto;border-radius:8px;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   border:1px solid rgba(200,170,110,.28);background:var(--surface-3);transition:.15s}
@@ -751,14 +753,6 @@ img.miss-img{opacity:0}
   box-shadow:0 0 13px rgba(200,170,110,.16)}
 .bca.big .bca-nm{color:var(--gold-l)}
 .bca:hover .bca-ic{border-color:var(--gold);transform:translateY(-2px)}
-/* 已下架的海克斯：灰度 + 角标，数据照小程序原样保留，只是标明版本状态 */
-.bca.off .bca-ic{filter:grayscale(.7);opacity:.72;border-color:var(--line)}
-.bca.off .bca-nm{color:var(--dim-2)}
-.bca-off{display:block;margin-top:2px;font-style:normal;font-size:9px;line-height:1.2;
-  color:#e0645c;background:rgba(224,100,92,.12);border-radius:3px;padding:1px 0}
-.off-tag{display:inline-block;margin-left:6px;font-size:10px;line-height:1.4;padding:0 4px;
-  border-radius:3px;color:#e0645c;background:rgba(224,100,92,.12);vertical-align:middle}
-.bd-row.off .bd-ic{filter:grayscale(1);opacity:.5}
 .bc-items{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
 .bc-items .item{width:42px;height:42px}
 
@@ -796,22 +790,42 @@ img.miss-img{opacity:0}
   color:var(--dim-2);font-variant-numeric:tabular-nums}
 
 @media(max-width:640px){
-  /* 分段按钮：禁止被压扁（手机上曾整体叠成一行） */
-  .play-tabs{display:flex;gap:4px;padding:3px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .play-tabs .pt{flex:0 0 auto;padding:6px 9px;font-size:12px}
-  .bcard{padding:11px 12px 12px}
+  .play-tabs{gap:3px;padding:3px}
+  .play-tabs .pt{padding:7px 10px;font-size:12.5px}
+  .play-tabs .pt i{font-size:10.5px;padding:1px 4px}
+  .bcard{padding:12px 12px 13px;border-radius:11px}
   .bc-tt{font-size:14px}
-  /* 核心/备选：手机改成上下两行，标签横排，避免竖排字挤成一团 */
-  .bc-augs{flex-direction:column;gap:9px}
-  .ba{width:100%;gap:6px;align-items:flex-start}
-  .ba-l{writing-mode:horizontal-tb;letter-spacing:0;padding-top:12px;width:24px;font-size:10px}
-  .ba-w{gap:6px}
-  .bca{width:calc((100% - 30px) / 4)}
-  .bca-ic{width:38px;height:38px}
-  .bca.big .bca-ic{width:44px;height:44px}
+  /* 核心/备选：手机上标签放上面一行，图标占满整行 —— 之前标签占宽 + 百分比宽度
+     被父级挤成几十像素，名字竖着掉下来、已下架角标也竖排 */
+  .bc-augs{flex-direction:column;gap:11px}
+  .ba{width:100%;flex-direction:column;gap:5px;align-items:stretch}
+  .ba-l{writing-mode:horizontal-tb;letter-spacing:1px;padding-top:0;width:auto;
+    font-size:10.5px;text-align:left;color:var(--dim-2)}
+  .ba-w{gap:8px 6px;justify-content:flex-start}
+  .bca{width:50px}
+  .bca-ic{width:42px;height:42px}
+  .bca.big .bca-ic{width:46px;height:46px}
   .bca-nm{font-size:10px}
-  .bc-items .item{width:36px;height:36px}
+  .bc-items{gap:5px;margin-top:11px}
+  .bc-items .item{width:32px;height:32px;border-radius:6px}
+  .bc-items .item .idx{font-size:8px;line-height:11px;padding:0 2px;left:1px;top:1px}
   .bd-hd{padding:14px 15px 11px}
   .bd-body{padding:13px 15px 18px}
   .bd-grid{grid-template-columns:1fr}
+  .bd-hd h3,.bd-hdt h3{font-size:16px}
+  /* 三选一：手机上三列并排会把名字挤成竖排，改成三张横卡 */
+  .qz-wrap{padding:14px 12px 50px}
+  .qz-head{gap:9px}
+  .qz-prog{margin-left:0;width:100%;justify-content:space-between}
+  .qz-dot{padding:3px 8px;font-size:10.5px}
+  .qz-grid{grid-template-columns:1fr;gap:9px}
+  .qz-card{grid-template-columns:62px minmax(0,1fr);
+    grid-template-areas:"ico top" "ico name" "ico short" "ico stat";
+    gap:3px 11px;padding:10px 12px 10px 10px}
+  .qz-ico{width:62px;height:62px;align-self:start}
+  .qz-ico img{width:52px;height:52px}
+  .qz-short{min-height:0;-webkit-line-clamp:2}
+  .qz-stat{padding-top:7px;margin-top:4px}
+  .qz-final-top{gap:14px}
+  .qz-badge{width:72px;height:72px}
 }

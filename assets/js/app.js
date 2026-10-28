@@ -395,6 +395,11 @@
     try {
       const d = await getJSON(`data/heroes/${slug}.json`);
       if (seq !== heroSeq) return;
+      // 当前版本已移除的海克斯：全站任何位置都不再展示
+      const keep = (a) => a && a.name && !augGone(a.name);
+      d.specialAugments = (d.specialAugments || []).filter(keep);
+      d.trapAugments = (d.trapAugments || []).filter(keep);
+      d.recommendAugments = (d.recommendAugments || []).filter(keep);
       S.hero = d;
       applySup(d);
       S.view = 'hero';
@@ -499,13 +504,13 @@
 
   const AUG_CN = { prismatic: '棱彩', gold: '黄金', silver: '白银' };
 
+  // 某个海克斯是否已在当前版本被官方移除（这些一律不展示）
+  const augGone = (n) => !!(S.augMap[n] || {}).isDeleted;
+
   // 一张构建方案卡：锻体 + 核心/备选海克斯 + 六件装备
   function buildCard(b, i) {
-    // 已下架的海克斯排后面（版本更新后官方删除的，玩家这一局抽不到）
-    const off = (a) => !!(S.augMap[a.name] || {}).isDeleted;
-    const sortOff = (list) => list.slice().sort((x, y) => off(x) - off(y));
-    const cores = sortOff((b.coreAugments || []).filter((a) => a.name));
-    const alts = sortOff((b.altAugments || []).filter((a) => a.name)).slice(0, 5);
+    const cores = (b.coreAugments || []).filter((a) => a.name);
+    const alts = (b.altAugments || []).filter((a) => a.name).slice(0, 5);
     const items = b.items || [];
     const forge = (b.forge || []).length
       ? `<div class="bc-forge"><span>锻体</span>${b.forge.map((f) => esc(FORGE[f] || f)).join('<i>·</i>')}</div>`
@@ -513,18 +518,16 @@
     // 图标 + 名字，点图标看海克斯详情
     const cell = (a, big) => {
       const full = S.augMap[a.name] || {};
-      const isOff = !!full.isDeleted;
-      return `<div class="bca${big ? ' big' : ''}${isOff ? ' off' : ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
-        isOff ? '（当前版本已下架）' : ''
-      }${a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''}"><div class="bca-ic">${
+      return `<div class="bca${big ? ' big' : ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
+        a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''
+      }"><div class="bca-ic">${
         a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`
-      }</div><div class="bca-nm">${esc(a.name)}</div>${isOff ? '<i class="bca-off">已下架</i>' : ''}</div>`;
+      }</div><div class="bca-nm">${esc(a.name)}</div></div>`;
     };
-    return `<article class="bcard${b.stale ? ' stale' : ''}" data-build="${i}">
+    return `<article class="bcard" data-build="${i}">
       <div class="bc-hd">
         ${rankBadge(b.tier)}
         <h4 class="bc-tt">${esc(b.name)}</h4>
-        ${b.stale ? '<span class="off-tag">4.0 已移除</span>' : ''}
         <span class="bc-go" data-build="${i}">查看详情<i>›</i></span>
       </div>
       ${forge}
@@ -545,15 +548,16 @@
     const b = (S.builds || [])[i];
     if (!b) return;
     const augGrid = (list) =>
-      list
+      (list || [])
+        .filter((a) => a && a.name && !augGone(a.name))
         .map((a) => {
           const full = S.augMap[a.name] || {};
           const wr = a.winRate != null ? a.winRate : full.winRate;
           const tier = a.tier || full.tier || '';
-          return `<div class="bd-row${full.isDeleted ? ' off' : ''}" data-aug="${esc(a.name)}">
+          return `<div class="bd-row" data-aug="${esc(a.name)}">
             <div class="bd-ic">${a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : '<span class="miss">?</span>'}</div>
             <div class="bd-tx">
-              <div class="bd-nm">${esc(a.name)}${full.isDeleted ? '<span class="off-tag">已下架</span>' : ''}</div>
+              <div class="bd-nm">${esc(a.name)}</div>
               <div class="bd-sub">${tier ? `<span class="tier ${esc(tier)}">${esc(AUG_CN[tier] || tier)}</span>` : ''}${
                 wr != null ? `<span style="color:${wrColor(wr)}">${wr.toFixed(2)}%</span>` : ''
               }</div>
@@ -673,24 +677,16 @@
   function viewPlay() {
     const h = S.hero;
     const plays = h.playstyles || [];
-    // 有装备或海克斯的方案才算数，纯名字的空壳不展示；内容多的排前面，再按评级
     const fill = (b) => ((b.coreAugments || []).length ? 1 : 0) + ((b.items || []).length ? 1 : 0);
-    // 核心海克斯全在 4.0 被移除 → 标为旧版本方案，排到最后
-    (h.builds || []).forEach((b) => {
-      const cs = (b.coreAugments || []).filter((a) => a.name);
-      b.stale = cs.length > 0 && cs.every((a) => (S.augMap[a.name] || {}).isDeleted);
-    });
+    // 已移除的海克斯整张卡不展示（小程序里也不会再出现这套），备选池里的一并剔除
     const builds = (h.builds || [])
+      .filter((b) => !(b.coreAugments || []).some((a) => augGone(a.name)))
+      .map((b) => ({ ...b, altAugments: (b.altAugments || []).filter((a) => !augGone(a.name)) }))
       .filter((b) => (b.items || []).length || (b.coreAugments || []).length || (b.altAugments || []).length)
-      .sort(
-        (a, b) =>
-          (a.stale ? 1 : 0) - (b.stale ? 1 : 0) ||
-          fill(b) - fill(a) ||
-          tierScore(b.tier) - tierScore(a.tier)
-      );
+      .sort((a, b) => fill(b) - fill(a) || tierScore(b.tier) - tierScore(a.tier));
     S.builds = builds;
-    // 三件套：任意一个海克斯在 4.0 被移除，这套组合就凑不出来了，整条剔除
-    const combos = (h.augmentCombos || []).filter((c) => !c.some((n) => (S.augMap[n] || {}).isDeleted));
+    // 三件套：任意一个海克斯已被移除，这套组合就凑不出来了，整条剔除
+    const combos = (h.augmentCombos || []).filter((c) => !c.some((n) => augGone(n)));
     const total = builds.length + plays.length + combos.length;
     if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
 
