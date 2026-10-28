@@ -501,8 +501,11 @@
 
   // 一张构建方案卡：锻体 + 核心/备选海克斯 + 六件装备
   function buildCard(b, i) {
-    const cores = (b.coreAugments || []).filter((a) => a.name);
-    const alts = (b.altAugments || []).filter((a) => a.name).slice(0, 5);
+    // 已下架的海克斯排后面（版本更新后官方删除的，玩家这一局抽不到）
+    const off = (a) => !!(S.augMap[a.name] || {}).isDeleted;
+    const sortOff = (list) => list.slice().sort((x, y) => off(x) - off(y));
+    const cores = sortOff((b.coreAugments || []).filter((a) => a.name));
+    const alts = sortOff((b.altAugments || []).filter((a) => a.name)).slice(0, 5);
     const items = b.items || [];
     const forge = (b.forge || []).length
       ? `<div class="bc-forge"><span>锻体</span>${b.forge.map((f) => esc(FORGE[f] || f)).join('<i>·</i>')}</div>`
@@ -510,11 +513,12 @@
     // 图标 + 名字，点图标看海克斯详情
     const cell = (a, big) => {
       const full = S.augMap[a.name] || {};
-      return `<div class="bca${big ? ' big' : ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
-        a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''
-      }"><div class="bca-ic">${
+      const isOff = !!full.isDeleted;
+      return `<div class="bca${big ? ' big' : ''}${isOff ? ' off' : ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
+        isOff ? '（当前版本已下架）' : ''
+      }${a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''}"><div class="bca-ic">${
         a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`
-      }</div><div class="bca-nm">${esc(a.name)}</div></div>`;
+      }</div><div class="bca-nm">${esc(a.name)}</div>${isOff ? '<i class="bca-off">已下架</i>' : ''}</div>`;
     };
     return `<article class="bcard" data-build="${i}">
       <div class="bc-hd">
@@ -545,10 +549,10 @@
           const full = S.augMap[a.name] || {};
           const wr = a.winRate != null ? a.winRate : full.winRate;
           const tier = a.tier || full.tier || '';
-          return `<div class="bd-row" data-aug="${esc(a.name)}">
+          return `<div class="bd-row${full.isDeleted ? ' off' : ''}" data-aug="${esc(a.name)}">
             <div class="bd-ic">${a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : '<span class="miss">?</span>'}</div>
             <div class="bd-tx">
-              <div class="bd-nm">${esc(a.name)}</div>
+              <div class="bd-nm">${esc(a.name)}${full.isDeleted ? '<span class="off-tag">已下架</span>' : ''}</div>
               <div class="bd-sub">${tier ? `<span class="tier ${esc(tier)}">${esc(AUG_CN[tier] || tier)}</span>` : ''}${
                 wr != null ? `<span style="color:${wrColor(wr)}">${wr.toFixed(2)}%</span>` : ''
               }</div>

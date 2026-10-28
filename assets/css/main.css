@@ -373,12 +373,14 @@ img.miss-img{opacity:0}
   .brand-text{display:none}
   .meta{display:none}
   .layout{flex-direction:column;height:auto}
-  /* 手机上英雄墙限高，否则 173 个头像会把内容区顶到屏幕外；用 height 而不是 max-height，避免被内容撑开 */
+  /* 手机上英雄墙限高并独立滚动，否则 173 个头像会把内容区顶到屏幕外 */
   .sidebar{width:100%;border-right:0;border-bottom:1px solid var(--line);
-    height:38vh;min-height:180px;flex-shrink:0;overflow:hidden}
+    height:34vh;min-height:150px;max-height:300px;flex-shrink:0;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;background:var(--bg);position:relative;z-index:2}
   .hero-grid{padding-bottom:8px}
   .content{overflow:visible}
   .hero-head{padding:14px 14px 0}
+  .hero-head .splash{opacity:.14}
   .hero-avatar{width:62px;height:62px}
   .hero-name h1{font-size:19px}
   .tabs{padding:0 12px;overflow-x:auto}
@@ -741,6 +743,14 @@ img.miss-img{opacity:0}
   box-shadow:0 0 13px rgba(200,170,110,.16)}
 .bca.big .bca-nm{color:var(--gold-l)}
 .bca:hover .bca-ic{border-color:var(--gold);transform:translateY(-2px)}
+/* 已下架的海克斯：灰度 + 角标，数据照小程序原样保留，只是标明版本状态 */
+.bca.off .bca-ic{filter:grayscale(1);opacity:.5;border-color:var(--line)}
+.bca.off .bca-nm{color:var(--dim-2);text-decoration:line-through}
+.bca-off{display:block;margin-top:2px;font-style:normal;font-size:9px;line-height:1.2;
+  color:#e0645c;background:rgba(224,100,92,.12);border-radius:3px;padding:1px 0}
+.off-tag{display:inline-block;margin-left:6px;font-size:10px;line-height:1.4;padding:0 4px;
+  border-radius:3px;color:#e0645c;background:rgba(224,100,92,.12);vertical-align:middle}
+.bd-row.off .bd-ic{filter:grayscale(1);opacity:.5}
 .bc-items{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
 .bc-items .item{width:42px;height:42px}
 
@@ -778,11 +788,17 @@ img.miss-img{opacity:0}
   color:var(--dim-2);font-variant-numeric:tabular-nums}
 
 @media(max-width:640px){
-  .play-tabs .pt{padding:6px 9px;font-size:12px}
+  /* 分段按钮：禁止被压扁（手机上曾整体叠成一行） */
+  .play-tabs{display:flex;gap:4px;padding:3px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .play-tabs .pt{flex:0 0 auto;padding:6px 9px;font-size:12px}
   .bcard{padding:11px 12px 12px}
   .bc-tt{font-size:14px}
-  .bc-augs{gap:10px}
-  .bca{width:48px}
+  /* 核心/备选：手机改成上下两行，标签横排，避免竖排字挤成一团 */
+  .bc-augs{flex-direction:column;gap:9px}
+  .ba{width:100%;gap:6px;align-items:flex-start}
+  .ba-l{writing-mode:horizontal-tb;letter-spacing:0;padding-top:12px;width:24px;font-size:10px}
+  .ba-w{gap:6px}
+  .bca{width:calc((100% - 30px) / 4)}
   .bca-ic{width:38px;height:38px}
   .bca.big .bca-ic{width:44px;height:44px}
   .bca-nm{font-size:10px}
