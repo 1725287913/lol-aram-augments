@@ -71,14 +71,17 @@ input{font:inherit}
 }
 .side-head .count{color:var(--dim-2)}
 .hero-grid{
-  flex:1;overflow-y:auto;padding:0 10px 16px;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-content:start;
+  flex:1;min-height:0;overflow-y:auto;padding:0 10px 16px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:8px;align-content:start;
 }
-.hcard{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;
-  border:1px solid transparent;transition:transform .12s,border-color .12s;background:var(--surface-2)}
+/* 卡片用 padding-top 撑出正方形：不依赖 aspect-ratio，图片没加载也不会塌成一条 */
+.hcard{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;background:var(--surface-3);
+  border:1px solid transparent;transition:transform .12s,border-color .12s}
+.hcard::before{content:"";display:block;padding-top:100%}
 .hcard:hover{transform:translateY(-2px);border-color:var(--gold)}
 .hcard.active{border-color:var(--hex);box-shadow:0 0 0 1px var(--hex),0 4px 14px rgba(10,200,185,.22)}
-.hcard img{width:100%;aspect-ratio:1;object-fit:cover;filter:saturate(.9)}
+.hcard img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.9);background:var(--surface-3)}
 .hcard.active img{filter:saturate(1.1)}
 .hcard .nm{position:absolute;left:0;right:0;bottom:0;padding:10px 3px 3px;
   font-size:10px;text-align:center;line-height:1.2;
@@ -305,7 +308,6 @@ img.miss-img{opacity:0}
 }
 @media(max-width:1000px){
   :root{--sidebar:200px}
-  .hero-grid{grid-template-columns:repeat(3,1fr)}
   .aug-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
 }
 @media(max-width:720px){
@@ -314,9 +316,10 @@ img.miss-img{opacity:0}
   .brand-text{display:none}
   .meta{display:none}
   .layout{flex-direction:column;height:auto}
-  .sidebar{width:100%;border-right:0;border-bottom:1px solid var(--line)}
-  .hero-grid{grid-template-columns:repeat(6,1fr);grid-auto-rows:min-content;
-    max-height:172px;padding-bottom:10px}
+  /* 手机上英雄墙限高，否则 173 个头像会把内容区顶到屏幕外 */
+  .sidebar{width:100%;border-right:0;border-bottom:1px solid var(--line);
+    max-height:40vh;flex-shrink:0}
+  .hero-grid{padding-bottom:8px}
   .content{overflow:visible}
   .hero-head{padding:14px 14px 0}
   .hero-avatar{width:62px;height:62px}
