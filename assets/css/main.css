@@ -175,14 +175,55 @@ input{font:inherit}
 .shoes-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
 /* 海克斯组合 */
-.combo-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-.combo{display:flex;gap:6px;align-items:center;padding:7px;border-radius:8px;
+.combo-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:8px}
+.combo{display:block;padding:9px 10px;border-radius:8px;cursor:pointer;
   background:var(--surface);border:1px solid var(--line);transition:.15s}
 .combo:hover{border-color:rgba(10,200,185,.45);background:var(--surface-2)}
-.combo .ci{width:32px;height:32px;border-radius:6px;overflow:hidden;border:1px solid var(--line);flex-shrink:0}
+.combo-hd{display:flex;gap:4px;align-items:center;position:relative;margin-bottom:6px}
+.combo .ci{width:30px;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line);flex-shrink:0}
 .combo .ci img{width:100%;height:100%;object-fit:cover}
-.combo .cn{font-size:11px;line-height:1.25;color:var(--dim);overflow:hidden;display:-webkit-box;
+.combo-rk{margin-left:auto;font-size:10px;color:var(--dim-2);font-variant-numeric:tabular-nums;
+  border:1px solid var(--line);border-radius:4px;padding:0 4px;line-height:15px}
+.combo .cn{font-size:11px;line-height:1.35;color:var(--dim);overflow:hidden;display:-webkit-box;
   -webkit-line-clamp:2;-webkit-box-orient:vertical}
+.combo-wr{font-size:11px;margin-top:5px;font-variant-numeric:tabular-nums}
+.combo-wr i{font-style:normal;color:var(--dim-2);margin-left:5px;font-size:10px}
+.combo-wr.dim{color:var(--dim-2)}
+
+/* 方案总览 */
+.plan-sum{display:flex;align-items:center;gap:14px;padding:13px 15px;margin-bottom:20px;
+  border-radius:12px;border:1px solid rgba(10,200,185,.22);
+  background:linear-gradient(100deg,rgba(10,200,185,.09),rgba(10,200,185,.02) 62%,transparent)}
+.ps-num{font-size:30px;font-weight:800;color:var(--hex);line-height:1;font-variant-numeric:tabular-nums;flex-shrink:0}
+.ps-num i{font-size:12px;font-weight:400;font-style:normal;color:var(--dim);margin-left:3px}
+.ps-t{font-size:13px;color:var(--text);font-weight:500}
+.ps-d{font-size:11.5px;color:var(--dim-2);margin-top:3px}
+.ps-d b{color:var(--dim);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* 出装路线卡 */
+.route-card{padding:13px 15px;border-radius:11px;border:1px solid var(--line);background:var(--surface)}
+.rc-lbl{font-size:10.5px;color:var(--dim-2);letter-spacing:.6px;margin:0 0 7px}
+.rc-lbl i{font-style:normal;color:var(--dim-2);opacity:.75}
+.rc-lbl:not(:first-child){margin-top:14px}
+
+/* 核心构建方案卡 */
+.adv-forge{font-size:12px;color:var(--dim);margin-top:6px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.adv-forge i{font-style:normal;color:var(--dim-2)}
+.cb-lbl2{font-size:10px;color:var(--dim-2);letter-spacing:.5px;border:1px solid var(--line);
+  border-radius:4px;padding:0 5px;line-height:16px;flex-shrink:0}
+.adv-an{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:9px}
+.adv-augs .ai,.adv-an .ai{display:block;width:26px;height:26px;border-radius:5px;overflow:hidden;
+  border:1px solid var(--line);cursor:pointer;transition:.15s;background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center}
+.adv-an .ai.big{width:34px;height:34px;border-radius:6px;border-color:rgba(200,170,110,.4)}
+.adv-an .ai img{width:100%;height:100%;object-fit:cover}
+.adv-an .ai b{font-size:9px;color:var(--dim-2);font-weight:500;line-height:1.1;text-align:center}
+.adv-an .ai:hover{border-color:var(--gold);transform:translateY(-2px)}
+.adv-tag{font-size:10px;padding:1px 6px;border-radius:4px;line-height:16px;font-weight:400}
+.adv-tag.ok{color:rgba(10,200,185,.9);background:rgba(10,200,185,.1);border:1px solid rgba(10,200,185,.25)}
+.adv-tag.lock{color:var(--dim-2);background:var(--surface-2);border:1px solid var(--line)}
+.adv-items{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.adv-items .item{width:36px;height:36px}
 
 /* ---------- 海克斯卡片 ---------- */
 .aug-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
@@ -621,6 +662,14 @@ img.miss-img{opacity:0}
   .qz-total b{font-size:36px}
   .qz-badge{width:74px;height:74px;font-size:15px}
   .qz-log-row{padding:8px 10px}
+  .plan-sum{padding:11px 13px;gap:11px;margin-bottom:16px}
+  .ps-num{font-size:25px}
+  .ps-t{font-size:12px}
+  .ps-d{font-size:11px;line-height:1.5}
+  .route-card{padding:11px 12px}
+  .adv-items .item{width:32px;height:32px}
+  .adv-an .ai.big{width:30px;height:30px}
+  .combo-list{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
 }
 @media(max-width:560px){
   .navbtn span{display:none}

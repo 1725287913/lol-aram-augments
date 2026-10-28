@@ -456,39 +456,112 @@
     }</div>`;
   }
 
-  // 一条「思路点评」：评级徽章 + 方案名 + 文字点评 + 核心海克斯图标
-  function advRow(b) {
-    const cores = (b.coreAugments || []).filter((a) => a.icon);
+  // 一条「核心构建方案」：评级徽章 + 名称 + 锻体 + 核心/备选海克斯 + 点评 + 出装
+  function advRow(b, routeCount) {
+    const cores = (b.coreAugments || []).filter((a) => a.icon || a.name);
+    const alts = (b.altAugments || []).slice(0, 6);
+    const items = b.items || [];
+    const bare = !cores.length && !items.length; // 只有名字和评级，核心与出装都被锁
+    const forge = (b.forge || []).length
+      ? `<div class="adv-forge"><span class="cb-lbl2">锻体</span>${b.forge
+          .map((f) => esc(FORGE[f] || f))
+          .join('<i>›</i>')}</div>`
+      : '';
+    const augIcon = (a, cls) =>
+      `<span class="ai ${cls || ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
+        a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''
+      }">${a.icon ? img(a.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`}</span>`;
+
     return `<div class="adv">
       ${rankBadge(b.tier)}
       <div class="adv-bd">
-        <div class="adv-t"><b>${esc(b.name)}</b></div>
+        <div class="adv-t"><b>${esc(b.name)}</b>${
+          items.length
+            ? `<span class="adv-tag ok">出装已公开</span>`
+            : bare
+            ? `<span class="adv-tag lock">会员方案</span>`
+            : ''
+        }</div>
+        ${bare ? '' : forge}
+        ${
+          cores.length
+            ? `<div class="adv-an"><span class="cb-lbl2">核心</span>${cores.map((a) => augIcon(a, 'big')).join('')}</div>`
+            : ''
+        }
+        ${
+          !bare && alts.length
+            ? `<div class="adv-an"><span class="cb-lbl2">备选</span>${alts.map((a) => augIcon(a)).join('')}</div>`
+            : ''
+        }
         ${
           b.desc
             ? `<div class="adv-d">${esc(b.desc)}</div>`
-            : `<div class="adv-mut">原站没收录这套的文字点评，可以先按名字和核心海克斯对照下面的出装。</div>`
+            : bare
+            ? ''
+            : `<div class="adv-mut">这套原站没给文字点评，按名字和核心海克斯对照下面的出装路线看。</div>`
         }
         ${
-          cores.length
-            ? `<div class="adv-augs">${cores
-                .map(
-                  (a) =>
-                    `<span class="ai" data-aug="${esc(a.name)}" title="${esc(a.name)}${
-                      a.winRate != null ? ' · ' + a.winRate.toFixed(2) + '%' : ''
-                    }">${img(a.icon, '', a.name)}</span>`
-                )
-                .join('')}</div>`
+          items.length
+            ? `<div class="adv-items">${items.map((it, k) => itemHTML(it, k + 1)).join('')}</div>`
+            : bare
+            ? `<div class="adv-mut">核心海克斯和出装是小程序的会员内容，网页版原站只公开了方案名与评级。${
+                routeCount ? `可以先按下面 ${routeCount} 套出装路线打。` : ''
+              }</div>`
             : ''
         }
       </div>
     </div>`;
   }
 
+  // 三件套组合：按三个海克斯在本英雄身上的胜率均值排序
+  function combosHTML(h) {
+    const rows = (h.augmentCombos || []).map((c) => {
+      const rs = c.map((n) => (S.rates[n] ? S.rates[n].winRate : null));
+      const known = rs.filter((x) => x != null);
+      const avg = known.length ? known.reduce((a, b) => a + b, 0) / known.length : null;
+      return { c, avg, known: known.length };
+    });
+    rows.sort((a, b) => (b.avg || 0) - (a.avg || 0));
+    return rows
+      .map(({ c, avg, known }, i) => {
+        const cells = c
+          .map((n) => {
+            const a = S.augMap[n];
+            return `<div class="ci" title="${esc(n)}">${a ? img(a.icon, '', n) : '<span class="miss">?</span>'}</div>`;
+          })
+          .join('');
+        return `<div class="combo" data-combo="${esc(c.join('|||'))}" title="${esc(c.join(' / '))}">
+          <div class="combo-hd">${cells}<span class="combo-rk">${i + 1}</span></div>
+          <div class="cn">${esc(c.join(' · '))}</div>
+          ${
+            avg != null
+              ? `<div class="combo-wr" style="color:${wrColor(avg)}">均胜率 ${avg.toFixed(2)}%${
+                  known < 3 ? `<i>${known}/3 有数据</i>` : ''
+                }</div>`
+              : `<div class="combo-wr dim">暂无胜率数据</div>`
+          }
+        </div>`;
+      })
+      .join('');
+  }
+
   function viewPlay() {
     const h = S.hero;
     const plays = h.playstyles || [];
-    if (!plays.length) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
-    const p = plays[S.playIdx] || plays[0];
+    const builds = (h.builds || []).slice().sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
+    const combos = h.augmentCombos || [];
+    const total = builds.length + plays.length + combos.length;
+    if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
+    const p = plays[S.playIdx] || plays[0] || {};
+
+    // 顶部总览：一眼看到有多少套方案可选
+    const summary = `<div class="plan-sum">
+      <div class="ps-num">${total}<i>套</i></div>
+      <div class="ps-bd">
+        <div class="ps-t">这个英雄一共有 ${total} 套方案可以用</div>
+        <div class="ps-d"><b>${builds.length}</b> 套核心构建 · <b>${plays.length}</b> 套出装路线 · <b>${combos.length}</b> 套海克斯三件套</div>
+      </div>
+    </div>`;
 
     const forge = (p.forge || []).length
       ? `<div class="forge">${p.forge
@@ -499,21 +572,22 @@
           .join('')}</div>`
       : `<div class="notice" style="margin:0"><span class="ni">!</span><div>这一套暂无锻体数据，明日补充。</div></div>`;
 
-    const combos = (h.augmentCombos || [])
-      .map((c) => {
-        const cells = c
-          .map((n) => {
-            const a = S.augMap[n];
-            return `<div class="ci" title="${esc(n)}">${a ? img(a.icon, '', n) : '<span class="miss">?</span>'}</div>`;
-          })
-          .join('');
-        return `<div class="combo" data-combo="${esc(c.join('|||'))}" title="${esc(c.join(' / '))}">${cells}<div class="cn">${esc(c.join(' · '))}</div></div>`;
-      })
-      .join('');
-
     return `
-      <div class="section">
-        <div class="sec-head"><h3>选择玩法</h3><div class="sec-line"></div><span class="hint">${plays.length} 套出装路线</span></div>
+      ${summary}
+
+      ${
+        builds.length
+          ? `<div class="section">
+        <div class="sec-head"><h3>核心构建方案</h3><div class="sec-line"></div><span class="hint">${builds.length} 套 · 评级与点评来自原站攻略</span></div>
+        <div class="adv-list">${builds.map((b) => advRow(b, plays.length)).join("")}</div>
+      </div>`
+          : ''
+      }
+
+      ${
+        plays.length
+          ? `<div class="section">
+        <div class="sec-head"><h3>出装路线</h3><div class="sec-line"></div><span class="hint">${plays.length} 套 · 锻体到六神装</span></div>
         <div class="play-tabs">
           ${plays
             .map(
@@ -522,64 +596,36 @@
             )
             .join('')}
         </div>
-      </div>
 
-      <div class="section">
-        <div class="sec-head"><h3>锻体</h3><div class="sec-line"></div><span class="hint">强化属性优先顺序</span></div>
-        ${forge}
-      </div>
-
-      <div class="section">
-        <div class="sec-head"><h3>出门装</h3><div class="sec-line"></div></div>
-        <div class="items-row">${(p.startItems || []).map((i) => itemHTML(i)).join('') || '<span class="hint">—</span>'}</div>
-      </div>
-
-      <div class="section">
-        <div class="sec-head"><h3>核心装备</h3><div class="sec-line"></div><span class="hint">按顺序出</span></div>
-        <div class="items-row">${(p.coreItems || []).map((i, k) => itemHTML(i, k + 1)).join('') || '<span class="hint">—</span>'}</div>
-      </div>
-
-      ${
-        (p.otherItems || []).length
-          ? `<div class="section">
-        <div class="sec-head"><h3>备选装备</h3><div class="sec-line"></div><span class="hint">看对面阵容换</span></div>
-        <div class="items-row">${p.otherItems.map((i) => itemHTML(i)).join('')}</div>
+        <div class="route-card">
+          <div class="rc-lbl">锻体顺序</div>
+          ${forge}
+          <div class="rc-lbl">出门装</div>
+          <div class="items-row">${(p.startItems || []).map((i) => itemHTML(i)).join('') || '<span class="hint">—</span>'}</div>
+          <div class="rc-lbl">核心装备 <i>按顺序出</i></div>
+          <div class="items-row">${(p.coreItems || []).map((i, k) => itemHTML(i, k + 1)).join('') || '<span class="hint">—</span>'}</div>
+          ${
+            (p.otherItems || []).length
+              ? `<div class="rc-lbl">备选装备 <i>看对面阵容换</i></div>
+          <div class="items-row">${p.otherItems.map((i) => itemHTML(i)).join('')}</div>`
+              : ''
+          }
+          ${
+            (p.shoes || []).length
+              ? `<div class="rc-lbl">鞋子</div>
+          <div class="items-row">${p.shoes.map((i) => itemHTML(i)).join('')}</div>`
+              : ''
+          }
+        </div>
       </div>`
           : ''
       }
 
       ${
-        (p.shoes || []).length
+        combos.length
           ? `<div class="section">
-        <div class="sec-head"><h3>鞋子</h3><div class="sec-line"></div></div>
-        <div class="shoes-row">${p.shoes.map((i) => itemHTML(i)).join('')}</div>
-      </div>`
-          : ''
-      }
-
-      ${
-        (h.builds || []).length
-          ? (() => {
-              const all = h.builds.slice().sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
-              const withDesc = all.filter((b) => b.desc);
-              // 有文字的优先，全都没文字就退化成按评级列前三套
-              const show = withDesc.length ? withDesc.slice(0, 4) : all.slice(0, 3);
-              const hint = withDesc.length
-                ? `共 ${all.length} 套 · 展示 ${show.length} 套有文字点评`
-                : `共 ${all.length} 套 · 原站未收录文字点评`;
-              return `<div class="section">
-        <div class="sec-head"><h3>思路点评</h3><div class="sec-line"></div><span class="hint">${hint}</span></div>
-        <div class="adv-list">${show.map(advRow).join('')}</div>
-      </div>`;
-            })()
-          : ''
-      }
-
-      ${
-        combos
-          ? `<div class="section">
-        <div class="sec-head"><h3>强力海克斯组合</h3><div class="sec-line"></div><span class="hint">点任意一组看详情</span></div>
-        <div class="combo-list">${combos}</div>
+        <div class="sec-head"><h3>海克斯三件套</h3><div class="sec-line"></div><span class="hint">${combos.length} 套 · 按三个海克斯在本英雄的均胜率排序</span></div>
+        <div class="combo-list">${combosHTML(h)}</div>
       </div>`
           : ''
       }
