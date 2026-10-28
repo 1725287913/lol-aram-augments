@@ -256,7 +256,7 @@
   function heroCard(h, isFav) {
     const on = S.hero && S.hero.slug === h.slug;
     return `<button class="hcard${on ? ' on' : ''}${isFav ? ' fav' : ''}" data-slug="${esc(h.slug)}" title="${esc(h.name + ' ' + h.title + ' · 胜率 ' + pct(h.win))}">
-      ${img(h.icon, 'hc-img', h.name)}
+      ${img(faceOf(h.slug), 'hc-img', h.name)}
       ${h.win != null ? `<span class="hc-wr">${h.win.toFixed(1)}</span>` : ''}
       <span class="hc-nm">${esc(h.name)}</span>
       <span class="hc-star" data-fav="${esc(h.slug)}" title="收藏">★</span>
@@ -370,9 +370,51 @@
   }
 
   /* ---------- 头像 + 徽章 ---------- */
+  // 官方高清头像（120px）与海报（1000px），比数据源自带的 96px 小图清晰
+  const faceOf = (slug) => `assets/zhishi/face/${slug}.png`;
+  const posterOf = (slug) => `assets/zhishi/poster/${slug}.jpg`;
+
   function tierBadge(t) {
     if (!t) return '';
     return `<span class="tbadge t-${tierCls(t) || 'na'}">${esc(t)}</span>`;
+  }
+
+  /* 切换英雄时换整页背景海报 */
+  function paintPoster() {
+    const h = S.hero;
+    const bg = $('#heroBgImg');
+    if (!bg || !h) return;
+    const url = posterOf(h.slug);
+    const pre = new Image();
+    pre.onload = function () {
+      bg.style.backgroundImage = `url("${url}")`;
+      bg.classList.add('on');
+    };
+    pre.onerror = function () {
+      bg.style.backgroundImage = '';
+      bg.classList.remove('on');
+    };
+    pre.src = url;
+  }
+
+  /* 顶部四段锚点：只滚动定位，不隐藏内容 */
+  function quickNavHTML() {
+    const b = curBuild();
+    const augN = b ? RAR_ORDER.reduce((n, k) => n + ((b.augs[k[0]] || []).length), 0) : 0;
+    const spN = (S.hero.special || []).length;
+    const items = [
+      { id: 'sec-gear', n: '构建方案', c: b ? String((b.six || []).length) : '' },
+      { id: 'sec-aug', n: '推荐海克斯', c: augN ? String(augN) : '' },
+      { id: 'sec-game', n: '常规玩法', c: '' },
+      { id: 'sec-sp', n: '特殊玩法', c: spN ? String(spN) : '', hide: !spN },
+    ];
+    return items
+      .filter((x) => !x.hide)
+      .map(
+        (x) =>
+          `<button class="qn" data-jump="${x.id}">${x.n}${x.c ? `<i>${x.c}</i>` : ''}</button>`
+      )
+      .join('');
   }
 
   /* ---------- 英雄页：头部 ---------- */
@@ -385,18 +427,19 @@
 
     $('#content').innerHTML = `
       <section class="hero-head">
-        <div class="hh-glow"></div>
+        <div class="hh-banner"><img src="${posterOf(h.slug)}" alt="" loading="eager" onerror="this.parentNode.style.display='none'" /></div>
         <div class="hh-main">
           <div class="hh-avatar">
-            ${img(h.icon, '', h.name)}
-            <span class="hh-tierline"></span>
+            ${img(faceOf(h.slug), '', h.name)}
+            <span class="hh-frame"></span>
+            ${r.tier ? `<span class="hh-tierline t-${tierCls(r.tier) || 'na'}">${esc(r.tier)}</span>` : ''}
           </div>
           <div class="hh-id">
             <div class="hh-name">
-              ${tierBadge(r.tier)}
               <h1>${esc(h.name)}</h1>
+              <span class="hh-title">${esc(h.title)}</span>
             </div>
-            <div class="hh-title">${esc(h.title)}${aliasList.length ? `<i>· ${esc(aliasList.join(' / '))}</i>` : ''}</div>
+            ${aliasList.length ? `<div class="hh-tags">${aliasList.map((a) => `<span class="hh-tag">${esc(a)}</span>`).join('')}</div>` : ''}
             <div class="hh-stats">
               <div class="hs hs-wr"><b>${pct(r.win)}</b><span>胜率</span></div>
               <div class="hs"><b>${pct(r.pick)}</b><span>选取率</span></div>
@@ -424,23 +467,25 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="hh-acts">
-          <button class="act${S.favs.includes(h.slug) ? ' on' : ''}" id="favBtn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 6.2 6.8.9-5 4.7 1.3 6.7-6-3.3-6 3.3 1.3-6.7-5-4.7 6.8-.9z"/></svg>
-            <span>${S.favs.includes(h.slug) ? '已收藏' : '收藏'}</span>
-          </button>
-          <button class="act" id="shareBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.6 1.6"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.6-1.6"/></svg>
-            <span>分享</span>
-          </button>
+          <div class="hh-acts">
+            <button class="act${S.favs.includes(h.slug) ? ' on' : ''}" id="favBtn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 6.2 6.8.9-5 4.7 1.3 6.7-6-3.3-6 3.3 1.3-6.7-5-4.7 6.8-.9z"/></svg>
+              <span>${S.favs.includes(h.slug) ? '已收藏' : '收藏'}</span>
+            </button>
+            <button class="act" id="shareBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.6 1.6"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.6-1.6"/></svg>
+              <span>分享</span>
+            </button>
+          </div>
         </div>
       </section>
 
       <nav class="play-tabs" id="playTabs">${playTabsHTML()}</nav>
+      <nav class="quick-nav" id="quickNav">${quickNavHTML()}</nav>
 
       <div class="page-body" id="pageBody"></div>
     `;
+    paintPoster();
     renderBody();
   }
 
@@ -553,7 +598,7 @@
       .filter(Boolean)
       .join(' · ');
 
-    return `<section class="sec">
+    return `<section class="sec" id="sec-gear">
       ${secHead('推荐出装', '', stat)}
       <div class="gear-box">
         ${gearRow(b.start, '出门装')}
@@ -603,7 +648,7 @@
         ? `<button class="more-btn" data-expand="0">收起</button>`
         : '';
 
-    return `<section class="sec">
+    return `<section class="sec" id="sec-aug">
       ${secHead('海克斯推荐', filters, `按本英雄胜率排序 · 共 ${total} 个`)}
       ${rows}
       ${more}
@@ -628,7 +673,7 @@
   function buildCombos(b) {
     const list = (b.combos || []).slice().sort((x, y) => (y.w || 0) - (x.w || 0)).slice(0, 6);
     if (!list.length) return '';
-    return `<section class="sec">
+    return `<section class="sec" id="sec-combo">
       ${secHead('高胜率海克斯组合', '', '同时拿到这两个，胜率明显更高')}
       <div class="combo-list">
         ${list
@@ -654,7 +699,7 @@
   function buildGame(h) {
     const g = h.game || [];
     if (!g.length) return '';
-    return `<section class="sec">
+    return `<section class="sec" id="sec-game">
       ${secHead('对局思路', '', `${g.length} 条`)}
       <ol class="game-list">${g.map((t, i) => `<li><i>${i + 1}</i><span>${esc(t)}</span></li>`).join('')}</ol>
     </section>`;
@@ -696,7 +741,7 @@
       )
       .join('');
 
-    return `<section class="sec">
+    return `<section class="sec" id="sec-sp">
       ${secHead('特殊玩法', '', `${list.length} 套 · 需要特定海克斯才成立`)}
       <div class="sp-list">${cards}</div>
     </section>`;
@@ -705,7 +750,7 @@
   function buildTips(h) {
     const t = h.tips || [];
     if (!t.length) return '';
-    return `<section class="sec">
+    return `<section class="sec" id="sec-tip">
       ${secHead('小技巧', '', `${t.length} 条`)}
       <div class="tip-list">${t
         .map(
@@ -734,7 +779,7 @@
   function buildSkills(h) {
     const abil = h.abil || [];
     if (!abil.length) return '';
-    return `<section class="sec">
+    return `<section class="sec" id="sec-skill">
       ${secHead('技能说明', h.order ? `<span class="sec-tag">加点 ${esc(h.order)}</span>` : '', '')}
       <details class="skill-fold">
         <summary>展开 ${abil.length} 个技能<span class="sf-ar">›</span></summary>
@@ -1050,6 +1095,16 @@
     const qz = t.closest('[data-qz]');
     if (qz) return qzPick(Number(qz.dataset.qz));
 
+    const jump = t.closest('[data-jump]');
+    if (jump) {
+      const sec = document.getElementById(jump.dataset.jump);
+      if (sec) {
+        const top = sec.getBoundingClientRect().top + window.scrollY - 116;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+      return;
+    }
+
     const bst = t.closest('[data-build]');
     if (bst) {
       const n = Number(bst.dataset.build);
@@ -1108,6 +1163,28 @@
       qzNext();
     }
   });
+
+  /* 滚动时高亮顶部锚点 */
+  let navTick = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (navTick) return;
+      navTick = true;
+      requestAnimationFrame(() => {
+        navTick = false;
+        const btns = $$('#quickNav .qn');
+        if (!btns.length) return;
+        let cur = btns[0];
+        btns.forEach((b) => {
+          const sec = document.getElementById(b.dataset.jump);
+          if (sec && sec.getBoundingClientRect().top <= 150) cur = b;
+        });
+        btns.forEach((b) => b.classList.toggle('on', b === cur));
+      });
+    },
+    { passive: true }
+  );
 
   window.addEventListener('hashchange', () => {
     const slug = decodeURIComponent(location.hash.replace(/^#/, ''));

@@ -1,36 +1,38 @@
 /* ============================================================
    海斗指南 · 样式
-   配色：深底 + 荧光黄绿高亮，海克斯按稀有度发光
+   视觉基调对齐海斗小程序：深蓝黑底 + 亮蓝高亮 + 卡片化
    ============================================================ */
 
 :root {
-  --bg: #0a0c10;
-  --bg-e: #0d1016;
-  --panel: #12161e;
-  --panel-2: #171c26;
-  --panel-3: #1d2330;
-  --line: #212836;
-  --line-2: #2c3546;
-  --tx: #e9eef7;
-  --tx-2: #b8c2d2;
-  --dim: #8b96a8;
-  --dim-2: #626d80;
+  --bg: #080b11;
+  --bg-e: #0b0f16;
+  --panel: #111721;
+  --panel-2: #161d29;
+  --panel-3: #1c2433;
+  --line: #1f2836;
+  --line-2: #2b3646;
+  --tx: #eaf0fa;
+  --tx-2: #b6c1d4;
+  --dim: #8390a5;
+  --dim-2: #5b6779;
 
-  --acc: #cdf564;
-  --acc-2: #a8dd3f;
-  --acc-dim: rgba(205, 245, 100, 0.12);
+  /* 主色：小程序里的那种亮蓝 */
+  --acc: #3d9bff;
+  --acc-2: #6cb6ff;
+  --acc-dim: rgba(61, 155, 255, 0.12);
+  --acc-line: rgba(61, 155, 255, 0.34);
 
-  --up: #4fd88a;
+  --up: #3ddc84;
   --down: #f0716a;
-  --gold: #e8bb5c;
+  --gold: #ffc53d;
   --prism: #b782f5;
   --silver: #9aacbf;
 
-  --r: 12px;
-  --r-s: 8px;
-  --top: 56px;
+  --r: 14px;
+  --r-s: 9px;
+  --top: 58px;
   --side: 268px;
-  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -140,7 +142,7 @@ ul {
   height: 16px;
   border-radius: 4px;
   background: var(--acc);
-  box-shadow: 0 0 0 3px rgba(205, 245, 100, 0.14);
+  box-shadow: 0 0 0 3px rgba(61, 155, 255, 0.14);
   transform: rotate(45deg);
 }
 
@@ -187,7 +189,7 @@ ul {
 }
 
 .search input:focus {
-  border-color: rgba(205, 245, 100, 0.5);
+  border-color: rgba(61, 155, 255, 0.5);
   background: var(--panel-2);
 }
 
@@ -416,7 +418,7 @@ ul {
 
 .hcard.on {
   border-color: var(--acc);
-  box-shadow: 0 0 0 1px var(--acc), 0 0 18px rgba(205, 245, 100, 0.18);
+  box-shadow: 0 0 0 1px var(--acc), 0 0 18px rgba(61, 155, 255, 0.18);
 }
 
 .hcard.on .hc-nm {
@@ -492,7 +494,7 @@ ul {
   right: -40px;
   width: 260px;
   height: 200px;
-  background: radial-gradient(circle, rgba(205, 245, 100, 0.12), transparent 68%);
+  background: radial-gradient(circle, rgba(61, 155, 255, 0.12), transparent 68%);
   pointer-events: none;
 }
 
@@ -556,9 +558,9 @@ ul {
 }
 
 .tbadge.t-s {
-  background: rgba(205, 245, 100, 0.15);
+  background: rgba(61, 155, 255, 0.15);
   color: var(--acc);
-  border-color: rgba(205, 245, 100, 0.35);
+  border-color: rgba(61, 155, 255, 0.35);
 }
 .tbadge.t-ss,
 .tbadge.t-sss {
@@ -619,8 +621,8 @@ ul {
 }
 
 .hs-wr {
-  border-color: rgba(205, 245, 100, 0.24);
-  background: rgba(205, 245, 100, 0.07);
+  border-color: rgba(61, 155, 255, 0.24);
+  background: rgba(61, 155, 255, 0.07);
 }
 
 .hh-side {
@@ -677,8 +679,8 @@ ul {
 .order-txt {
   padding: 4px 8px;
   border-radius: 7px;
-  background: rgba(205, 245, 100, 0.1);
-  border: 1px solid rgba(205, 245, 100, 0.26);
+  background: rgba(61, 155, 255, 0.1);
+  border: 1px solid rgba(61, 155, 255, 0.26);
   color: var(--acc);
   font-size: 12.5px;
   font-weight: 700;
@@ -941,8 +943,8 @@ ul {
 
 /* 核心件：六件成装的前三件 */
 .gitem.is-core .gi-box {
-  border-color: rgba(205, 245, 100, 0.45);
-  background: rgba(205, 245, 100, 0.06);
+  border-color: rgba(61, 155, 255, 0.45);
+  background: rgba(61, 155, 255, 0.06);
 }
 
 .gitem.is-core .gi-nm {
@@ -1255,7 +1257,7 @@ ul {
 
 .more-btn:hover {
   color: var(--acc);
-  border-color: rgba(205, 245, 100, 0.4);
+  border-color: rgba(61, 155, 255, 0.4);
   background: var(--acc-dim);
 }
 
@@ -1956,7 +1958,7 @@ ul {
 
 .qzc.best {
   border-color: var(--acc);
-  background: rgba(205, 245, 100, 0.07);
+  background: rgba(61, 155, 255, 0.07);
 }
 
 .qzc.best::after {
@@ -2622,5 +2624,2010 @@ ul {
 
   .hs span {
     font-size: 9px;
+  }
+}
+
+/* ============================================================
+   v4 视觉层：对齐海斗小程序的观感
+   —— 英雄海报做整页背景、头像用官方高清图、卡片化排版
+   ============================================================ */
+
+/* ---------- 英雄海报背景 ---------- */
+.hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.hero-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 86vh;
+  background-repeat: no-repeat;
+  background-position: 50% 14%;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.6s ease, transform 6s ease-out;
+  filter: brightness(0.62) saturate(1.08);
+}
+
+.hero-bg-img.on {
+  opacity: 0.62;
+  transform: scale(1);
+}
+
+/* 遮罩：顶部留人物、往下渐隐到纯背景色，保证正文永远压得住 */
+.hero-bg-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 62% at 50% 0%, rgba(8, 11, 17, 0.18) 0%, rgba(8, 11, 17, 0.72) 58%, var(--bg) 92%),
+    linear-gradient(180deg, rgba(8, 11, 17, 0.34) 0%, rgba(8, 11, 17, 0.5) 42%, var(--bg) 78%);
+}
+
+.layout,
+.content,
+.topbar {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 顶栏：左中右三段，中段标题居中 ---------- */
+.topbar {
+  height: var(--top);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(9, 13, 19, 0.82);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tb-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.tb-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(150deg, #4facff 0%, #2b73d6 100%);
+  box-shadow: 0 0 0 1px rgba(108, 182, 255, 0.4), 0 3px 12px rgba(61, 155, 255, 0.34);
+  position: relative;
+}
+
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 2px;
+  border: 1.6px solid rgba(255, 255, 255, 0.9);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-45deg);
+}
+
+.brand-text {
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--tx);
+}
+
+.navbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  color: var(--tx-2);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: 0.16s;
+  white-space: nowrap;
+}
+
+.navbtn svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+.navbtn:hover {
+  color: #fff;
+  background: rgba(61, 155, 255, 0.16);
+  border-color: var(--acc-line);
+}
+
+.navbtn-icon {
+  width: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.meta {
+  font-size: 11.5px;
+  color: var(--dim-2);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  padding-right: 2px;
+}
+
+/* ---------- 英雄头部：海报透出来的玻璃卡 ---------- */
+.hero-head {
+  position: relative;
+  padding: 20px 20px 16px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(23, 31, 44, 0.86) 0%, rgba(14, 19, 27, 0.92) 100%);
+  backdrop-filter: blur(22px) saturate(1.3);
+  -webkit-backdrop-filter: blur(22px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* 卡片右上角一层蓝色柔光，跟海报呼应 */
+.hero-head::before {
+  content: '';
+  position: absolute;
+  top: -90px;
+  right: -60px;
+  width: 320px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(61, 155, 255, 0.16), transparent 66%);
+  pointer-events: none;
+}
+
+.hh-main {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* 头像：大一圈、圆角更圆、描边按评级上色 */
+.hh-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 92px;
+  height: 92px;
+  border-radius: 16px;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
+.hh-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--panel-2);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+.hh-frame {
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+.hh-tierline {
+  position: absolute;
+  left: -3px;
+  bottom: -7px;
+  min-width: 30px;
+  height: 19px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  color: #0a0f16;
+  background: linear-gradient(135deg, #ffd76e, #ffa726);
+  box-shadow: 0 3px 10px rgba(255, 167, 38, 0.4);
+}
+
+.hh-tierline.t-s {
+  background: linear-gradient(135deg, #7fd2ff, #3d9bff);
+  box-shadow: 0 3px 10px rgba(61, 155, 255, 0.45);
+}
+
+.hh-tierline.t-ss,
+.hh-tierline.t-sss {
+  background: linear-gradient(135deg, #ff9de2, #e04fd0);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(224, 79, 208, 0.45);
+}
+
+.hh-tierline.t-a {
+  background: linear-gradient(135deg, #c9a5ff, #9a5cf0);
+  color: #fff;
+}
+
+.hh-id {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.hh-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hh-name h1 {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: 0.6px;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+}
+
+.hh-title {
+  margin-top: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dim);
+  letter-spacing: 0.3px;
+}
+
+.hh-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.hh-tag {
+  height: 22px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: #9fc6f0;
+  background: rgba(61, 155, 255, 0.1);
+  border: 1px solid rgba(61, 155, 255, 0.24);
+}
+
+/* 四个数据块 */
+.hh-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 13px;
+  flex-wrap: wrap;
+}
+
+.hs {
+  min-width: 74px;
+  padding: 7px 12px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hs b {
+  display: block;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--tx);
+  letter-spacing: 0.2px;
+}
+
+.hs span {
+  display: block;
+  margin-top: 1px;
+  font-size: 10.5px;
+  color: var(--dim-2);
+  letter-spacing: 0.4px;
+}
+
+.hs-wr b {
+  color: var(--gold);
+}
+
+.hs-wr {
+  background: rgba(255, 197, 61, 0.08);
+  border-color: rgba(255, 197, 61, 0.22);
+}
+
+/* 右侧召唤师技能 / 加点 */
+.hh-side {
+  display: flex;
+  gap: 18px;
+  flex: 0 0 auto;
+}
+
+.hh-box {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hb-lb {
+  font-size: 10.5px;
+  color: var(--dim-2);
+  letter-spacing: 0.6px;
+}
+
+.hb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spell img {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spell em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--tx-2);
+}
+
+.order-txt {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--acc-2);
+  letter-spacing: 0.4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--acc-dim);
+  border: 1px solid var(--acc-line);
+  white-space: nowrap;
+}
+
+.ab-ic {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.ab-ic img {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ab-ic i {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  min-width: 12px;
+  height: 12px;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-style: normal;
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #0a0f16;
+  background: var(--acc-2);
+}
+
+.hh-acts {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  align-self: flex-start;
+  padding-top: 2px;
+}
+
+.act {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--dim);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: 0.16s;
+}
+
+.act svg {
+  width: 13px;
+  height: 13px;
+}
+
+.act:hover {
+  color: var(--tx);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.act.on {
+  color: var(--gold);
+  background: rgba(255, 197, 61, 0.12);
+  border-color: rgba(255, 197, 61, 0.32);
+}
+
+/* ---------- 流派切换：小程序那种宽胶囊 ---------- */
+.play-tabs {
+  display: flex;
+  gap: 9px;
+  margin: 14px 0 0;
+  padding: 0 0 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.play-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.play-tabs .pt {
+  position: relative;
+  flex: 1 0 auto;
+  min-width: 108px;
+  height: auto;
+  padding: 10px 16px 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  border-radius: 12px;
+  background: rgba(21, 28, 39, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: 0.18s;
+}
+
+.play-tabs .pt:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(28, 37, 51, 0.85);
+}
+
+.play-tabs .pt.on {
+  background: linear-gradient(160deg, rgba(38, 88, 148, 0.92) 0%, rgba(24, 52, 90, 0.92) 100%);
+  border-color: rgba(108, 182, 255, 0.52);
+  box-shadow: 0 6px 20px rgba(61, 155, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.play-tabs .pt.on::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--acc-2), transparent);
+}
+
+.play-tabs .pt-n {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--tx-2);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.play-tabs .pt.on .pt-n {
+  color: #fff;
+}
+
+.play-tabs .pt-w {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--dim-2);
+}
+
+.play-tabs .pt.on .pt-w {
+  color: var(--acc-2);
+}
+
+.play-tabs .pt-sp .pt-n::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--prism);
+  vertical-align: 1px;
+}
+
+/* ---------- 顶部锚点跳转 ---------- */
+.quick-nav {
+  display: flex;
+  gap: 7px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.quick-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.qn {
+  flex: 0 0 auto;
+  height: 29px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--dim);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid transparent;
+  transition: 0.15s;
+  white-space: nowrap;
+}
+
+.qn i {
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--dim-2);
+  font-weight: 700;
+}
+
+.qn:hover {
+  color: var(--tx-2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.qn.on {
+  color: var(--acc-2);
+  background: var(--acc-dim);
+  border-color: var(--acc-line);
+}
+
+.qn.on i {
+  color: var(--acc-2);
+}
+
+/* ---------- 区块头：蓝色菱形 + 标题 ---------- */
+.sec {
+  margin-top: 22px;
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.sec-head h3 {
+  position: relative;
+  padding-left: 15px;
+  font-size: 15.5px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--tx);
+  white-space: nowrap;
+}
+
+.sec-head h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #6cb6ff, #2b73d6);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(61, 155, 255, 0.6);
+}
+
+.sec-sub {
+  font-size: 11.5px;
+  color: var(--dim-2);
+  white-space: nowrap;
+}
+
+.sec-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.09), transparent);
+  min-width: 8px;
+}
+
+.sec-tag {
+  height: 21px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--acc-2);
+  background: var(--acc-dim);
+  border: 1px solid var(--acc-line);
+}
+
+/* ---------- 出装 ---------- */
+.gear-box {
+  padding: 16px 16px 12px;
+  border-radius: 14px;
+  background: rgba(20, 27, 38, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.gear-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.gear-row + .gear-row {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.gear-lb {
+  flex: 0 0 auto;
+  width: 62px;
+  padding-top: 4px;
+  font-size: 11.5px;
+  color: var(--dim-2);
+  line-height: 1.35;
+}
+
+.gear-lb i {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 10px;
+  color: rgba(61, 155, 255, 0.72);
+}
+
+.gear-items {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gitem {
+  width: 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.gi-box {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1b2432, #121821);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.16s;
+}
+
+.gitem:hover .gi-box {
+  border-color: var(--acc-line);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.gi-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 核心件：蓝色描边 + 柔光 */
+.gitem.is-core .gi-box {
+  border-color: rgba(108, 182, 255, 0.6);
+  box-shadow: 0 0 0 1px rgba(108, 182, 255, 0.24), 0 0 16px rgba(61, 155, 255, 0.22);
+}
+
+.gi-idx {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(9, 14, 21, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.gitem.is-core .gi-idx {
+  background: linear-gradient(135deg, #4facff, #2b73d6);
+  border-color: transparent;
+}
+
+.gi-nm {
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--dim);
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+/* ---------- 海克斯筛选 ---------- */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--dim);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: 0.15s;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  color: var(--tx-2);
+}
+
+.chip.on {
+  color: #dceaff;
+  background: rgba(61, 155, 255, 0.18);
+  border-color: rgba(108, 182, 255, 0.5);
+}
+
+.chip.c-prismatic.on {
+  color: #f0dcff;
+  background: rgba(183, 130, 245, 0.2);
+  border-color: rgba(183, 130, 245, 0.5);
+}
+
+.chip.c-gold.on {
+  color: #ffe9b8;
+  background: rgba(255, 197, 61, 0.18);
+  border-color: rgba(255, 197, 61, 0.48);
+}
+
+.chip.c-silver.on {
+  color: #e2eaf3;
+  background: rgba(154, 172, 191, 0.2);
+  border-color: rgba(154, 172, 191, 0.5);
+}
+
+/* ---------- 海克斯列表 ---------- */
+.aug-group {
+  margin-top: 14px;
+}
+
+.ag-lb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tx-2);
+}
+
+.ag-lb i {
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--dim-2);
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rar-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.rar-dot.r-prismatic {
+  background: var(--prism);
+  box-shadow: 0 0 8px rgba(183, 130, 245, 0.7);
+}
+
+.rar-dot.r-gold {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(255, 197, 61, 0.7);
+}
+
+.rar-dot.r-silver {
+  background: var(--silver);
+  box-shadow: 0 0 8px rgba(154, 172, 191, 0.6);
+}
+
+.aug-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+
+.aug {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px 9px 10px;
+  border-radius: 11px;
+  background: rgba(20, 27, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  transition: 0.16s;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.aug:hover {
+  background: rgba(28, 38, 53, 0.9);
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.aug::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2.5px;
+}
+
+.aug.r-prismatic::before {
+  background: linear-gradient(180deg, #d3aaff, #8f4cf0);
+}
+.aug.r-gold::before {
+  background: linear-gradient(180deg, #ffd76e, #e09b1a);
+}
+.aug.r-silver::before {
+  background: linear-gradient(180deg, #cdd8e4, #7f8d9e);
+}
+
+.aug-rank {
+  flex: 0 0 auto;
+  width: 18px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--dim-2);
+  text-align: center;
+}
+
+.aug-ic {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--panel-3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.aug-ic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aug-bd {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.aug-nm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tx);
+  line-height: 1.3;
+}
+
+.aug-rar {
+  flex: 0 0 auto;
+  height: 16px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.aug-rar.r-prismatic {
+  color: #ddbcff;
+  background: rgba(183, 130, 245, 0.18);
+}
+.aug-rar.r-gold {
+  color: #ffdd94;
+  background: rgba(255, 197, 61, 0.16);
+}
+.aug-rar.r-silver {
+  color: #c8d4e0;
+  background: rgba(154, 172, 191, 0.18);
+}
+
+.aug-desc {
+  margin-top: 2px;
+  font-size: 10.8px;
+  color: var(--dim-2);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aug-w {
+  flex: 0 0 auto;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--acc-2);
+  letter-spacing: 0.2px;
+}
+
+.more-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--dim);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  transition: 0.16s;
+}
+
+.more-btn:hover {
+  color: var(--acc-2);
+  border-color: var(--acc-line);
+  background: var(--acc-dim);
+}
+
+/* ---------- 高胜率组合 ---------- */
+.combo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 9px;
+}
+
+.combo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: rgba(20, 27, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  transition: 0.16s;
+  text-align: left;
+  width: 100%;
+}
+
+.combo:hover {
+  border-color: rgba(108, 182, 255, 0.34);
+  background: rgba(26, 36, 50, 0.9);
+}
+
+.cb-ics {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.cb-ic {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cb-ic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cb-plus {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--dim-2);
+}
+
+.cb-nm {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--tx-2);
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.cb-w {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--up);
+}
+
+.cb-rk {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--dim-2);
+}
+
+/* ---------- 对局思路 ---------- */
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-list li {
+  display: flex;
+  gap: 11px;
+  padding: 11px 14px;
+  border-radius: 11px;
+  background: rgba(20, 27, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12.8px;
+  line-height: 1.6;
+  color: var(--tx-2);
+}
+
+.game-list li > i {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--acc-2);
+  background: var(--acc-dim);
+  border: 1px solid var(--acc-line);
+}
+
+/* ---------- 小技巧 ---------- */
+.tip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tip {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 11px;
+  background: rgba(20, 27, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 2px solid rgba(255, 197, 61, 0.5);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--tx-2);
+}
+
+.tip-el {
+  font-weight: 700;
+  color: var(--gold);
+  flex: 0 0 auto;
+}
+
+/* ---------- 特殊玩法卡 ---------- */
+.sp-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px;
+}
+
+.sp-card {
+  padding: 14px 15px;
+  border-radius: 14px;
+  background: rgba(20, 27, 38, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: 0.16s;
+}
+
+.sp-card:hover {
+  border-color: rgba(183, 130, 245, 0.34);
+}
+
+.sp-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.sp-cat {
+  height: 19px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #dfc2ff;
+  background: rgba(183, 130, 245, 0.18);
+  border: 1px solid rgba(183, 130, 245, 0.34);
+}
+
+.sp-card h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--tx);
+}
+
+.sp-lb {
+  font-size: 10.5px;
+  color: var(--dim-2);
+  margin: 8px 0 5px;
+  letter-spacing: 0.4px;
+}
+
+.sp-augs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sp-sum {
+  margin-top: 9px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+/* ---------- 技能折叠 ---------- */
+.skill-fold {
+  border-radius: 14px;
+  background: rgba(20, 27, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.skill-fold > summary {
+  padding: 12px 16px;
+  font-size: 12.5px;
+  color: var(--dim);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.skill-fold > summary::before {
+  content: '▸';
+  font-size: 10px;
+  color: var(--acc);
+  transition: 0.2s;
+}
+
+.skill-fold[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.skill-list {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill {
+  display: flex;
+  gap: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.sk-ic {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sk-ic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sk-bd {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sk-bd h5 {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--tx);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sk-bd h5 i {
+  font-style: normal;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--acc-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--acc-dim);
+}
+
+.sk-bd p {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--dim-2);
+}
+
+/* ---------- 空状态 ---------- */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(20, 27, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 13px;
+  color: var(--dim);
+  margin-top: 16px;
+}
+
+.notice .ni {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  font-style: italic;
+  color: var(--acc-2);
+  background: var(--acc-dim);
+  border: 1px solid var(--acc-line);
+}
+
+/* ---------- 弹层细节 ---------- */
+.modal-card {
+  border-radius: 18px;
+  background: linear-gradient(170deg, #18202d 0%, #10161f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- v4 修正：顶栏保持固定、海报更明显、右侧信息不再挤 ---------- */
+.topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+}
+
+/* 旧样式里的斜切方块会盖住新图标，这里显式复位 */
+.brand-mark {
+  transform: none;
+}
+
+/* 海报：提亮 + 减轻遮罩，让英雄真正成为背景 */
+.hero-bg-img {
+  height: 92vh;
+  opacity: 0;
+  filter: brightness(0.74) saturate(1.12);
+}
+
+.hero-bg-img.on {
+  opacity: 0.9;
+}
+
+.hero-bg-veil {
+  background:
+    radial-gradient(130% 70% at 50% 0%, rgba(8, 11, 17, 0) 0%, rgba(8, 11, 17, 0.5) 52%, var(--bg) 88%),
+    linear-gradient(180deg, rgba(8, 11, 17, 0.2) 0%, rgba(8, 11, 17, 0.42) 38%, var(--bg) 74%);
+}
+
+/* 右侧：召唤师技能 / 加点 两行排，收藏分享钉在卡片右上角 */
+.hh-side {
+  flex-wrap: wrap;
+  max-width: 300px;
+  padding-right: 96px;
+  row-gap: 10px;
+}
+
+.hh-acts {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-left: 0;
+  padding-top: 0;
+}
+
+.spell em {
+  display: none;
+}
+
+.spell img {
+  width: 28px;
+  height: 28px;
+}
+
+.hb-row {
+  gap: 6px;
+}
+
+.ab-ic,
+.ab-ic img {
+  width: 26px;
+  height: 26px;
+}
+
+.order-txt {
+  font-size: 11.5px;
+  padding: 2px 7px;
+}
+
+/* 数据块在窄一点时也别挤 */
+.hs {
+  min-width: 70px;
+  padding: 7px 10px 6px;
+}
+
+.hs b {
+  font-size: 16px;
+}
+
+.hs span {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   v4 手机端：窄屏下重新排版，一屏能读完关键信息
+   ============================================================ */
+@media (max-width: 760px) {
+  :root {
+    --top: 54px;
+  }
+
+  body {
+    padding-top: 54px;
+  }
+
+  /* 顶栏只留：图标 / 搜索 / 英雄入口 */
+  .topbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .brand {
+    gap: 0;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .meta {
+    display: none;
+  }
+
+  .tb-right .navbtn {
+    display: none;
+  }
+
+  .search {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .search input {
+    height: 34px;
+    font-size: 12.5px;
+    padding-left: 32px;
+  }
+
+  .play-tabs {
+    margin: 0 -12px;
+    padding: 0 12px 2px;
+  }
+
+  .content > .hero-head {
+    margin: 0;
+  }
+
+  /* 英雄卡：竖向紧凑，头像与名字并排 */
+  .hero-head {
+    padding: 13px 13px 12px;
+    border-radius: 15px;
+  }
+
+  .hh-main {
+    gap: 12px;
+    padding-bottom: 0;
+  }
+
+  .hh-avatar {
+    width: 66px;
+    height: 66px;
+    border-radius: 13px;
+  }
+
+  .hh-avatar img {
+    border-radius: 11px;
+  }
+
+  .hh-frame {
+    border-radius: 13px;
+  }
+
+  .hh-tierline {
+    min-width: 24px;
+    height: 16px;
+    font-size: 10px;
+    padding: 0 5px;
+    bottom: -6px;
+    border-radius: 6px;
+  }
+
+  .hh-name h1 {
+    font-size: 23px;
+  }
+
+  .hh-title {
+    font-size: 11.5px;
+  }
+
+  .hh-tags {
+    margin-top: 6px;
+    gap: 5px;
+  }
+
+  .hh-tag {
+    height: 19px;
+    padding: 0 7px;
+    font-size: 10.5px;
+  }
+
+  /* 四个数据块一行放下 */
+  .hh-stats {
+    margin-top: 9px;
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+
+  .hs {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 5px 6px 4px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .hs b {
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+
+  .hs span {
+    font-size: 9px;
+    white-space: nowrap;
+    transform: scale(0.94);
+  }
+
+  /* 技能区整行铺开，不再和头像抢宽度 */
+  .hh-side {
+    order: 5;
+    width: 100%;
+    max-width: none;
+    padding: 10px 0 0;
+    margin-top: 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 18px;
+  }
+
+  .hb-lb {
+    font-size: 9.5px;
+  }
+
+  .spell img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .ab-ic,
+  .ab-ic img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .hh-acts {
+    position: absolute;
+    right: 0;
+    top: -3px;
+  }
+
+  .act {
+    height: 27px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .act svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* 流派：小卡横滑，一屏露三个半 */
+  .play-tabs {
+    gap: 7px;
+  }
+
+  .play-tabs .pt {
+    flex: 0 0 auto;
+    min-width: 92px;
+    padding: 8px 12px 9px;
+    border-radius: 10px;
+  }
+
+  .play-tabs .pt-n {
+    font-size: 12.5px;
+  }
+
+  .play-tabs .pt-w {
+    font-size: 10.5px;
+  }
+
+  .quick-nav {
+    gap: 6px;
+  }
+
+  .qn {
+    height: 27px;
+    padding: 0 10px;
+    font-size: 11.5px;
+  }
+
+  /* 区块标题 */
+  .sec {
+    margin-top: 18px;
+  }
+
+  .sec-head {
+    gap: 7px;
+    margin-bottom: 9px;
+    flex-wrap: wrap;
+  }
+
+  .sec-head h3 {
+    font-size: 14.5px;
+    padding-left: 13px;
+  }
+
+  .sec-sub {
+    font-size: 10.5px;
+  }
+
+  /* 出装：标签换到上方，六个图标一行放满 */
+  .gear-box {
+    padding: 12px 12px 10px;
+    border-radius: 12px;
+  }
+
+  .gear-row {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .gear-lb {
+    width: auto;
+    padding-top: 0;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .gear-lb i {
+    display: inline;
+    margin-top: 0;
+    font-size: 9.5px;
+  }
+
+  .gear-items {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .gitem {
+    width: 46px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .gi-box {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 9px;
+  }
+
+  .gi-nm {
+    font-size: 8.5px;
+    line-height: 1.2;
+  }
+
+  /* 海克斯：单列，胜率靠右 */
+  .aug-list {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .aug {
+    padding: 8px 10px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .aug-ic {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .aug-nm {
+    font-size: 12px;
+  }
+
+  .aug-desc {
+    font-size: 10px;
+  }
+
+  .aug-w {
+    font-size: 12.5px;
+  }
+
+  .aug-rank {
+    width: 14px;
+    font-size: 10px;
+  }
+
+  .combo-list,
+  .sp-list {
+    grid-template-columns: 1fr;
+  }
+
+  .game-list li,
+  .tip {
+    font-size: 12px;
+    padding: 9px 11px;
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 400px) {
+  .hh-name h1 {
+    font-size: 21px;
+  }
+
+  .hs b {
+    font-size: 12.5px;
+  }
+
+  .hs span {
+    font-size: 8.5px;
+    transform: scale(0.9);
+  }
+
+  .gitem {
+    width: 42px;
+  }
+}
+
+/* 手机端让技能区独占一整行：父级必须允许换行，否则 order 无效 */
+@media (max-width: 760px) {
+  .hh-main {
+    flex-wrap: wrap;
+  }
+
+  .hh-id {
+    flex: 1 1 0;
+  }
+}
+
+/* ---------- v4 修三：海报透进卡片 + 手机端按钮不压标题 ---------- */
+/* 卡片降点不透明度，让背后英雄海报真的看得见 */
+.hero-head {
+  background: linear-gradient(160deg, rgba(23, 31, 44, 0.72) 0%, rgba(14, 19, 27, 0.84) 100%);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+}
+
+/* 出装、海克斯这些实心块也给一丝通透感，整页才不像贴纸 */
+.gear-box {
+  background: rgba(20, 27, 38, 0.76);
+}
+
+.aug,
+.combo,
+.game-list li,
+.tip,
+.sp-card {
+  background: rgba(20, 27, 38, 0.72);
+}
+
+@media (max-width: 760px) {
+  /* 手机竖屏：横版海报裁到人物上半身，别整张铺满 */
+  .hero-bg-img {
+    height: 74vh;
+    background-position: 50% 22%;
+    background-size: cover;
+  }
+
+  /* 标题右侧给收藏/分享让出位置 */
+  .hh-id {
+    padding-right: 78px;
+  }
+
+  .hh-name h1 {
+    font-size: 22px;
+  }
+
+  .hh-acts {
+    top: -2px;
+    gap: 6px;
+  }
+
+  /* 只留图标，去掉文字，省空间不再压名字 */
+  .act span {
+    display: none;
+  }
+
+  .act {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 9px;
+  }
+
+  .act svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ---------- v4 修四：英雄卡顶部海报横幅（清晰可见，向下渐隐） ---------- */
+.hh-banner {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 196px;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0, 0, 0, 0.55) 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0, 0, 0, 0.55) 72%, transparent 100%);
+}
+
+.hh-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 16%;
+  opacity: 0.72;
+  filter: saturate(1.15) contrast(1.04);
+  transform: scale(1.02);
+}
+
+/* 海报上再压一层由左到右的暗色，保证名字永远读得清 */
+.hh-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(10, 14, 20, 0.86) 0%, rgba(10, 14, 20, 0.5) 42%, rgba(10, 14, 20, 0.12) 78%);
+}
+
+/* banner 之上所有内容都要抬起来 */
+.hh-main {
+  z-index: 1;
+}
+
+/* 有了横幅，卡片自身的底色可以更透 */
+.hero-head {
+  background: linear-gradient(170deg, rgba(16, 22, 31, 0.78) 0%, rgba(12, 17, 24, 0.9) 62%, rgba(12, 17, 24, 0.96) 100%);
+}
+
+/* 全局背景降低存在感，避免和横幅重复 */
+.hero-bg-img.on {
+  opacity: 0.5;
+}
+
+@media (max-width: 760px) {
+  .hh-banner {
+    height: 168px;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .hh-banner img {
+    object-position: 50% 12%;
+  }
+
+  /* 手机上品牌图标和侧栏按钮会并排出现两个「按钮」，去掉品牌 */
+  .topbar .brand {
+    display: none;
+  }
+}
+
+/* ---------- v4 修五：海报上文字可读性 ---------- */
+/* 横幅整体再压一层暗，不只是左右渐变 */
+.hh-banner::after {
+  background:
+    linear-gradient(100deg, rgba(10, 14, 20, 0.9) 0%, rgba(10, 14, 20, 0.62) 40%, rgba(10, 14, 20, 0.3) 74%, rgba(10, 14, 20, 0.42) 100%),
+    linear-gradient(180deg, rgba(10, 14, 20, 0.2) 0%, rgba(10, 14, 20, 0.34) 60%, rgba(12, 17, 24, 0.72) 100%);
+}
+
+.hh-title,
+.hb-lb,
+.hs span {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+.hs {
+  background: rgba(12, 17, 24, 0.52);
+  border-color: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.hs-wr {
+  background: rgba(255, 197, 61, 0.14);
+  border-color: rgba(255, 197, 61, 0.3);
+}
+
+.hh-tag {
+  background: rgba(12, 24, 39, 0.62);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@media (max-width: 760px) {
+  .hh-banner {
+    height: 150px;
+  }
+
+  .hh-banner img {
+    opacity: 0.62;
+  }
+
+  /* 手机上名字区更靠上，海报只做背景氛围 */
+  .hh-banner::after {
+    background:
+      linear-gradient(100deg, rgba(10, 14, 20, 0.92) 0%, rgba(10, 14, 20, 0.7) 46%, rgba(10, 14, 20, 0.46) 100%),
+      linear-gradient(180deg, rgba(10, 14, 20, 0.26) 0%, rgba(10, 14, 20, 0.5) 100%);
+  }
+}
+
+/* ---------- v4 修六：海报上的小标签太暗，提亮一档 ---------- */
+.hb-lb {
+  color: #93a1b5;
+}
+
+.hh-title {
+  color: #a7b3c6;
+}
+
+@media (max-width: 760px) {
+  /* 手机上把技能区两行之间的空隙收一收 */
+  .hh-side {
+    gap: 12px;
+    padding-top: 9px;
+  }
+
+  .hh-box {
+    gap: 5px;
+  }
+
+  /* 装备名太长时缩一点，别再断成两行 */
+  .gi-nm {
+    font-size: 8px;
+    -webkit-line-clamp: 2;
+    letter-spacing: -0.2px;
   }
 }
