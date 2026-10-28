@@ -1,0 +1,29 @@
+{
+ "dataVersion": "26.21",
+ "gamePatch": "16.21.1",
+ "sourceUpdatedAt": "2026-10-25",
+ "augmentUpdatedAt": "2026-10-25",
+ "itemUpdatedAt": "2026-10-21",
+ "rateUpdatedAt": "2026-10-24",
+ "counts": {
+  "heroes": 173,
+  "augments": 268,
+  "items": 196,
+  "builds": 506,
+  "playstyles": 331,
+  "rateRecords": 22310,
+  "plays": 23,
+  "specialAugments": 724,
+  "trapAugments": 131
+ },
+ "coverage": {
+  "iconAugment": 268,
+  "tips": 30,
+  "skillEnhancement": 36,
+  "deleted": 21,
+  "buildWithDetail": 171,
+  "heroWithBuff": 109,
+  "heroWithSkill": 173
+ },
+ "builtAt": "2026-10-28"
+}

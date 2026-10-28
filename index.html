@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0e17">
+<title>海斗指南 · 海克斯大乱斗</title>
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◆</span>
+    <span class="brand-text">海斗指南</span>
+  </div>
+  <div class="search">
+    <input id="q" type="search" placeholder="搜索英雄 / 别名" autocomplete="off" spellcheck="false">
+  </div>
+  <button class="navbtn" id="openPlays">玩法库</button>
+  <div class="meta" id="patchInfo">加载中…</div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <span>全部英雄</span>
+      <span class="count" id="heroCount">—</span>
+    </div>
+    <div class="hero-grid" id="heroGrid"></div>
+  </aside>
+
+  <main class="content" id="content">
+    <div class="empty-state">
+      <div class="empty-icon">◆</div>
+      <p>从左侧选一个英雄</p>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

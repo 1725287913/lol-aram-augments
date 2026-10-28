@@ -1,0 +1,1872 @@
+{
+ "name": "熔岩巨兽",
+ "slug": "Malphite",
+ "aliases": [
+  "墨菲特",
+  "石头人"
+ ],
+ "avatar": "assets/img/heroes/Malphite.png",
+ "splash": "assets/img/misc/5e610cf0-8c94-4446-ab25-162cc416d68f.jpg",
+ "positions": [
+  "法师",
+  "坦克",
+  "远程",
+  "魔法型",
+  "技能型",
+  "穿透型",
+  "自己护盾",
+  "硬控",
+  "减速",
+  "蓝条",
+  "位移",
+  "舍弃攻速"
+ ],
+ "winRate": 48.47,
+ "winRateChange": 0.41,
+ "buff": [],
+ "exclusiveChanges": [],
+ "changes": [],
+ "bugFixes": [
+  {
+   "version": "26.15",
+   "text": "修复了一个BUG，该BUG曾导致：【威能之追求】能被供应给阿克尚（E）、德莱文的（Q）、俄洛伊的（E）和墨菲特的（W）。"
+  }
+ ],
+ "skills": [
+  {
+   "key": "passive",
+   "label": "被动",
+   "name": "花岗岩护盾",
+   "desc": "在未受到伤害(8-6【随等级提升】)秒后，墨菲特为自身提供(10%【生命值】)护盾值",
+   "icon": "assets/img/skills/MalphitePassive_Malphite_GraniteShield.png"
+  },
+  {
+   "key": "q",
+   "label": "Q",
+   "name": "地震碎片",
+   "desc": "墨菲特朝一名敌人发出一块大地碎片，造成(【70/120/170/220/270】 +60%【法术强度】)魔法伤害，并对目标造成持续3秒的【20%/25%/30%/35%/40%】减速。墨菲特还会窃取目标的这一部分速度，来获得持续3秒的与这个减速效果等额的移动速度。",
+   "icon": "assets/img/skills/Malphiteq_SeismicShard.png"
+  },
+  {
+   "key": "w",
+   "label": "W",
+   "name": "雷霆拍击",
+   "desc": "被动：墨菲特获得【10%/15%/20%/25%/30%】护甲。这个效果会在花岗岩护盾激活时提升至30% 主动：墨菲特的下次攻击造成额外的(【30/40/50/60/70 】+20%【法术强度】+15%【护甲】)物理伤害，并会引发一阵余震，以在一个锥形范围内造成(【15/25/35/45/55】+30%【法术强度】+15%【护甲】)物理伤害。在接下来的5秒内，他的攻击会继续引发余震。 对野怪造成180%伤害。",
+   "icon": "assets/img/skills/Malphitew_Obduracy.png"
+  },
+  {
+   "key": "e",
+   "label": "E",
+   "name": "大地震颤",
+   "desc": "墨菲特锤击地面，对周围敌人造成(【60/95/130/165/200】 +40%【护甲】 +60%【法术强度】)魔法伤害并减少他们【30%/35%/40%/45%/50%】攻击速度，持续3秒。",
+   "icon": "assets/img/skills/Malphitee_Landslide.png"
+  },
+  {
+   "key": "r",
+   "label": "R",
+   "name": "势不可挡",
+   "desc": "墨菲特携着山崩之力冲锋，进行不可阻挡的突进。在突进结束时，墨菲特会击飞1.5秒并造成(【200/300/400】 +90%【法术强度】)魔法伤害",
+   "icon": "assets/img/skills/Malphiter_UFSlash.png"
+  }
+ ],
+ "spells": [
+  "assets/img/spells/4.webp",
+  "assets/img/spells/32.webp"
+ ],
+ "points": {
+  "priority": [
+   "Q",
+   "E",
+   "W"
+  ],
+  "skillOrder": {
+   "1": "Q",
+   "2": "W",
+   "3": "E",
+   "4": "Q",
+   "5": "Q",
+   "6": "R",
+   "7": "Q",
+   "8": "E",
+   "9": "Q",
+   "10": "E",
+   "11": "R",
+   "12": "E",
+   "13": "E",
+   "14": "W",
+   "15": "W",
+   "16": "R",
+   "17": "W",
+   "18": "W"
+  }
+ },
+ "playstyles": [
+  {
+   "title": "坦克",
+   "forge": [
+    "cd",
+    "生命值",
+    "抗性",
+    "移速",
+    "法强"
+   ],
+   "startItems": [
+    {
+     "name": "巨人腰带",
+     "icon": "assets/img/items/1011.png"
+    },
+    {
+     "name": "红水晶",
+     "icon": "assets/img/items/1028.png"
+    }
+   ],
+   "coreItems": [
+    {
+     "name": "心之钢",
+     "icon": "assets/img/items/3084.png"
+    },
+    {
+     "name": "狂徒铠甲",
+     "icon": "assets/img/items/3083.png"
+    },
+    {
+     "name": "无终恨意",
+     "icon": "assets/img/items/2502.png"
+    },
+    {
+     "name": "振奋盔甲",
+     "icon": "assets/img/items/3065.png"
+    },
+    {
+     "name": "裂隙制造者",
+     "icon": "assets/img/items/4633.png"
+    },
+    {
+     "name": "千变者贾修",
+     "icon": "assets/img/items/6665.png"
+    }
+   ],
+   "otherItems": [
+    {
+     "name": "败魔",
+     "icon": "assets/img/items/2504.png"
+    },
+    {
+     "name": "兰顿之兆",
+     "icon": "assets/img/items/3143.png"
+    },
+    {
+     "name": "荆棘之甲",
+     "icon": "assets/img/items/3075.png"
+    },
+    {
+     "name": "璀璨回响",
+     "icon": "assets/img/items/6664.png"
+    }
+   ],
+   "shoes": [
+    {
+     "name": "铁板靴",
+     "icon": "assets/img/items/3047.png"
+    },
+    {
+     "name": "水银之靴",
+     "icon": "assets/img/items/3111.png"
+    }
+   ],
+   "completeItems": []
+  },
+  {
+   "title": "AP爆发",
+   "forge": [
+    "法穿",
+    "法强",
+    "cd",
+    "移速",
+    "全能吸血"
+   ],
+   "startItems": [
+    {
+     "name": "遗失的章节",
+     "icon": "assets/img/items/3802.png"
+    }
+   ],
+   "coreItems": [
+    {
+     "name": "残疫",
+     "icon": "assets/img/items/3118.png"
+    },
+    {
+     "name": "影焰",
+     "icon": "assets/img/items/4645.png"
+    },
+    {
+     "name": "风暴狂涌",
+     "icon": "assets/img/items/4646.png"
+    },
+    {
+     "name": "灭世者的死亡之帽",
+     "icon": "assets/img/items/3089.png"
+    },
+    {
+     "name": "虚空之杖",
+     "icon": "assets/img/items/3135.png"
+    },
+    {
+     "name": "中娅沙漏",
+     "icon": "assets/img/items/3157.png"
+    }
+   ],
+   "otherItems": [
+    {
+     "name": "蜕生",
+     "icon": "assets/img/items/3137.png"
+    },
+    {
+     "name": "莫雷洛秘典",
+     "icon": "assets/img/items/3165.png"
+    },
+    {
+     "name": "卢登的回声",
+     "icon": "assets/img/items/6655.png"
+    }
+   ],
+   "shoes": [
+    {
+     "name": "法师之靴",
+     "icon": "assets/img/items/3020.png"
+    },
+    {
+     "name": "明朗之靴",
+     "icon": "assets/img/items/3158.png"
+    }
+   ],
+   "completeItems": []
+  },
+  {
+   "title": "通臂拳",
+   "forge": [
+    "攻速",
+    "cd",
+    "攻击力",
+    "抗性",
+    "生命值"
+   ],
+   "startItems": [
+    {
+     "name": "巨人腰带",
+     "icon": "assets/img/items/1011.png"
+    },
+    {
+     "name": "红水晶",
+     "icon": "assets/img/items/1028.png"
+    }
+   ],
+   "coreItems": [
+    {
+     "name": "心之钢",
+     "icon": "assets/img/items/3084.png"
+    },
+    {
+     "name": "猎魔人弩箭",
+     "icon": "assets/img/items/2512.png"
+    },
+    {
+     "name": "海克斯注力刚壁",
+     "icon": "assets/img/items/3073.png"
+    },
+    {
+     "name": "破败王者之刃",
+     "icon": "assets/img/items/3153.png"
+    },
+    {
+     "name": "黄昏与黎明",
+     "icon": "assets/img/items/2510.png"
+    },
+    {
+     "name": "公理圆弧",
+     "icon": "assets/img/items/6696.png"
+    }
+   ],
+   "otherItems": [
+    {
+     "name": "挺进破坏者",
+     "icon": "assets/img/items/6631.png"
+    },
+    {
+     "name": "死亡之舞",
+     "icon": "assets/img/items/6333.png"
+    }
+   ],
+   "shoes": [
+    {
+     "name": "狂战士胫甲",
+     "icon": "assets/img/items/3006.png"
+    },
+    {
+     "name": "水银之靴",
+     "icon": "assets/img/items/3111.png"
+    },
+    {
+     "name": "铁板靴",
+     "icon": "assets/img/items/3047.png"
+    }
+   ],
+   "completeItems": []
+  }
+ ],
+ "builds": [
+  {
+   "name": "通背拳石头人",
+   "tier": "A",
+   "desc": null,
+   "hasDetail": true,
+   "coreAugments": []
+  },
+  {
+   "name": "核弹流&自爆流",
+   "tier": "S",
+   "desc": null,
+   "hasDetail": false,
+   "coreAugments": []
+  }
+ ],
+ "altAugments": [
+  {
+   "name": "装甲冲击",
+   "winRate": 56.95,
+   "icon": "assets/img/augments/armoredimpact_large.png",
+   "tier": "gold"
+  },
+  {
+   "name": "升级：献祭",
+   "winRate": 52.87,
+   "icon": "assets/img/augments/upgradeimmolate_large.webp",
+   "tier": "silver"
+  },
+  {
+   "name": "吸元秘术",
+   "winRate": 51.83,
+   "icon": "assets/img/augments/mercysstrike_large.png",
+   "tier": "gold"
+  },
+  {
+   "name": "孤勇者",
+   "winRate": 51.66,
+   "icon": "assets/img/augments/adamant_large.webp",
+   "tier": "silver"
+  },
+  {
+   "name": "属性叠属性叠属性！",
+   "winRate": 51.38,
+   "icon": "assets/img/augments/statsonstatsonstats_large.webp",
+   "tier": "prismatic"
+  }
+ ],
+ "augmentCombos": [
+  [
+   "钢化你心",
+   "坦克引擎",
+   "飞身踢"
+  ],
+  [
+   "钢化你心",
+   "重量级打击手",
+   "坦克引擎"
+  ],
+  [
+   "钢化你心",
+   "重量级打击手",
+   "飞身踢"
+  ],
+  [
+   "歌利亚巨人",
+   "钢化你心",
+   "重量级打击手"
+  ],
+  [
+   "星界躯体",
+   "钢化你心",
+   "飞身踢"
+  ],
+  [
+   "星界躯体",
+   "钢化你心",
+   "重量级打击手"
+  ],
+  [
+   "坦克引擎",
+   "飞身踢",
+   "高压锅"
+  ],
+  [
+   "歌利亚巨人",
+   "重量级打击手",
+   "飞身踢"
+  ],
+  [
+   "重量级打击手",
+   "坦克引擎",
+   "高压锅"
+  ],
+  [
+   "歌利亚巨人",
+   "钢化你心",
+   "飞身踢"
+  ]
+ ],
+ "recommendAugments": [
+  {
+   "name": "装甲冲击",
+   "pickRate": 11.25,
+   "winRate": 56.95,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/armoredimpact_large.png",
+   "short": "施放技能后，你的下一次普通攻击会对附近敌人造成250%额外护甲 + 50-125（随英雄等级成长）额外物理伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "升级：献祭",
+   "pickRate": 3.03,
+   "winRate": 52.87,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/upgradeimmolate_large.webp",
+   "short": "【璀璨回响】和【日炎圣盾】每当有目标受到【献祭】效果影响时，提供12 金币",
+   "hasDetail": true
+  },
+  {
+   "name": "吸元秘术",
+   "pickRate": 1.24,
+   "winRate": 51.83,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/mercysstrike_large.png",
+   "short": "每20秒，你的下次攻击额外造成80-300（随英雄等级成长） + 5%最大生命值物理伤害…",
+   "hasDetail": true
+  },
+  {
+   "name": "孤勇者",
+   "pickRate": 0.17,
+   "winRate": 51.66,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/adamant_large.webp",
+   "short": "附近600码内每有一个敌方英雄，你就会获得15%攻击速度、10护甲和10魔法抗性",
+   "hasDetail": true
+  },
+  {
+   "name": "属性叠属性叠属性！",
+   "pickRate": 0.81,
+   "winRate": 51.38,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/statsonstatsonstats_large.webp",
+   "short": "获得4个【属性锻造器】！",
+   "hasDetail": true
+  },
+  {
+   "name": "钢化你心",
+   "pickRate": 6.52,
+   "winRate": 51.36,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/quest_steelyourheart_large.webp",
+   "short": "任务：持有【心之钢】且层数在300层或以上",
+   "hasDetail": true
+  },
+  {
+   "name": "保持坚定",
+   "pickRate": 5.66,
+   "winRate": 51.35,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/genericabilityaugmenticon_silver.webp",
+   "short": "【技能强化】当【技能】对敌方英雄造成伤害时，获得护甲和魔法抗性",
+   "hasDetail": true
+  },
+  {
+   "name": "和我一起困在这里",
+   "pickRate": 3.55,
+   "winRate": 51.35,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/stuckinherewithme_large.webp",
+   "short": "使用你的终极技能时会嘲讽附近的敌人们并提供给你持续若干秒的伤害减免",
+   "hasDetail": true
+  },
+  {
+   "name": "鼓声暴起 低音轰鸣",
+   "pickRate": 3.87,
+   "winRate": 51.23,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/theboomandthebass_large.png",
+   "short": "施放技能后，你在6秒内的下一次普攻变得更快，附带50-200（随英雄等级成长） + 50%额外攻击力 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "小丑学院",
+   "pickRate": 4.81,
+   "winRate": 51.21,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/clowncollege_large.webp",
+   "short": "背刺：你从背后袭击敌人时，会造成20-35（随英雄等级成长） + 35%法术强度 + 50%攻击力额外物理伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "豪猪",
+   "pickRate": 2.21,
+   "winRate": 51.21,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/pincushion_large.webp",
+   "short": "承受来自英雄的伤害会积攒一次尖针迸发，这些尖针会从你身上飞出，对附近的敌人们造成伤害和减速",
+   "hasDetail": true
+  },
+  {
+   "name": "科学狂人",
+   "pickRate": 4.05,
+   "winRate": 51.02,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/madscientist_large.webp",
+   "short": "在回合开始时，你的体型要么变大(获得30%适应之力和20%生命值)要么变小(获得70技能急速和40%移动速度)",
+   "hasDetail": true
+  },
+  {
+   "name": "重量级打击手",
+   "pickRate": 4.8,
+   "winRate": 50.94,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/heavyhitter_large.webp",
+   "short": "你的攻击造成相当于你3.5%最大生命值的额外物理伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "利刃华尔兹",
+   "pickRate": 1.01,
+   "winRate": 50.85,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/bladewaltz_large.webp",
+   "short": "让你进入不可被选取状态，在此期间对敌人进行突进并造成30-150（随英雄等级成长） + 10%额外攻击力 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "逃跑计划",
+   "pickRate": 3.78,
+   "winRate": 50.69,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/escapeplan_large.webp",
+   "short": "在降至35%生命值时，获得巨量65%最大生命值持续衰减的护盾、持续衰减的150%移动速度和持续衰减的缩小效果",
+   "hasDetail": true
+  },
+  {
+   "name": "高压锅",
+   "pickRate": 3.34,
+   "winRate": 50.6,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/questpressurecooker_large.webp",
+   "short": "每一秒，对附近的敌方英雄们施加一层可无限叠加的灼烧，在2秒的持续时间里每秒造成0.5%最大生命值魔法伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "蓝色屏障",
+   "pickRate": 1.02,
+   "winRate": 50.56,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/bluenote_large.png",
+   "short": "获得持续1.5秒的护盾，数额相当于你花费的200-450%（随英雄等级成长）法力值",
+   "hasDetail": true
+  },
+  {
+   "name": "大师铸就",
+   "pickRate": 2.7,
+   "winRate": 50.26,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/forgedbythemaster_large.webp",
+   "short": "使你的装备和强化符文伤害提升45%",
+   "hasDetail": true
+  },
+  {
+   "name": "歌利亚巨人",
+   "pickRate": 6.51,
+   "winRate": 50.25,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/goliath_large.webp",
+   "short": "体型变大，获得35%生命值和15%适应之力",
+   "hasDetail": true
+  },
+  {
+   "name": "全能龙魂",
+   "pickRate": 0.83,
+   "winRate": 50.11,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/omnisoul_large.webp",
+   "short": "获得3个随机龙魂",
+   "hasDetail": true
+  },
+  {
+   "name": "最终形态",
+   "pickRate": 2.29,
+   "winRate": 49.79,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/finalform_large.webp",
+   "short": "在施放你的终极技能时，获得持续10秒的50%最大生命值护盾、20%全能吸血和30%额外移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "前进时间到",
+   "pickRate": 2.01,
+   "winRate": 49.79,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/genericabilityaugmenticon_silver.webp",
+   "short": "【技能强化】激活【技能】会在其持续期间为你提供移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "闪光弹",
+   "pickRate": 0.1,
+   "winRate": 49.7,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/flashbang_large.webp",
+   "short": "闪现时引发爆炸，造成60%法术强度 + 70%攻击力 + 70伤害和减速",
+   "hasDetail": true
+  },
+  {
+   "name": "海牛阿福的勇士",
+   "pickRate": 1.22,
+   "winRate": 49.36,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/quest_urfschampion_large.webp",
+   "short": "任务：参与击杀（具体次数待确认）",
+   "hasDetail": true
+  },
+  {
+   "name": "吃过路兵",
+   "pickRate": 0.58,
+   "winRate": 49.35,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/dashing_large.webp",
+   "short": "周期性地识别出敌方英雄身上的破绽",
+   "hasDetail": true
+  },
+  {
+   "name": "水果化",
+   "pickRate": 2.24,
+   "winRate": 49.32,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/fruitseason_large.png",
+   "short": "每次参与击杀，会使被击杀英雄爆炸为3-6（随英雄等级成长）个水果",
+   "hasDetail": true
+  },
+  {
+   "name": "小蜜蜂！！！",
+   "pickRate": 6.86,
+   "winRate": 49.31,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/bees_large.png",
+   "short": "每15-10（随英雄等级成长）秒，你的下一个命中敌方英雄的技能会朝该目标投掷一个蜂巢",
+   "hasDetail": true
+  },
+  {
+   "name": "小小的额外帮助",
+   "pickRate": 2.59,
+   "winRate": 49.3,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】在你的技能持续期间获得攻击距离和攻击速度",
+   "hasDetail": true
+  },
+  {
+   "name": "练腿日",
+   "pickRate": 2.13,
+   "winRate": 49.23,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/legday_large.webp",
+   "short": "获得50移动速度和50%减速抗性",
+   "hasDetail": true
+  },
+  {
+   "name": "超强大脑",
+   "pickRate": 2.08,
+   "winRate": 49.08,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/bigbrain_large.webp",
+   "short": "获得300%法术强度护盾值",
+   "hasDetail": true
+  },
+  {
+   "name": "山脉龙魂",
+   "pickRate": 0.48,
+   "winRate": 49.05,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/mountainsoul_large.webp",
+   "short": "你获得山脉龙魂，在脱离战斗之后获得一个持续一小段时间的护盾",
+   "hasDetail": true
+  },
+  {
+   "name": "终极刷新",
+   "pickRate": 9.64,
+   "winRate": 49.04,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/ultimaterevolution_large.webp",
+   "short": "在施放终极技能后刷新你的终极技能",
+   "hasDetail": true
+  },
+  {
+   "name": "男爵之手",
+   "pickRate": 0.42,
+   "winRate": 48.99,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/handofbaron_large.webp",
+   "short": "获得25%适应之力。附近友方小兵都获得极大增强",
+   "hasDetail": true
+  },
+  {
+   "name": "坦克引擎",
+   "pickRate": 8.53,
+   "winRate": 48.94,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/tank_engine_large.webp",
+   "short": "参与击杀时，获得一个层数，使你的体型增大5%并提升5%最大生命值",
+   "hasDetail": true
+  },
+  {
+   "name": "巫妖大脑",
+   "pickRate": 1.67,
+   "winRate": 48.92,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/lichbrain_large.png",
+   "short": "获得30 + 4%最大生命值法术强度",
+   "hasDetail": true
+  },
+  {
+   "name": "无限循环往复",
+   "pickRate": 4.88,
+   "winRate": 48.91,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/infiniterecursion_large.webp",
+   "short": "获得60技能急速，外加每次参与击杀3技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "快步",
+   "pickRate": 2.5,
+   "winRate": 48.89,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】当你使用【技能】时，朝你的鼠标指针进行冲刺",
+   "hasDetail": true
+  },
+  {
+   "name": "濒死悟道",
+   "pickRate": 0.55,
+   "winRate": 48.89,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/hellbent_large.webp",
+   "short": "用攻击或技能伤害敌方英雄时会提供层数",
+   "hasDetail": true
+  },
+  {
+   "name": "生机迸发",
+   "pickRate": 4.02,
+   "winRate": 48.86,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/growthspurt_large.webp",
+   "short": "获得【生机迸发】召唤师技能",
+   "hasDetail": true
+  },
+  {
+   "name": "渴血",
+   "pickRate": 0.87,
+   "winRate": 48.85,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/goredrink_large.webp",
+   "short": "获得15%全能吸血",
+   "hasDetail": true
+  },
+  {
+   "name": "将他们放倒倒倒",
+   "pickRate": 3.22,
+   "winRate": 48.79,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/takeemdowndowndown_large.png",
+   "short": "普攻和技能会对敌方英雄施加一层持续5秒的效果，并造成5-30（随英雄等级成长） + 35%额外攻击力 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "海洋龙魂",
+   "pickRate": 0.91,
+   "winRate": 48.79,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/oceansoul_large.webp",
+   "short": "获得【海洋龙魂】，在对敌方英雄造成伤害后提供高额的生命和法力回复",
+   "hasDetail": true
+  },
+  {
+   "name": "鲨鱼诱饵",
+   "pickRate": 2.45,
+   "winRate": 48.73,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/fishbait_large.webp",
+   "short": "在阵亡之后的若干秒，一头鲨鱼会啃噬所有附近的敌人们",
+   "hasDetail": true
+  },
+  {
+   "name": "质变：混沌",
+   "pickRate": 2.62,
+   "winRate": 48.72,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/transmutechaos_large.webp",
+   "short": "获得2个随机的强化符文",
+   "hasDetail": true
+  },
+  {
+   "name": "秘术冲拳",
+   "pickRate": 1.21,
+   "winRate": 48.7,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/mysticpunch_large.webp",
+   "short": "攻击特效使你的各个基础技能的冷却时间缩减其125%剩余冷却时间",
+   "hasDetail": true
+  },
+  {
+   "name": "罪恶快感",
+   "pickRate": 0.76,
+   "winRate": 48.7,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/getexcited_large.webp",
+   "short": "参与击杀后，获得持续4秒的100%移动速度和15%攻击速度",
+   "hasDetail": true
+  },
+  {
+   "name": "升级：风暴狂涌",
+   "pickRate": 3.59,
+   "winRate": 48.62,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/upgradehubris_large.webp",
+   "short": "风暴狂涌 - 风啸现在总会在一个区域内引爆，对附近所有敌人造成相当于10% +…",
+   "hasDetail": true
+  },
+  {
+   "name": "巨人杀手",
+   "pickRate": 0.96,
+   "winRate": 48.58,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/giantslayer_large.webp",
+   "short": "体型变小，获得20%移动速度，并基于敌方英雄体型大于你的程度造成10%到30%额外伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "无尽大杀四方",
+   "pickRate": 2.47,
+   "winRate": 48.57,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/endlessdecimate_large.webp",
+   "short": "在战斗状态下，自动施放一次环形斧头挥舞从而造成物理伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "星界躯体",
+   "pickRate": 4.25,
+   "winRate": 48.55,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/celestialbody_large.webp",
+   "short": "获得1500生命值，但你造成的伤害降低10%",
+   "hasDetail": true
+  },
+  {
+   "name": "侵蚀",
+   "pickRate": 0.98,
+   "winRate": 48.51,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/erosion_large.webp",
+   "short": "对敌人造成伤害时会施加一层持续4秒的1.5%护甲和魔法抗性击碎效果，至多在20层时击碎0.015 + 20 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "沃格勒特的巫师帽",
+   "pickRate": 3.44,
+   "winRate": 48.44,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/quest_woogletswitchcap_large.webp",
+   "short": "立刻获得一个无用大棒。任务：持有灭世者的死亡之帽和中娅沙漏",
+   "hasDetail": true
+  },
+  {
+   "name": "属性叠属性！",
+   "pickRate": 1.84,
+   "winRate": 48.42,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/statsonstats_large.webp",
+   "short": "获得3个【属性锻造器】！",
+   "hasDetail": true
+  },
+  {
+   "name": "俯冲轰炸",
+   "pickRate": 8.23,
+   "winRate": 48.41,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/divebomber_large.webp",
+   "short": "在你阵亡时爆炸，对附近的敌人们造成目标20%最大生命值的真实伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "杀意翻涌",
+   "pickRate": 0.77,
+   "winRate": 48.38,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/killsecure_large.webp",
+   "short": "在朝着低生命值的敌人时，获得额外移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "面包和果酱",
+   "pickRate": 0.88,
+   "winRate": 48.31,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】你的技能获得技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "升级：耀光",
+   "pickRate": 0.93,
+   "winRate": 48.25,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/upgradesheen_large.webp",
+   "short": "你的【咒刃】效果造成额外目标最大生命值物理伤害并治疗你自身",
+   "hasDetail": true
+  },
+  {
+   "name": "火狐",
+   "pickRate": 1.18,
+   "winRate": 48.23,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/firfox_large.webp",
+   "short": "自动施放：每7秒，获得25%移动速度并召唤3道烈焰环绕于你…",
+   "hasDetail": true
+  },
+  {
+   "name": "史上最大雪球",
+   "pickRate": 5.03,
+   "winRate": 48.21,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/biggestsnowballever_large.webp",
+   "short": "你的雪球获得100技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "属性！",
+   "pickRate": 0.83,
+   "winRate": 48.2,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/stats_large.webp",
+   "short": "获得2个【属性锻造器】！",
+   "hasDetail": true
+  },
+  {
+   "name": "命运之武器",
+   "pickRate": 0.28,
+   "winRate": 48.17,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/protagonistssignatureweapon_large.png",
+   "short": "你的第一件传说级装备成为命运之武器",
+   "hasDetail": true
+  },
+  {
+   "name": "尤里卡",
+   "pickRate": 8.06,
+   "winRate": 48.16,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/eureka_large.webp",
+   "short": "获得相当于30%法术强度的技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "泰坦的坚决",
+   "pickRate": 2.73,
+   "winRate": 48.1,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/iamthejuggernaut_large.webp",
+   "short": "在承受或造成伤害时获得层数",
+   "hasDetail": true
+  },
+  {
+   "name": "轻拍背部",
+   "pickRate": 0.41,
+   "winRate": 48.1,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/patontheback_large.webp",
+   "short": "友军会在你走过时鼓励你，为你提供护盾和移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "罪恶快感！",
+   "pickRate": 5.12,
+   "winRate": 48.08,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/overextender_large.webp",
+   "short": "将一个召唤师技能替换为罪恶快感！",
+   "hasDetail": true
+  },
+  {
+   "name": "黎明使者的坚决",
+   "pickRate": 2.37,
+   "winRate": 48.02,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/dawnbringersresolve_large.webp",
+   "short": "在跌到50%生命值以下时，在3秒里持续回复共30%最大生命值",
+   "hasDetail": true
+  },
+  {
+   "name": "夺金",
+   "pickRate": 0.48,
+   "winRate": 47.99,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/goldrend_large.webp",
+   "short": "用攻击或技能对一个英雄造成伤害时会造成额外50-150（随英雄等级成长） + 20%法术强度 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "由心及物",
+   "pickRate": 1.57,
+   "winRate": 47.98,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/mindtomatter_large.webp",
+   "short": "使你的最大生命值提升，数额相当于你一半的法力值",
+   "hasDetail": true
+  },
+  {
+   "name": "软弹啪叽抓",
+   "pickRate": 0.86,
+   "winRate": 47.97,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/squishyslappygrab_large.webp",
+   "short": "偶尔对所有附近的敌方英雄放出软弹啪叽的手，然后用灵链系住",
+   "hasDetail": true
+  },
+  {
+   "name": "电涌力场",
+   "pickRate": 0.85,
+   "winRate": 47.94,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/surgefield_large.webp",
+   "short": "在施放终极技能时，在你周围生成一个地带来提供技能急速和移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "质变：棱彩阶",
+   "pickRate": 7.03,
+   "winRate": 47.92,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/transmuteprismatic_large.webp",
+   "short": "获得1个随机棱彩阶强化符文",
+   "hasDetail": true
+  },
+  {
+   "name": "急急小子",
+   "pickRate": 1.43,
+   "winRate": 47.87,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/withhaste_large.webp",
+   "short": "获得移动速度，相当于你的70%技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "循环往复",
+   "pickRate": 10.63,
+   "winRate": 47.86,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/recursion_large.webp",
+   "short": "获得60技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "有始有终",
+   "pickRate": 3.45,
+   "winRate": 47.86,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/frombeginningtoend_large.webp",
+   "short": "获得先攻和黑暗收割基石符文",
+   "hasDetail": true
+  },
+  {
+   "name": "捐赠",
+   "pickRate": 2.79,
+   "winRate": 47.82,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/donation_large.webp",
+   "short": "获得1750金币。无需多问",
+   "hasDetail": true
+  },
+  {
+   "name": "尖端发明家",
+   "pickRate": 1.71,
+   "winRate": 47.79,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/apexinventor_large.webp",
+   "short": "获得100装备急速(相当于50%装备冷却缩减)",
+   "hasDetail": true
+  },
+  {
+   "name": "质变：黄金阶",
+   "pickRate": 3.83,
+   "winRate": 47.73,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/transmutegold_large.webp",
+   "short": "获得1个随机黄金阶强化符文",
+   "hasDetail": true
+  },
+  {
+   "name": "术士果汁盒",
+   "pickRate": 3.53,
+   "winRate": 47.65,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/warlockjuicebox_large.webp",
+   "short": "获得10% + 0.035%法术强度全能吸血",
+   "hasDetail": true
+  },
+  {
+   "name": "虚幻武器",
+   "pickRate": 3.3,
+   "winRate": 47.59,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/etherealweapon_large.webp",
+   "short": "你的技能可施加攻击特效。每个目标有1秒冷却时间",
+   "hasDetail": true
+  },
+  {
+   "name": "自然即是治愈",
+   "pickRate": 1.29,
+   "winRate": 47.49,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/natureishealing_large.webp",
+   "short": "站在草丛中时，每秒回复（数值待确认）最大生命值",
+   "hasDetail": true
+  },
+  {
+   "name": "飞升仪式",
+   "pickRate": 1.27,
+   "winRate": 47.46,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/glasscannon_large.webp",
+   "short": "参与击杀敌方英雄后会留下其精华",
+   "hasDetail": true
+  },
+  {
+   "name": "牙仙子",
+   "pickRate": 5.85,
+   "winRate": 47.34,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/questburstingteeth_large.webp",
+   "short": "爆裂敌人会掉落牙齿。拾取牙齿会提供给你永久的穿甲和法术穿透",
+   "hasDetail": true
+  },
+  {
+   "name": "终极唤醒",
+   "pickRate": 4.32,
+   "winRate": 47.31,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/zerohour_large.webp",
+   "short": "在施放你的终极技能后，重置你所有基础技能的冷却时间",
+   "hasDetail": true
+  },
+  {
+   "name": "闪现向前",
+   "pickRate": 2.68,
+   "winRate": 47.29,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/flashy_large.webp",
+   "short": "你的闪现有3层充能，并且冷却时间为2秒",
+   "hasDetail": true
+  },
+  {
+   "name": "不动如山",
+   "pickRate": 1.16,
+   "winRate": 47.22,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/impassable_large.webp",
+   "short": "获得余震和冰川增幅基石符文",
+   "hasDetail": true
+  },
+  {
+   "name": "升级：中娅",
+   "pickRate": 2.66,
+   "winRate": 47.18,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/upgradezh_large.webp",
+   "short": "【中娅沙漏】的冷却时间降低至45秒",
+   "hasDetail": true
+  },
+  {
+   "name": "舞会女王",
+   "pickRate": 0.77,
+   "winRate": 47.17,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/promqueen_large.webp",
+   "short": "周期性地自动施放一道聚光灯降临在你身上",
+   "hasDetail": true
+  },
+  {
+   "name": "回响施放",
+   "pickRate": 1.26,
+   "winRate": 47.09,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/genericabilityaugmenticon_prismatic.webp",
+   "short": "【技能强化】施放你的技能时会朝你的鼠标位置派出一个复制体并再次施放该技能",
+   "hasDetail": true
+  },
+  {
+   "name": "缩小引擎",
+   "pickRate": 3.81,
+   "winRate": 46.99,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/shrinkengine_large.webp",
+   "short": "参与击杀后会让你变小并且获得技能急速和移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "死之舞",
+   "pickRate": 0.8,
+   "winRate": 46.71,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/totentanz_large.png",
+   "short": "将一个召唤师技能替换为与死亡共舞一曲",
+   "hasDetail": true
+  },
+  {
+   "name": "鲨鱼暴风",
+   "pickRate": 1.56,
+   "winRate": 46.69,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/sharktempest_large.webp",
+   "short": "鲨鱼们环绕着你的【雪球】，对附近的敌人们造成伤害和减速",
+   "hasDetail": true
+  },
+  {
+   "name": "转得我眩晕了",
+   "pickRate": 0.29,
+   "winRate": 46.63,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/youspinmerightround_large.webp",
+   "short": "将一个召唤师技能替换为骄行荡寇",
+   "hasDetail": true
+  },
+  {
+   "name": "终极循环往复",
+   "pickRate": 11.88,
+   "winRate": 46.53,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/zealot_large.webp",
+   "short": "获得50终极技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "炼狱龙魂",
+   "pickRate": 1.34,
+   "winRate": 46.52,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/infernalsoul_large.webp",
+   "short": "你获得炼狱龙魂，使用技能或攻击命中敌人时造成额外伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "夜狩",
+   "pickRate": 1.02,
+   "winRate": 46.49,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/nightstalking_large.webp",
+   "short": "在对敌人造成伤害的3秒内参与击杀该敌人会使你进入1.5秒的隐身状态",
+   "hasDetail": true
+  },
+  {
+   "name": "溢流",
+   "pickRate": 1.87,
+   "winRate": 46.46,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/overflow_large.webp",
+   "short": "你的法力值消耗翻倍。你的技能的治疗效果、护盾效果和伤害获得提升，提升幅度基于你的最大法力值",
+   "hasDetail": true
+  },
+  {
+   "name": "你摸不到",
+   "pickRate": 1.61,
+   "winRate": 46.45,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/canttouchthis_large.webp",
+   "short": "施放你的终极技能会使你进入持续2秒的的免疫伤害状态(8秒冷却时间)",
+   "hasDetail": true
+  },
+  {
+   "name": "深红钴蓝闪光",
+   "pickRate": 4.3,
+   "winRate": 46.39,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】被【技能】伤害过的敌方英雄会被标记",
+   "hasDetail": true
+  },
+  {
+   "name": "神圣雪球",
+   "pickRate": 1.19,
+   "winRate": 46.33,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/goldensnowball_large.webp",
+   "short": "雪球获得100技能急速。你在用【雪球】冲刺后短暂免疫伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "不祥契约",
+   "pickRate": 0.86,
+   "winRate": 46.31,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/wisdomofages_large.webp",
+   "short": "基于已损失生命值，获得75-150（随英雄等级成长）法术强度，50%移动速度和20%全能吸血",
+   "hasDetail": true
+  },
+  {
+   "name": "双生火焰",
+   "pickRate": 1.57,
+   "winRate": 46.28,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/twinfire_large.webp",
+   "short": "造成技能伤害时，发射1+300%暴击几率个飞弹，每个造成10-30（随英雄等级成长） + 7%额外攻击力 +…",
+   "hasDetail": true
+  },
+  {
+   "name": "大法师",
+   "pickRate": 4.07,
+   "winRate": 46.27,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/archmage_large.webp",
+   "short": "施放一个技能会返还另一个随机技能的花费，数额相当于30%原技能冷却时间",
+   "hasDetail": true
+  },
+  {
+   "name": "针插垫",
+   "pickRate": 1.16,
+   "winRate": 46.18,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/symphonyofwar_large.webp",
+   "short": "【技能强化】在【技能】期间进行攻击会施加标记，其会在该持续时长结束时爆炸，从而造成伤害并提供移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "下雪天",
+   "pickRate": 2.12,
+   "winRate": 46.16,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/snowday_large.webp",
+   "short": "你的【雪球】获得100技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "物理转魔法",
+   "pickRate": 6.4,
+   "winRate": 46.13,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/adapt_large.webp",
+   "short": "将额外攻击力转化为法术强度，并获得15%法术强度",
+   "hasDetail": true
+  },
+  {
+   "name": "快中求稳",
+   "pickRate": 0.39,
+   "winRate": 46.08,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/swiftandsafe_large.webp",
+   "short": "在冲刺或闪烁后，获得持续2秒的65-290（随英雄等级成长） + 26%法术强度 + 65%额外攻击力护盾值",
+   "hasDetail": true
+  },
+  {
+   "name": "狂热者",
+   "pickRate": 2.55,
+   "winRate": 46.03,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/zealot_large.webp",
+   "short": "你的攻击会对一个额外目标发射一个飞弹，从而造成削减过的伤害并施加攻击特效",
+   "hasDetail": true
+  },
+  {
+   "name": "暗影疾奔",
+   "pickRate": 0.44,
+   "winRate": 46.02,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/shadowrunner_large.webp",
+   "short": "在使用一个冲刺、跳跃、闪烁或传送类技能或离开潜行状态之后，获得持续2秒的300移动速度",
+   "hasDetail": true
+  },
+  {
+   "name": "注魔",
+   "pickRate": 0.74,
+   "winRate": 45.97,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/juiced_large.webp",
+   "short": "攻击特效造成7%最大法力值（远程为5.6%最大法力值）魔法伤害，这个伤害可以暴击",
+   "hasDetail": true
+  },
+  {
+   "name": "扳机炼狱",
+   "pickRate": 1.89,
+   "winRate": 45.88,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/madscientist_large.webp",
+   "short": "获得悍勇本色。在你达到S评价等级时，自动使用炼狱扳机",
+   "hasDetail": true
+  },
+  {
+   "name": "超凡邪恶",
+   "pickRate": 4.23,
+   "winRate": 45.87,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/aram_phenomenalevil_large.webp",
+   "short": "在你用技能命中敌人时永久获得1法术强度",
+   "hasDetail": true
+  },
+  {
+   "name": "超负荷",
+   "pickRate": 1.12,
+   "winRate": 45.83,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/genericabilityaugmenticon_prismatic.webp",
+   "short": "【技能强化】使用另一个技能会重置技能的冷却时间",
+   "hasDetail": true
+  },
+  {
+   "name": "巫师式思考",
+   "pickRate": 4.83,
+   "winRate": 45.79,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/witchfulthinking_large.webp",
+   "short": "获得20-80（随英雄等级成长）法术强度",
+   "hasDetail": true
+  },
+  {
+   "name": "弹球",
+   "pickRate": 2.63,
+   "winRate": 45.76,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/pinballsnowball_large.webp",
+   "short": "你的雪球获得50技能急速并且造成额外的100-500（随英雄等级成长） 真实伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "潘朵拉的盒子",
+   "pickRate": 1.59,
+   "winRate": 45.72,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/pandoras_box_large.webp",
+   "short": "将你的所有强化符文变为随机的棱彩阶强化符文",
+   "hasDetail": true
+  },
+  {
+   "name": "扇巴掌",
+   "pickRate": 0.75,
+   "winRate": 45.72,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/slaparound_large.webp",
+   "short": "每当你定身或缚地一个敌人时，获得一层可叠加的10适应之力",
+   "hasDetail": true
+  },
+  {
+   "name": "终极不可阻挡",
+   "pickRate": 2.23,
+   "winRate": 45.66,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/ultimateunstoppable_large.webp",
+   "short": "在你使用你的终极技能后，你获得持续3秒的控制免疫",
+   "hasDetail": true
+  },
+  {
+   "name": "神圣干预",
+   "pickRate": 0.96,
+   "winRate": 45.61,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/slowactingpainkillers_large.webp",
+   "short": "在战斗开始15秒后，召唤一颗护体星星缓慢地降落在你身上",
+   "hasDetail": true
+  },
+  {
+   "name": "杀戮时间到了",
+   "pickRate": 6.79,
+   "winRate": 45.53,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/itskillingtime_large.webp",
+   "short": "在施放你的终极技能后，将所有敌人打上死亡标记",
+   "hasDetail": true
+  },
+  {
+   "name": "穿针引线",
+   "pickRate": 4.56,
+   "winRate": 45.52,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/threadtheneedle_large.webp",
+   "short": "获得18%护甲穿透和法术穿透",
+   "hasDetail": true
+  },
+  {
+   "name": "全凭身法",
+   "pickRate": 3.43,
+   "winRate": 45.51,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/dashing_large.webp",
+   "short": "你的冲刺、跳跃、闪烁或传送类技能获得175技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "珠光护手",
+   "pickRate": 6.21,
+   "winRate": 45.34,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/jeweledgauntlet_large.webp",
+   "short": "你的技能可以造成暴击，造成145%总伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "吞噬灵魂",
+   "pickRate": 0.44,
+   "winRate": 45.34,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/souleater_large.webp",
+   "short": "定身一个敌方英雄时会提供20最大生命值",
+   "hasDetail": true
+  },
+  {
+   "name": "面包和奶酪",
+   "pickRate": 1.31,
+   "winRate": 45.12,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】你的技能获得技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "残忍",
+   "pickRate": 1.95,
+   "winRate": 45.09,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/cruelty_large.webp",
+   "short": "定身或缚地一个敌方英雄时，召唤一颗彗星至敌人上方",
+   "hasDetail": true
+  },
+  {
+   "name": "翻倍时间",
+   "pickRate": 2.03,
+   "winRate": 45.08,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/aram_phenomenalevil_large.webp",
+   "short": "在4秒内用2种不同技能对一名敌方英雄造成伤害时，会造成10%最大法力值魔法伤害并提供25最大法力值",
+   "hasDetail": true
+  },
+  {
+   "name": "纯粹主义者 - 术师",
+   "pickRate": 4.91,
+   "winRate": 44.99,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/puristcaster_large.webp",
+   "short": "获得百分比冷却缩减并将你的所有攻击速度转化为技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "神射法师",
+   "pickRate": 3.37,
+   "winRate": 44.89,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/marksmage_large.webp",
+   "short": "你的攻击造成相当于你100%法术强度的额外物理伤害",
+   "hasDetail": true
+  },
+  {
+   "name": "黄铜爆音",
+   "pickRate": 1.13,
+   "winRate": 44.81,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/camo_large.png",
+   "short": "将一个召唤师技能替换为黄铜爆音",
+   "hasDetail": true
+  },
+  {
+   "name": "面包和黄油",
+   "pickRate": 1.75,
+   "winRate": 44.8,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "你的Q获得100技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "威能之追求",
+   "pickRate": 1.87,
+   "winRate": 44.74,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/marksmage_large.webp",
+   "short": "【技能强化】任务：用【技能】命中敌人次",
+   "hasDetail": true
+  },
+  {
+   "name": "巨像的勇气",
+   "pickRate": 0.59,
+   "winRate": 44.72,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/courageofthecolossus_large.webp",
+   "short": "定身或缚地一个敌方英雄后获得150-450（随英雄等级成长） + 4%最大生命值护盾值",
+   "hasDetail": true
+  },
+  {
+   "name": "物法皆修",
+   "pickRate": 0.89,
+   "winRate": 44.67,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/masterofduality_large.webp",
+   "short": "你的每次攻击为你提供可叠加的6-18（随英雄等级成长）法术强度…",
+   "hasDetail": true
+  },
+  {
+   "name": "冰寒",
+   "pickRate": 0.99,
+   "winRate": 44.57,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/icecold_large.webp",
+   "short": "你的减速效果可使移动速度降低额外的100",
+   "hasDetail": true
+  },
+  {
+   "name": "急速之追求",
+   "pickRate": 1.93,
+   "winRate": 44.34,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "short": "【技能强化】用技能命中敌方英雄以获得技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "王冠之重",
+   "pickRate": 1.95,
+   "winRate": 44.25,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/heavyisthecrown_large.png",
+   "short": "获得10攻击力、25法术强度，并使你的额外攻击力、额外法术强度和总攻击速度提升10%",
+   "hasDetail": true
+  },
+  {
+   "name": "回归基本功",
+   "pickRate": 0.18,
+   "winRate": 43.45,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/backtobasics_large.webp",
+   "short": "你的终极技能已被封印。获得35%技能伤害、治疗效果、护盾，和70技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "冰雪爆裂",
+   "pickRate": 1.76,
+   "winRate": 43.43,
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "icon": "assets/img/augments/snowbomb_large.webp",
+   "short": "再次施放雪球会造成提升伤害、击飞该目标、并击退附近的敌人们",
+   "hasDetail": true
+  },
+  {
+   "name": "精怪魔法",
+   "pickRate": 2.47,
+   "winRate": 43.32,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/feymagic_large.webp",
+   "short": "你的终极技能的伤害会对敌人造成持续若干秒的变形效果",
+   "hasDetail": true
+  },
+  {
+   "name": "三重射击",
+   "pickRate": 2.7,
+   "winRate": 43.13,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/genericabilityaugmenticon_prismatic.webp",
+   "short": "【技能强化】你的技能会瞄准你前方2个额外的敌人",
+   "hasDetail": true
+  },
+  {
+   "name": "闪闪现现",
+   "pickRate": 0.08,
+   "winRate": 42.25,
+   "tier": "silver",
+   "tierLabel": "白银",
+   "icon": "assets/img/augments/flash2_large.webp",
+   "short": "获得第二个【闪现】召唤师技能和70召唤师技能急速",
+   "hasDetail": true
+  },
+  {
+   "name": "尊我为王",
+   "pickRate": 0.46,
+   "winRate": 33.7,
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "icon": "assets/img/augments/kingme_large.webp",
+   "short": "当你第一次携带一件传说级装备并乘坐敌人的传送门时，你会加冕为王，升级你的装备并获得一个随机棱彩阶强化符文",
+   "hasDetail": true
+  }
+ ],
+ "specialAugments": [
+  {
+   "name": "山脉龙魂",
+   "icon": "assets/img/augments/mountainsoul_large.webp",
+   "tier": "silver",
+   "tierLabel": "白银",
+   "reason": "坦克出装时配合被动和败魔，能大幅提高抗揍能力，可以出振奋增幅护盾厚度"
+  },
+  {
+   "name": "终极刷新",
+   "icon": "assets/img/augments/ultimaterevolution_large.webp",
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "reason": "连撞两次"
+  },
+  {
+   "name": "快步",
+   "icon": "assets/img/augments/genericabilityaugmenticon_gold.webp",
+   "tier": "gold",
+   "tierLabel": "黄金",
+   "reason": "可以放小技能假装放大骗一波闪现"
+  },
+  {
+   "name": "全凭身法",
+   "icon": "assets/img/augments/dashing_large.webp",
+   "tier": "prismatic",
+   "tierLabel": "棱彩",
+   "reason": "大招可以吃到减CD"
+  }
+ ],
+ "trapAugments": [],
+ "patchNotes": []
+}
