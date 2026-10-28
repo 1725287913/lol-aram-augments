@@ -4454,9 +4454,22 @@ ul {
 }
 
 @media (max-width: 760px) {
-  /* 手机竖屏：横版海报裁到人物上半身，别整张铺满 */
+  /* 手机竖屏：横版海报完整展示为顶部通栏，不再 cover 放大只露中间一条 */
   .hero-bg-img {
-    object-position: 50% 20%;
+    height: auto;
+    aspect-ratio: 1215 / 717;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+
+  /* 手机端遮罩：海报下半段自然渐入正文底色 */
+  .hero-bg-veil {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 11, 17, 0.1) 0%,
+      rgba(8, 11, 17, 0.22) 42%,
+      var(--bg) 70%
+    );
   }
 
   /* 标题右侧给收藏/分享让出位置 */
@@ -5074,9 +5087,9 @@ ul {
     font-size: 10.5px;
   }
 
-  /* 手机上海报同样要看得清 */
+  /* 手机端整张海报完整显示（比例一致无裁切），position 仅兜底 */
   .hero-bg-img {
-    object-position: 50% 14%;
+    object-position: 50% 30%;
   }
 
   .hh-banner {
@@ -5087,6 +5100,21 @@ ul {
 /* ---------- v5 细节：缺失图标不显示破图 ---------- */
 .img-fail {
   opacity: 0;
+}
+
+/* 英雄大头像可点击 → 打开侧边栏换英雄 */
+.hh-avatar {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hh-avatar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.hh-avatar:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .pl-aug .img-fail + em,

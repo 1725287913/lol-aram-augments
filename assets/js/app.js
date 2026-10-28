@@ -1256,6 +1256,12 @@
   document.addEventListener('click', (e) => {
     const t = e.target;
 
+    // 点击英雄大头像 → 打开侧边栏选英雄（手机端主要换英雄入口）
+    if (t.closest('.hh-avatar')) {
+      openSide();
+      return;
+    }
+
     if (t.closest('[data-close]')) {
       const isExit = t.closest('[data-qzexit]');
       closeModal();
