@@ -219,6 +219,26 @@ ul {
   flex: 0 0 auto;
 }
 
+/* 数据版本，既是说明也是「数据真实」的凭证 */
+.meta {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-left: 16px;
+  font-size: 11.5px;
+  color: var(--dim-2);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.nav-acts {
+  margin-left: 0;
+}
+
+.meta b {
+  color: var(--dim);
+  font-weight: 600;
+}
+
 .navbtn {
   display: inline-flex;
   align-items: center;
@@ -2133,6 +2153,10 @@ ul {
   }
 
   .nav-acts {
+    display: none;
+  }
+
+  .meta {
     display: none;
   }
 

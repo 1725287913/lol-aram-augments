@@ -136,6 +136,12 @@
     index.forEach((h) => (S.bySlug[h.slug] = h));
 
     $('#heroCount').textContent = index.length;
+    const pi = $('#patchInfo');
+    if (pi) {
+      const v = meta.version || '';
+      const d = meta.dataDate || '';
+      pi.innerHTML = v ? `<b>${esc(v)}</b>${d ? ` · ${esc(d)} 数据` : ''}` : '';
+    }
     renderList();
 
     const hash = decodeURIComponent(location.hash.replace(/^#/, ''));
