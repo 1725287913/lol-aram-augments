@@ -457,11 +457,10 @@
   }
 
   // 一条「核心构建方案」：评级徽章 + 名称 + 锻体 + 核心/备选海克斯 + 点评 + 出装
-  function advRow(b, routeCount) {
+  function advRow(b) {
     const cores = (b.coreAugments || []).filter((a) => a.icon || a.name);
     const alts = (b.altAugments || []).slice(0, 6);
     const items = b.items || [];
-    const bare = !cores.length && !items.length; // 只有名字和评级，核心与出装都被锁
     const forge = (b.forge || []).length
       ? `<div class="adv-forge"><span class="cb-lbl2">锻体</span>${b.forge
           .map((f) => esc(FORGE[f] || f))
@@ -475,38 +474,18 @@
     return `<div class="adv">
       ${rankBadge(b.tier)}
       <div class="adv-bd">
-        <div class="adv-t"><b>${esc(b.name)}</b>${
-          items.length
-            ? `<span class="adv-tag ok">出装已公开</span>`
-            : bare
-            ? `<span class="adv-tag lock">会员方案</span>`
-            : ''
-        }</div>
-        ${bare ? '' : forge}
+        <div class="adv-t"><b>${esc(b.name)}</b></div>
+        ${forge}
         ${
           cores.length
             ? `<div class="adv-an"><span class="cb-lbl2">核心</span>${cores.map((a) => augIcon(a, 'big')).join('')}</div>`
             : ''
         }
-        ${
-          !bare && alts.length
-            ? `<div class="adv-an"><span class="cb-lbl2">备选</span>${alts.map((a) => augIcon(a)).join('')}</div>`
-            : ''
-        }
-        ${
-          b.desc
-            ? `<div class="adv-d">${esc(b.desc)}</div>`
-            : bare
-            ? ''
-            : `<div class="adv-mut">这套原站没给文字点评，按名字和核心海克斯对照下面的出装路线看。</div>`
-        }
+        ${alts.length ? `<div class="adv-an"><span class="cb-lbl2">备选</span>${alts.map((a) => augIcon(a)).join('')}</div>` : ''}
+        ${b.desc ? `<div class="adv-d">${esc(b.desc)}</div>` : ''}
         ${
           items.length
             ? `<div class="adv-items">${items.map((it, k) => itemHTML(it, k + 1)).join('')}</div>`
-            : bare
-            ? `<div class="adv-mut">核心海克斯和出装是小程序的会员内容，网页版原站只公开了方案名与评级。${
-                routeCount ? `可以先按下面 ${routeCount} 套出装路线打。` : ''
-              }</div>`
             : ''
         }
       </div>
@@ -551,7 +530,7 @@
       ? `<div class="forge">${p.forge
           .map((f, i) => `${i ? '<span class="forge-arrow">›</span>' : ''}<span class="forge-chip">${esc(FORGE[f] || f)}</span>`)
           .join('')}</div>`
-      : `<div class="rc-none">这套原站没给锻体顺序</div>`;
+      : `<div class="rc-none">这套暂无锻体顺序，直接按下面的核心装备出</div>`;
     return `<div class="route-card">
       <div class="rc-head"><span class="rc-idx">${idx + 1}</span><b>${esc(p.title || '方案 ' + (idx + 1))}</b></div>
       <div class="rc-lbl">锻体顺序</div>
@@ -578,17 +557,26 @@
   function viewPlay() {
     const h = S.hero;
     const plays = h.playstyles || [];
-    const builds = (h.builds || []).slice().sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
+    // 只保留有完整出装的方案：只有名字、评级或备选名单的空壳一律不展示
+    const builds = (h.builds || [])
+      .filter((b) => (b.items || []).length)
+      .sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
     const combos = h.augmentCombos || [];
     const total = builds.length + plays.length + combos.length;
     if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
 
-    // 顶部总览：一眼看到有多少套方案可选
+    // 顶部总览：一眼看到有多少套，并能直接跳到对应区块
+    const jumps = [
+      plays.length ? `<a class="ps-jump" data-jump="sec-routes">出装路线 <b>${plays.length}</b></a>` : '',
+      builds.length ? `<a class="ps-jump" data-jump="sec-builds">核心构建 <b>${builds.length}</b></a>` : '',
+      combos.length ? `<a class="ps-jump" data-jump="sec-combos">三件套 <b>${combos.length}</b></a>` : '',
+    ].filter(Boolean).join('');
     const summary = `<div class="plan-sum">
       <div class="ps-num">${total}<i>套</i></div>
       <div class="ps-bd">
-        <div class="ps-t">这个英雄一共有 ${total} 套方案可以用</div>
-        <div class="ps-d"><b>${builds.length}</b> 套核心构建 · <b>${plays.length}</b> 套出装路线 · <b>${combos.length}</b> 套海克斯三件套</div>
+        <div class="ps-t">这个英雄一共有 ${total} 套玩法</div>
+        <div class="ps-d"><b>${plays.length}</b> 套出装路线 · <b>${builds.length}</b> 套核心构建 · <b>${combos.length}</b> 套海克斯三件套</div>
+        <div class="ps-nav">${jumps}</div>
       </div>
     </div>`;
 
@@ -596,17 +584,8 @@
       ${summary}
 
       ${
-        builds.length
-          ? `<div class="section">
-        <div class="sec-head"><h3>核心构建方案</h3><div class="sec-line"></div><span class="hint">${builds.length} 套 · 评级与点评来自原站攻略</span></div>
-        <div class="adv-list">${builds.map((b) => advRow(b, plays.length)).join("")}</div>
-      </div>`
-          : ''
-      }
-
-      ${
         plays.length
-          ? `<div class="section">
+          ? `<div class="section" id="sec-routes">
         <div class="sec-head"><h3>出装路线</h3><div class="sec-line"></div><span class="hint">${plays.length} 套 · 锻体到六神装</span></div>
         <div class="route-list">${plays.map((x, i) => routeCard(x, i)).join('')}</div>
       </div>`
@@ -614,8 +593,17 @@
       }
 
       ${
+        builds.length
+          ? `<div class="section" id="sec-builds">
+        <div class="sec-head"><h3>核心构建方案</h3><div class="sec-line"></div><span class="hint">${builds.length} 套 · 按评级排序</span></div>
+        <div class="adv-list">${builds.map((b) => advRow(b)).join('')}</div>
+      </div>`
+          : ''
+      }
+
+      ${
         combos.length
-          ? `<div class="section">
+          ? `<div class="section" id="sec-combos">
         <div class="sec-head"><h3>海克斯三件套</h3><div class="sec-line"></div><span class="hint">${combos.length} 套 · 按三个海克斯在本英雄的均胜率排序</span></div>
         <div class="combo-list">${combosHTML(h)}</div>
       </div>`
@@ -1562,6 +1550,14 @@
 
     const aug = t.closest('[data-aug]');
     if (aug) return openAug(aug.dataset.aug);
+
+    // 总览里的区块跳转
+    const jump = t.closest('[data-jump]');
+    if (jump) {
+      const el = document.getElementById(jump.dataset.jump);
+      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
 
     // 点装备图标看详情
     const itemEl = t.closest('[data-item]');
