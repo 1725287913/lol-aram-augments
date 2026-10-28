@@ -70,21 +70,22 @@ input{font:inherit}
   padding:12px 14px 8px;font-size:12px;color:var(--dim);letter-spacing:.5px;
 }
 .side-head .count{color:var(--dim-2)}
+/* 英雄墙：行高写死 64px，不依赖 aspect-ratio / 百分比 padding —— 这两种写法
+   在部分手机浏览器里会算出 0 高，导致卡片被压成一条。高度写死最稳。 */
 .hero-grid{
   flex:1;min-height:0;overflow-y:auto;padding:0 10px 16px;
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:8px;align-content:start;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));
+  gap:8px;align-content:start;
 }
-/* 卡片用 padding-top 撑出正方形：不依赖 aspect-ratio，图片没加载也不会塌成一条 */
-.hcard{position:relative;border-radius:8px;overflow:hidden;cursor:pointer;background:var(--surface-3);
-  border:1px solid transparent;transition:transform .12s,border-color .12s}
-.hcard::before{content:"";display:block;padding-top:100%}
+.hcard{position:relative;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;
+  background:var(--surface-3);border:1px solid transparent;transition:transform .12s,border-color .12s}
 .hcard:hover{transform:translateY(-2px);border-color:var(--gold)}
 .hcard.active{border-color:var(--hex);box-shadow:0 0 0 1px var(--hex),0 4px 14px rgba(10,200,185,.22)}
 .hcard img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;
   filter:saturate(.9);background:var(--surface-3)}
 .hcard.active img{filter:saturate(1.1)}
-.hcard .nm{position:absolute;left:0;right:0;bottom:0;padding:10px 3px 3px;
-  font-size:10px;text-align:center;line-height:1.2;
+.hcard .nm{position:absolute;left:0;right:0;bottom:0;padding:9px 2px 3px;
+  font-size:10px;text-align:center;line-height:1.15;letter-spacing:-.2px;
   background:linear-gradient(transparent,rgba(4,7,12,.92));
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hcard .wr{position:absolute;top:2px;right:2px;font-size:9px;padding:1px 3px;border-radius:3px;
@@ -201,10 +202,18 @@ input{font:inherit}
 .ps-d b{color:var(--dim);font-weight:600;font-variant-numeric:tabular-nums}
 
 /* 出装路线卡 */
+.route-list{display:flex;flex-direction:column;gap:10px}
 .route-card{padding:13px 15px;border-radius:11px;border:1px solid var(--line);background:var(--surface)}
-.rc-lbl{font-size:10.5px;color:var(--dim-2);letter-spacing:.6px;margin:0 0 7px}
+.rc-head{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);margin-bottom:10px}
+.rc-head b{font-weight:600}
+.rc-idx{width:19px;height:19px;border-radius:5px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:var(--hex);
+  background:rgba(10,200,185,.12);border:1px solid rgba(10,200,185,.28)}
+.rc-none{font-size:12px;color:var(--dim-2);padding:2px 0}
+.rc-lbl{font-size:10.5px;color:var(--dim-2);letter-spacing:.6px;margin:14px 0 7px}
+.rc-head + .rc-lbl{margin-top:0}
 .rc-lbl i{font-style:normal;color:var(--dim-2);opacity:.75}
-.rc-lbl:not(:first-child){margin-top:14px}
 
 /* 核心构建方案卡 */
 .adv-forge{font-size:12px;color:var(--dim);margin-top:6px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
@@ -357,9 +366,9 @@ img.miss-img{opacity:0}
   .brand-text{display:none}
   .meta{display:none}
   .layout{flex-direction:column;height:auto}
-  /* 手机上英雄墙限高，否则 173 个头像会把内容区顶到屏幕外 */
+  /* 手机上英雄墙限高，否则 173 个头像会把内容区顶到屏幕外；用 height 而不是 max-height，避免被内容撑开 */
   .sidebar{width:100%;border-right:0;border-bottom:1px solid var(--line);
-    max-height:40vh;flex-shrink:0}
+    height:38vh;min-height:180px;flex-shrink:0;overflow:hidden}
   .hero-grid{padding-bottom:8px}
   .content{overflow:visible}
   .hero-head{padding:14px 14px 0}

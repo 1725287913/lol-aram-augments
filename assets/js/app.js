@@ -545,6 +545,36 @@
       .join('');
   }
 
+  // 一套出装路线：锻体 → 出门 → 核心 → 备选 → 鞋子
+  function routeCard(p, idx) {
+    const forge = (p.forge || []).length
+      ? `<div class="forge">${p.forge
+          .map((f, i) => `${i ? '<span class="forge-arrow">›</span>' : ''}<span class="forge-chip">${esc(FORGE[f] || f)}</span>`)
+          .join('')}</div>`
+      : `<div class="rc-none">这套原站没给锻体顺序</div>`;
+    return `<div class="route-card">
+      <div class="rc-head"><span class="rc-idx">${idx + 1}</span><b>${esc(p.title || '方案 ' + (idx + 1))}</b></div>
+      <div class="rc-lbl">锻体顺序</div>
+      ${forge}
+      <div class="rc-lbl">出门装</div>
+      <div class="items-row">${(p.startItems || []).map((i) => itemHTML(i)).join('') || '<span class="hint">—</span>'}</div>
+      <div class="rc-lbl">核心装备 <i>按顺序出</i></div>
+      <div class="items-row">${(p.coreItems || []).map((i, k) => itemHTML(i, k + 1)).join('') || '<span class="hint">—</span>'}</div>
+      ${
+        (p.otherItems || []).length
+          ? `<div class="rc-lbl">备选装备 <i>看对面阵容换</i></div>
+      <div class="items-row">${p.otherItems.map((i) => itemHTML(i)).join('')}</div>`
+          : ''
+      }
+      ${
+        (p.shoes || []).length
+          ? `<div class="rc-lbl">鞋子</div>
+      <div class="items-row">${p.shoes.map((i) => itemHTML(i)).join('')}</div>`
+          : ''
+      }
+    </div>`;
+  }
+
   function viewPlay() {
     const h = S.hero;
     const plays = h.playstyles || [];
@@ -552,7 +582,6 @@
     const combos = h.augmentCombos || [];
     const total = builds.length + plays.length + combos.length;
     if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
-    const p = plays[S.playIdx] || plays[0] || {};
 
     // 顶部总览：一眼看到有多少套方案可选
     const summary = `<div class="plan-sum">
@@ -562,15 +591,6 @@
         <div class="ps-d"><b>${builds.length}</b> 套核心构建 · <b>${plays.length}</b> 套出装路线 · <b>${combos.length}</b> 套海克斯三件套</div>
       </div>
     </div>`;
-
-    const forge = (p.forge || []).length
-      ? `<div class="forge">${p.forge
-          .map((f, i) => {
-            const name = FORGE[f] || f;
-            return `${i ? '<span class="forge-arrow">›</span>' : ''}<span class="forge-chip">${esc(name)}</span>`;
-          })
-          .join('')}</div>`
-      : `<div class="notice" style="margin:0"><span class="ni">!</span><div>这一套暂无锻体数据，明日补充。</div></div>`;
 
     return `
       ${summary}
@@ -588,35 +608,7 @@
         plays.length
           ? `<div class="section">
         <div class="sec-head"><h3>出装路线</h3><div class="sec-line"></div><span class="hint">${plays.length} 套 · 锻体到六神装</span></div>
-        <div class="play-tabs">
-          ${plays
-            .map(
-              (x, i) =>
-                `<button class="play-tab${i === S.playIdx ? ' on' : ''}" data-play="${i}">${esc(x.title || '玩法 ' + (i + 1))}</button>`
-            )
-            .join('')}
-        </div>
-
-        <div class="route-card">
-          <div class="rc-lbl">锻体顺序</div>
-          ${forge}
-          <div class="rc-lbl">出门装</div>
-          <div class="items-row">${(p.startItems || []).map((i) => itemHTML(i)).join('') || '<span class="hint">—</span>'}</div>
-          <div class="rc-lbl">核心装备 <i>按顺序出</i></div>
-          <div class="items-row">${(p.coreItems || []).map((i, k) => itemHTML(i, k + 1)).join('') || '<span class="hint">—</span>'}</div>
-          ${
-            (p.otherItems || []).length
-              ? `<div class="rc-lbl">备选装备 <i>看对面阵容换</i></div>
-          <div class="items-row">${p.otherItems.map((i) => itemHTML(i)).join('')}</div>`
-              : ''
-          }
-          ${
-            (p.shoes || []).length
-              ? `<div class="rc-lbl">鞋子</div>
-          <div class="items-row">${p.shoes.map((i) => itemHTML(i)).join('')}</div>`
-              : ''
-          }
-        </div>
+        <div class="route-list">${plays.map((x, i) => routeCard(x, i)).join('')}</div>
       </div>`
           : ''
       }
