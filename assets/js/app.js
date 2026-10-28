@@ -369,6 +369,7 @@
   let heroSeq = 0;
   async function openHero(slug) {
     const seq = ++heroSeq;
+    preloadPoster(slug); // 海报与英雄 JSON 并行加载，不等串行
     try {
       const d = await getJSON(`data/heroes/${slug}.json`);
       if (seq !== heroSeq) return;
@@ -379,7 +380,14 @@
       S.planAll = false;
       history.replaceState(null, '', '#' + encodeURIComponent(slug));
       renderHero();
-      renderList($('#q').value);
+      // 列表内容没变就不重建（重建 173 张卡是切换卡顿的大头），只换高亮
+      if ($('#q').value.trim()) {
+        renderList($('#q').value);
+      } else {
+        const on = $('#heroGrid .hcard.on');
+        if (on) on.classList.remove('on');
+        document.querySelectorAll(`#heroGrid .hcard[data-slug="${S.hero.slug}"]`).forEach((c) => c.classList.add('on'));
+      }
       window.scrollTo({ top: 0, behavior: 'auto' });
       // 构建方案随后到，到了再补渲染，不阻塞首屏
       ensurePlans().then(() => {
@@ -409,16 +417,34 @@
     return `<span class="tbadge t-${tierCls(t) || 'na'}">${esc(t)}</span>`;
   }
 
-  /* 切换英雄时换整页背景海报（用 <img> 精确控位，不 cover 拉大导致模糊） */
-  function paintPoster() {
+  /* 切换英雄时换整页背景海报（用 <img> 精确控位；已载过的直接切换不闪白） */
+  const posterCache = new Set();
+
+  function preloadPoster(slug) {
+    if (posterCache.has(slug)) return;
+    const pre = new Image();
+    pre.onload = () => posterCache.add(slug);
+    pre.src = posterOf(slug);
+  }
+
+  function paintPoster(slug) {
     const h = S.hero;
     const bg = $('#heroBgImg');
-    if (!bg || !h) return;
-    const url = posterOf(h.slug);
-    const pre = new Image();
-    pre.onload = function () {
+    const s = slug || (h && h.slug);
+    if (!bg || !s) return;
+    const url = posterOf(s);
+    if (posterCache.has(s)) {
       bg.src = url;
       bg.classList.add('on');
+      return;
+    }
+    const pre = new Image();
+    pre.onload = function () {
+      posterCache.add(s);
+      if ((S.hero && S.hero.slug === s) || !S.hero) {
+        bg.src = url;
+        bg.classList.add('on');
+      }
     };
     pre.onerror = function () {
       bg.removeAttribute('src');
