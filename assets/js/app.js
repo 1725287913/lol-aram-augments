@@ -362,7 +362,7 @@
       history.replaceState(null, '', '#' + encodeURIComponent(slug));
       renderHero();
       renderList($('#q').value);
-      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
     } catch (err) {
       if (seq !== heroSeq) return;
       $('#content').innerHTML = `<div class="notice warn"><span class="ni">!</span><div>加载失败：${esc(err.message)}</div></div>`;
