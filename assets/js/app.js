@@ -87,7 +87,7 @@
   const S = {
     index: [], augments: [], augMap: {}, itemMap: {}, heroMap: {}, plays: [],
     meta: {}, hero: null, rates: {},
-    tab: 'play', playIdx: 0, tier: 'all', sort: 'wr', expand: false, view: 'hero',
+    tab: 'play', sub: 'build', builds: [], playIdx: 0, tier: 'all', sort: 'wr', expand: false, view: 'hero',
     favs: initFavs, playQ: '',
   };
 
@@ -456,40 +456,105 @@
     }</div>`;
   }
 
-  // 一条「核心构建方案」：评级徽章 + 名称 + 锻体 + 核心/备选海克斯 + 点评 + 出装
-  function advRow(b) {
-    const cores = (b.coreAugments || []).filter((a) => a.icon || a.name);
-    const alts = (b.altAugments || []).slice(0, 6);
+  const AUG_CN = { prismatic: '棱彩', gold: '黄金', silver: '白银' };
+
+  // 一张构建方案卡：锻体 + 核心/备选海克斯 + 六件装备
+  function buildCard(b, i) {
+    const cores = (b.coreAugments || []).filter((a) => a.name);
+    const alts = (b.altAugments || []).filter((a) => a.name).slice(0, 5);
     const items = b.items || [];
     const forge = (b.forge || []).length
-      ? `<div class="adv-forge"><span class="cb-lbl2">锻体</span>${b.forge
-          .map((f) => esc(FORGE[f] || f))
-          .join('<i>›</i>')}</div>`
+      ? `<div class="bc-forge"><span>锻体</span>${b.forge.map((f) => esc(FORGE[f] || f)).join('<i>·</i>')}</div>`
       : '';
-    const augIcon = (a, cls) =>
-      `<span class="ai ${cls || ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
+    // 图标 + 名字，点图标看海克斯详情
+    const cell = (a, big) => {
+      const full = S.augMap[a.name] || {};
+      return `<div class="bca${big ? ' big' : ''}" data-aug="${esc(a.name)}" title="${esc(a.name)}${
         a.winRate != null ? ' · 胜率 ' + a.winRate.toFixed(2) + '%' : ''
-      }">${a.icon ? img(a.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`}</span>`;
+      }"><div class="bca-ic">${
+        a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : `<b>${esc(a.name.slice(0, 2))}</b>`
+      }</div><div class="bca-nm">${esc(a.name)}</div></div>`;
+    };
+    return `<article class="bcard" data-build="${i}">
+      <div class="bc-hd">
+        ${rankBadge(b.tier)}
+        <h4 class="bc-tt">${esc(b.name)}</h4>
+        <span class="bc-go" data-build="${i}">查看详情<i>›</i></span>
+      </div>
+      ${forge}
+      ${
+        cores.length || alts.length
+          ? `<div class="bc-augs">
+        ${cores.length ? `<div class="ba"><span class="ba-l">核心</span><div class="ba-w">${cores.map((a) => cell(a, 1)).join('')}</div></div>` : ''}
+        ${alts.length ? `<div class="ba"><span class="ba-l">高胜率</span><div class="ba-w">${alts.map((a) => cell(a)).join('')}</div></div>` : ''}
+      </div>`
+          : ''
+      }
+      ${items.length ? `<div class="bc-items">${items.map((it, k) => itemHTML(it, k + 1)).join('')}</div>` : ''}
+    </article>`;
+  }
 
-    return `<div class="adv">
-      ${rankBadge(b.tier)}
-      <div class="adv-bd">
-        <div class="adv-t"><b>${esc(b.name)}</b></div>
+  // 方案详情弹层：点评 + 提示 + 核心/备选海克斯 + 推荐装备
+  function openBuild(i) {
+    const b = (S.builds || [])[i];
+    if (!b) return;
+    const augGrid = (list) =>
+      list
+        .map((a) => {
+          const full = S.augMap[a.name] || {};
+          const wr = a.winRate != null ? a.winRate : full.winRate;
+          const tier = a.tier || full.tier || '';
+          return `<div class="bd-row" data-aug="${esc(a.name)}">
+            <div class="bd-ic">${a.icon || full.icon ? img(a.icon || full.icon, '', a.name) : '<span class="miss">?</span>'}</div>
+            <div class="bd-tx">
+              <div class="bd-nm">${esc(a.name)}</div>
+              <div class="bd-sub">${tier ? `<span class="tier ${esc(tier)}">${esc(AUG_CN[tier] || tier)}</span>` : ''}${
+                wr != null ? `<span style="color:${wrColor(wr)}">${wr.toFixed(2)}%</span>` : ''
+              }</div>
+            </div>
+          </div>`;
+        })
+        .join('');
+    const items = b.items || [];
+    const forge = (b.forge || []).length
+      ? `<div class="bd-forge"><span>锻体</span>${b.forge.map((f) => esc(FORGE[f] || f)).join('<i>·</i>')}</div>`
+      : '';
+    showModal(`
+      <div class="bd-hd">
+        ${rankBadge(b.tier)}
+        <h3>${esc(b.name)}</h3>
+        <button class="m-x" data-close>✕</button>
+      </div>
+      <div class="bd-body">
+        ${b.desc ? `<p class="bd-desc">${esc(b.desc)}</p>` : ''}
+        ${b.tips ? `<div class="bd-tip"><span class="bd-tip-i">💡</span><div>${esc(b.tips)}</div></div>` : ''}
         ${forge}
         ${
-          cores.length
-            ? `<div class="adv-an"><span class="cb-lbl2">核心</span>${cores.map((a) => augIcon(a, 'big')).join('')}</div>`
+          (b.coreAugments || []).length
+            ? `<h5 class="bd-h">核心海克斯</h5><div class="bd-grid">${augGrid(b.coreAugments)}</div>`
             : ''
         }
-        ${alts.length ? `<div class="adv-an"><span class="cb-lbl2">备选</span>${alts.map((a) => augIcon(a)).join('')}</div>` : ''}
-        ${b.desc ? `<div class="adv-d">${esc(b.desc)}</div>` : ''}
+        ${
+          (b.altAugments || []).length
+            ? `<h5 class="bd-h">高胜率海克斯</h5><div class="bd-grid">${augGrid(b.altAugments)}</div>`
+            : ''
+        }
         ${
           items.length
-            ? `<div class="adv-items">${items.map((it, k) => itemHTML(it, k + 1)).join('')}</div>`
+            ? `<h5 class="bd-h">${b.hasDetail ? '核心装备' : '常规出装'}</h5><div class="bd-grid">${items
+                .map((it) => {
+                  const info = S.itemMap[it.name] || {};
+                  return `<div class="bd-row" data-item="${esc(it.name)}">
+                    <div class="bd-ic">${img(it.icon, '', it.name)}</div>
+                    <div class="bd-tx"><div class="bd-nm">${esc(it.name)}</div><div class="bd-sub">${
+                      info.price ? info.price + ' 金币' : ''
+                    }</div></div>
+                  </div>`;
+                })
+                .join('')}</div>`
             : ''
         }
-      </div>
-    </div>`;
+      </div>`);
   }
 
   // 三件套组合：按三个海克斯在本英雄身上的胜率均值排序
@@ -554,62 +619,40 @@
     </div>`;
   }
 
+  // 玩法页：构建方案 / 常规玩法 / 海克斯三件套
   function viewPlay() {
     const h = S.hero;
     const plays = h.playstyles || [];
-    // 只保留有完整出装的方案：只有名字、评级或备选名单的空壳一律不展示
+    // 有装备或海克斯的方案才算数，纯名字的空壳不展示；内容多的排前面，再按评级
+    const fill = (b) => ((b.coreAugments || []).length ? 1 : 0) + ((b.items || []).length ? 1 : 0);
     const builds = (h.builds || [])
-      .filter((b) => (b.items || []).length)
-      .sort((a, b) => tierScore(b.tier) - tierScore(a.tier));
+      .filter((b) => (b.items || []).length || (b.coreAugments || []).length || (b.altAugments || []).length)
+      .sort((a, b) => fill(b) - fill(a) || tierScore(b.tier) - tierScore(a.tier));
+    S.builds = builds;
     const combos = h.augmentCombos || [];
     const total = builds.length + plays.length + combos.length;
     if (!total) return `<div class="notice warn"><span class="ni">!</span><div>这个英雄暂无玩法数据。</div></div>`;
 
-    // 顶部总览：一眼看到有多少套，并能直接跳到对应区块
-    const jumps = [
-      plays.length ? `<a class="ps-jump" data-jump="sec-routes">出装路线 <b>${plays.length}</b></a>` : '',
-      builds.length ? `<a class="ps-jump" data-jump="sec-builds">核心构建 <b>${builds.length}</b></a>` : '',
-      combos.length ? `<a class="ps-jump" data-jump="sec-combos">三件套 <b>${combos.length}</b></a>` : '',
-    ].filter(Boolean).join('');
-    const summary = `<div class="plan-sum">
-      <div class="ps-num">${total}<i>套</i></div>
-      <div class="ps-bd">
-        <div class="ps-t">这个英雄一共有 ${total} 套玩法</div>
-        <div class="ps-d"><b>${plays.length}</b> 套出装路线 · <b>${builds.length}</b> 套核心构建 · <b>${combos.length}</b> 套海克斯三件套</div>
-        <div class="ps-nav">${jumps}</div>
-      </div>
-    </div>`;
+    const segs = [
+      ['build', '构建方案', builds.length],
+      ['route', '常规玩法', plays.length],
+      ['combo', '海克斯三件套', combos.length],
+    ].filter((s) => s[2]);
+    const sub = segs.some((s) => s[0] === S.sub) ? S.sub : segs[0][0];
 
-    return `
-      ${summary}
+    let body = '';
+    if (sub === 'build') {
+      body = `<div class="build-list">${builds.map((b, i) => buildCard(b, i)).join('')}</div>`;
+    } else if (sub === 'route') {
+      body = `<div class="route-list">${plays.map((x, i) => routeCard(x, i)).join('')}</div>`;
+    } else {
+      body = `<div class="combo-list">${combosHTML(h)}</div>`;
+    }
 
-      ${
-        plays.length
-          ? `<div class="section" id="sec-routes">
-        <div class="sec-head"><h3>出装路线</h3><div class="sec-line"></div><span class="hint">${plays.length} 套 · 锻体到六神装</span></div>
-        <div class="route-list">${plays.map((x, i) => routeCard(x, i)).join('')}</div>
-      </div>`
-          : ''
-      }
-
-      ${
-        builds.length
-          ? `<div class="section" id="sec-builds">
-        <div class="sec-head"><h3>核心构建方案</h3><div class="sec-line"></div><span class="hint">${builds.length} 套 · 按评级排序</span></div>
-        <div class="adv-list">${builds.map((b) => advRow(b)).join('')}</div>
-      </div>`
-          : ''
-      }
-
-      ${
-        combos.length
-          ? `<div class="section" id="sec-combos">
-        <div class="sec-head"><h3>海克斯三件套</h3><div class="sec-line"></div><span class="hint">${combos.length} 套 · 按三个海克斯在本英雄的均胜率排序</span></div>
-        <div class="combo-list">${combosHTML(h)}</div>
-      </div>`
-          : ''
-      }
-    `;
+    return `<div class="play-tabs">${segs
+      .map((s) => `<button class="pt${s[0] === sub ? ' on' : ''}" data-sub="${s[0]}">${s[1]}<i>${s[2]}</i></button>`)
+      .join('')}</div>
+      <div class="play-body">${body}</div>`;
   }
 
   /* ---------------- 海克斯 ---------------- */
@@ -1559,9 +1602,21 @@
       return;
     }
 
+    // 玩法页：切换构建方案 / 常规玩法 / 三件套
+    const seg = t.closest('[data-sub]');
+    if (seg) {
+      S.sub = seg.dataset.sub;
+      renderTab();
+      return;
+    }
+
     // 点装备图标看详情
     const itemEl = t.closest('[data-item]');
     if (itemEl) return openItem(itemEl.dataset.item);
+
+    // 打开一套构建方案详情
+    const bcardEl = t.closest('[data-build]');
+    if (bcardEl) return openBuild(+bcardEl.dataset.build);
 
     // 组合卡：点图标看对应海克斯，点空白看第一件
     const combo = t.closest('[data-combo]');
@@ -1631,7 +1686,7 @@
   });
 
   // 调试句柄（控制台可直接调）
-  window.__HD = { S, QZ, openHero, openAug, openPlay, openItem, showPlays, randomHero, shareHero, toggleFav, searchHeroes, renderTab, renderList, closeModal, openQuiz, qzPick, qzNext, qzFinish, qzExit };
+  window.__HD = { S, QZ, openHero, openAug, openPlay, openItem, openBuild, showPlays, randomHero, shareHero, toggleFav, searchHeroes, renderTab, renderList, closeModal, openQuiz, qzPick, qzNext, qzFinish, qzExit };
 
   boot().catch((err) => {    document.body.innerHTML = `<div style="padding:40px;color:#e0645c;font-family:sans-serif">
       <h2>数据加载失败</h2><p style="color:#8b97ad;margin-top:8px">${esc(err.message)}</p>

@@ -691,3 +691,98 @@ img.miss-img{opacity:0}
   .navbtn span{display:none}
   .navbtn{width:32px;padding:0}
 }
+
+/* ============ 玩法：分段切换 ============ */
+.play-tabs{display:flex;gap:5px;margin-bottom:14px;padding:4px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--line);overflow-x:auto}
+.play-tabs .pt{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:7px;
+  font-size:13px;color:var(--dim);white-space:nowrap;transition:.15s}
+.play-tabs .pt i{font-style:normal;font-size:11px;line-height:1;padding:2px 5px;border-radius:4px;
+  background:var(--surface-3);color:var(--dim-2);font-variant-numeric:tabular-nums}
+.play-tabs .pt:hover{color:var(--text)}
+.play-tabs .pt.on{background:linear-gradient(180deg,rgba(200,170,110,.2),rgba(200,170,110,.07));
+  color:var(--gold-l);box-shadow:inset 0 0 0 1px rgba(200,170,110,.3)}
+.play-tabs .pt.on i{background:rgba(200,170,110,.24);color:var(--gold-l)}
+
+/* ============ 构建方案卡 ============ */
+.build-list{display:flex;flex-direction:column;gap:10px}
+.bcard{padding:13px 15px 14px;border-radius:12px;border:1px solid var(--line);cursor:pointer;
+  background:linear-gradient(180deg,var(--surface),rgba(15,21,33,.55));
+  transition:border-color .15s,transform .15s}
+.bcard:hover{border-color:rgba(200,170,110,.42);transform:translateY(-1px)}
+.bc-hd{display:flex;align-items:center;gap:10px}
+.bc-hd .rank{width:29px;height:33px}
+.bc-hd .rank span{font-size:12px}
+.bc-tt{flex:1;min-width:0;font-size:15px;font-weight:600;color:#fff;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bc-go{flex-shrink:0;display:flex;align-items:center;gap:2px;font-size:11.5px;color:var(--dim-2)}
+.bc-go i{font-style:normal;font-size:15px;line-height:1}
+.bcard:hover .bc-go{color:var(--gold-l)}
+.bc-forge{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  font-size:12px;color:var(--dim)}
+.bc-forge span,.bd-forge span{font-size:10.5px;padding:1px 5px;border-radius:4px;
+  color:var(--dim-2);background:var(--surface-2);border:1px solid var(--line)}
+.bc-forge i,.bd-forge i{font-style:normal;color:var(--dim-2);opacity:.55}
+
+.bc-augs{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px}
+.ba{display:flex;gap:7px;align-items:stretch;min-width:0}
+.ba-l{writing-mode:vertical-rl;flex-shrink:0;padding-top:3px;text-align:center;
+  font-size:10px;letter-spacing:2px;color:var(--dim-2)}
+.ba-w{display:flex;flex-wrap:wrap;gap:7px}
+.bca{width:55px;text-align:center;cursor:pointer}
+.bca-ic{width:44px;height:44px;margin:0 auto;border-radius:8px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(200,170,110,.28);background:var(--surface-3);transition:.15s}
+.bca-ic img{width:100%;height:100%;object-fit:cover}
+.bca-ic b{font-size:10px;line-height:1.1;font-weight:500;color:var(--dim-2)}
+.bca-nm{margin-top:4px;font-size:10.5px;line-height:1.3;color:var(--dim);
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
+.bca.big .bca-ic{width:50px;height:50px;border-color:rgba(200,170,110,.6);
+  box-shadow:0 0 13px rgba(200,170,110,.16)}
+.bca.big .bca-nm{color:var(--gold-l)}
+.bca:hover .bca-ic{border-color:var(--gold);transform:translateY(-2px)}
+.bc-items{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.bc-items .item{width:42px;height:42px}
+
+/* ============ 构建方案详情弹层 ============ */
+.bd-hd{display:flex;align-items:center;gap:11px;padding:16px 20px 13px;
+  border-bottom:1px solid var(--line);position:relative}
+.bd-hd h3{flex:1;min-width:0;padding-right:30px;font-size:17px;font-weight:600;color:#fff}
+.bd-body{padding:15px 20px 20px}
+.bd-desc{font-size:13.5px;line-height:1.78;color:#c3ccdb}
+.bd-tip{display:flex;gap:9px;margin-top:12px;padding:11px 13px;border-radius:9px;
+  background:rgba(200,170,110,.07);border:1px solid rgba(200,170,110,.25);
+  font-size:12.5px;line-height:1.72;color:var(--gold-l)}
+.bd-tip-i{flex-shrink:0;line-height:1.5}
+.bd-forge{margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  font-size:12px;color:var(--dim)}
+.bd-h{display:flex;align-items:center;gap:6px;margin:17px 0 8px;
+  font-size:12px;letter-spacing:.5px;color:var(--dim)}
+.bd-h::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--gold)}
+.bd-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.bd-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;
+  background:var(--surface-2);border:1px solid var(--line);transition:.15s}
+.bd-row:hover{border-color:rgba(200,170,110,.4);background:var(--surface-3)}
+.bd-ic{width:36px;height:36px;flex-shrink:0;border-radius:7px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(200,170,110,.28);background:var(--surface-3)}
+.bd-ic img{width:100%;height:100%;object-fit:cover}
+.bd-tx{flex:1;min-width:0}
+.bd-nm{font-size:12.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd-sub{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:10.5px;
+  color:var(--dim-2);font-variant-numeric:tabular-nums}
+
+@media(max-width:640px){
+  .play-tabs .pt{padding:6px 9px;font-size:12px}
+  .bcard{padding:11px 12px 12px}
+  .bc-tt{font-size:14px}
+  .bc-augs{gap:10px}
+  .bca{width:48px}
+  .bca-ic{width:38px;height:38px}
+  .bca.big .bca-ic{width:44px;height:44px}
+  .bca-nm{font-size:10px}
+  .bc-items .item{width:36px;height:36px}
+  .bd-hd{padding:14px 15px 11px}
+  .bd-body{padding:13px 15px 18px}
+  .bd-grid{grid-template-columns:1fr}
+}
